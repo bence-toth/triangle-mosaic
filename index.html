@@ -69,7 +69,9 @@
         for (columnCounter = 0; columnCounter < numberOfColumns; ++columnCounter) {
           gridPointsInRow.push({
             x: columnCounter * horizontalDistance,
-            y: rowCounter * verticalDistance
+            y: rowCounter * verticalDistance,
+            ventureDirection: Math.random() * Math.PI * 2,
+            ventureFactor: Math.random()
           })
         }
         gridPoints.push(gridPointsInRow)
@@ -90,8 +92,15 @@
         style="fill: ${color};"
       />
     `
+
+    const movePoint = ({x, y, ventureDirection, ventureDistance}) => ({
+      x: x + (ventureDistance * Math.cos(ventureDirection)),
+      y: y + (ventureDistance * Math.sin(ventureDirection))
+    })
+
     const getTriangles = ({
-      grid
+      grid,
+      ventureDistance
     }) => {
       const numberOfRows = grid.length
       const numberOfColumns = grid[0].length
@@ -100,22 +109,27 @@
 
       for (rowCounter = 0; rowCounter < numberOfRows - 1; ++rowCounter) {
         for (columnCounter = 0; columnCounter < numberOfColumns - 1; ++columnCounter) {
-          const point1 = {
-            x: grid[rowCounter][columnCounter].x,
-            y: grid[rowCounter][columnCounter].y
-          }
-          const point2 = {
-            x: grid[rowCounter + 1][columnCounter].x,
-            y: grid[rowCounter + 1][columnCounter].y
-          }
-          const point3 = {
-            x: grid[rowCounter][columnCounter + 1].x,
-            y: grid[rowCounter][columnCounter + 1].y
-          }
-          const point4 = {
-            x: grid[rowCounter + 1][columnCounter + 1].x,
-            y: grid[rowCounter + 1][columnCounter + 1].y
-          }
+          const isFirstRow = (rowCounter === 0)
+          const isFirstColumn = (columnCounter === 0)
+          const isLastRow = (rowCounter === numberOfRows - 2)
+          const isLastColumn = (columnCounter === numberOfColumns - 2)
+
+          const point1 = movePoint({
+            ...grid[rowCounter][columnCounter],
+            ventureDistance: grid[rowCounter][columnCounter].ventureFactor * ((isFirstRow || isFirstColumn) ? 0 : ventureDistance)
+          })
+          const point2 = movePoint({
+            ...grid[rowCounter][columnCounter + 1],
+            ventureDistance: grid[rowCounter][columnCounter + 1].ventureFactor * ((isFirstRow || isLastColumn) ? 0 : ventureDistance)
+          })
+          const point3 = movePoint({
+            ...grid[rowCounter + 1][columnCounter],
+            ventureDistance: grid[rowCounter + 1][columnCounter].ventureFactor * ((isFirstColumn || isLastRow) ? 0 : ventureDistance)
+          })
+          const point4 = movePoint({
+            ...grid[rowCounter + 1][columnCounter + 1],
+            ventureDistance: grid[rowCounter + 1][columnCounter + 1].ventureFactor * ((isLastRow || isLastColumn) ? 0 : ventureDistance)
+          })
 
           triangles.push(
             getTriangle({
@@ -137,7 +151,8 @@
       width = 1280,
       height = 720,
       xResolution = 16,
-      yResolution = 9
+      yResolution = 9,
+      fuzz = 0.5
     } = {}) => {
       const grid = getGrid({
         width,
@@ -146,7 +161,14 @@
         yResolution
       })
 
-      const triangles = getTriangles({grid})
+      const horizontalDistance = height / yResolution
+      const verticalDistance = width / xResolution
+      const smallerDistance = Math.min(horizontalDistance, verticalDistance)
+      const maxVentureDistance = smallerDistance / 2
+      const triangles = getTriangles({
+        grid,
+        ventureDistance: fuzz * maxVentureDistance
+      })
 
       return getSvg({
         width,
@@ -159,7 +181,8 @@
       width: 1280,
       height: 720,
       xResolution: 16,
-      yResolution: 9
+      yResolution: 9,
+      fuzz: 0.5
     })
   </script>
 </body></html>
