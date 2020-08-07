@@ -1,19 +1,12 @@
-const getSvg = ({width, height, children} = {}) => `
+const getSvg = ({
+  width,
+  height,
+  children
+} = {}) => `
   <svg width="${width}" height="${height}">
     ${children}
   </svg>
 `
-
-const getRandomColorComponent = () => (
-  Math.floor(Math.random() * 255)
-)
-
-const getRandomColor = () => {
-  const r = getRandomColorComponent()
-  const g = getRandomColorComponent()
-  const b = getRandomColorComponent()
-  return `rgb(${r}, ${g}, ${b})`
-}
 
 const getGrid = ({
   width,
@@ -34,8 +27,8 @@ const getGrid = ({
       gridPointsInRow.push({
         x: columnCounter * horizontalDistance,
         y: rowCounter * verticalDistance,
-        ventureDirection: Math.random() * Math.PI * 2,
-        ventureFactor: Math.random()
+        direction: Math.random() * Math.PI * 2,
+        factor: Math.random()
       })
     }
     gridPoints.push(gridPointsInRow)
@@ -55,19 +48,95 @@ const getTriangle = ({
       ${edges[2].x},${edges[2].y}"
     style="
       fill: ${color};
-      stroke-width: 0;
+      stroke: ${color};
+      stroke-width: 1;
     "
   />
 `
 
-const movePoint = ({x, y, ventureDirection, ventureDistance}) => ({
-  x: x + (ventureDistance * Math.cos(ventureDirection)),
-  y: y + (ventureDistance * Math.sin(ventureDirection))
+const movePoint = ({
+  x,
+  y,
+  direction,
+  distance
+}) => ({
+  x: x + (distance * Math.cos(direction)),
+  y: y + (distance * Math.sin(direction))
 })
+
+const getDistance = ({x: x1, y: y1}, {x: x2, y: y2}) => (
+  Math.sqrt(
+    ((x2 - x1) ** 2) +
+    ((y2 - y1) ** 2)
+  )
+)
+
+const hexToRgb = (hex) => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+const getTriangleColor = ({
+  triangle,
+  colorSpots,
+  colorFuzz
+}) => {
+  // TODO: Clean this up
+  const center = {
+    x: (triangle[0].x + triangle[1].x + triangle[2].x) / 3,
+    y: (triangle[0].y + triangle[1].y + triangle[2].y) / 3
+  }
+
+  const sumOfDistances = (
+    colorSpots
+      .map(colorSpot => getDistance(colorSpot, center))
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+  )
+
+  const color = (
+    colorSpots
+      .map(colorSpot => ({
+        color: hexToRgb(colorSpot.color),
+        factor: getDistance(colorSpot, center) / sumOfDistances
+      }))
+      .map(({
+        color: {r, g, b},
+        factor
+      }) => ({
+        r: r * factor,
+        g: g * factor,
+        b: b * factor
+      }))
+      .reduce((accumulator, currentValue) => ({
+        r: accumulator.r + currentValue.r,
+        g: accumulator.g + currentValue.g,
+        b: accumulator.b + currentValue.b
+      }), {r: 0, g: 0, b: 0})
+  )
+
+  // TODO: This random should come from the triangle
+  const adjustValue = (value, maxDeviation = 0.5) => (
+    value * (1 + ((Math.random() * colorFuzz * maxDeviation * 2) - (colorFuzz * maxDeviation)))
+  )
+
+  const adjustedColor = {
+    r: Math.max(0, Math.min(255, adjustValue(color.r))),
+    g: Math.max(0, Math.min(255, adjustValue(color.g))),
+    b: Math.max(0, Math.min(255, adjustValue(color.b)))
+  }
+
+  return `rgb(${adjustedColor.r}, ${adjustedColor.g}, ${adjustedColor.b})`
+}
 
 const getTriangles = ({
   grid,
-  ventureDistance
+  shapeFuzz,
+  colorFuzz,
+  colorSpots
 }) => {
   const numberOfRows = grid.length
   const numberOfColumns = grid[0].length
@@ -81,31 +150,40 @@ const getTriangles = ({
       const isLastRow = (rowCounter === numberOfRows - 2)
       const isLastColumn = (columnCounter === numberOfColumns - 2)
 
+      // TODO: Clean this up
       const point1 = movePoint({
         ...grid[rowCounter][columnCounter],
-        ventureDistance: grid[rowCounter][columnCounter].ventureFactor * ((isFirstRow || isFirstColumn) ? 0 : ventureDistance)
+        distance: grid[rowCounter][columnCounter].factor * ((isFirstRow || isFirstColumn) ? 0 : shapeFuzz)
       })
       const point2 = movePoint({
         ...grid[rowCounter][columnCounter + 1],
-        ventureDistance: grid[rowCounter][columnCounter + 1].ventureFactor * ((isFirstRow || isLastColumn) ? 0 : ventureDistance)
+        distance: grid[rowCounter][columnCounter + 1].factor * ((isFirstRow || isLastColumn) ? 0 : shapeFuzz)
       })
       const point3 = movePoint({
         ...grid[rowCounter + 1][columnCounter],
-        ventureDistance: grid[rowCounter + 1][columnCounter].ventureFactor * ((isFirstColumn || isLastRow) ? 0 : ventureDistance)
+        distance: grid[rowCounter + 1][columnCounter].factor * ((isFirstColumn || isLastRow) ? 0 : shapeFuzz)
       })
       const point4 = movePoint({
         ...grid[rowCounter + 1][columnCounter + 1],
-        ventureDistance: grid[rowCounter + 1][columnCounter + 1].ventureFactor * ((isLastRow || isLastColumn) ? 0 : ventureDistance)
+        distance: grid[rowCounter + 1][columnCounter + 1].factor * ((isLastRow || isLastColumn) ? 0 : shapeFuzz)
       })
 
       triangles.push(
         getTriangle({
           edges: [point1, point2, point3],
-          color: getRandomColor()
+          color: getTriangleColor({
+            triangle: [point1, point2, point3],
+            colorSpots,
+            colorFuzz
+          })
         }),
         getTriangle({
           edges: [point2, point3, point4],
-          color: getRandomColor()
+          color: getTriangleColor({
+            triangle: [point2, point3, point4],
+            colorSpots,
+            colorFuzz
+          })
         })
       )
     }
@@ -119,7 +197,20 @@ const getTrianglesBackground = ({
   height = 720,
   xResolution = 16,
   yResolution = 9,
-  fuzz = 0.5
+  shapeFuzz = 0.65,
+  colorFuzz = 0.15,
+  colorSpots = [
+    {
+      x: 0,
+      y: 360,
+      color: '#ffc107'
+    },
+    {
+      x: 1280,
+      y: 360,
+      color: '#f44336'
+    }
+  ]
 } = {}) => {
   const grid = getGrid({
     width,
@@ -134,7 +225,9 @@ const getTrianglesBackground = ({
   const maxVentureDistance = smallerDistance / 2
   const triangles = getTriangles({
     grid,
-    ventureDistance: fuzz * maxVentureDistance
+    shapeFuzz: shapeFuzz * maxVentureDistance,
+    colorFuzz,
+    colorSpots
   })
 
   return getSvg({
