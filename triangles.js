@@ -1,4 +1,7 @@
-// TODO: Support gradients with multiple stops points
+// TODO: Support gradients with multiple stops points (and better maths for color interpolation)
+// TODO: ADD LICENSE
+// TODO: Add README
+// TODO: Add GitHub pages
 
 const renderSvg = ({
   width,
