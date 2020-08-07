@@ -33,7 +33,9 @@ const getGrid = ({
         x: columnCounter * horizontalDistance,
         y: rowCounter * verticalDistance,
         direction: Math.random() * Math.PI * 2,
-        factor: Math.random()
+        factor: Math.random(),
+        topTriangleColorDeviation: Math.random(),
+        bottomTriangleColorDeviation: Math.random()
       })
     }
     gridPoints.push(gridPointsInRow)
@@ -63,10 +65,14 @@ const movePoint = ({
   x,
   y,
   direction,
-  distance
+  distance,
+  topTriangleColorDeviation,
+  bottomTriangleColorDeviation
 }) => ({
   x: x + (distance * Math.cos(direction)),
-  y: y + (distance * Math.sin(direction))
+  y: y + (distance * Math.sin(direction)),
+  topTriangleColorDeviation,
+  bottomTriangleColorDeviation
 })
 
 const getDistance = ({x: x1, y: y1}, {x: x2, y: y2}) => (
@@ -88,7 +94,8 @@ const hexToRgb = (hex) => {
 const getTriangleColor = ({
   triangle,
   colorSpots,
-  colorFuzz
+  colorFuzz,
+  colorDeviation
 }) => {
   // TODO: Clean this up
   const center = {
@@ -123,9 +130,8 @@ const getTriangleColor = ({
       }), {r: 0, g: 0, b: 0})
   )
 
-  // TODO: This random should come from the triangle
   const adjustValue = (value, maxDeviation = 0.5) => (
-    value * (1 + ((Math.random() * colorFuzz * maxDeviation * 2) - (colorFuzz * maxDeviation)))
+    value * (1 + ((colorDeviation * colorFuzz * maxDeviation * 2) - (colorFuzz * maxDeviation)))
   )
 
   const adjustedColor = {
@@ -179,7 +185,8 @@ const getTriangles = ({
           color: getTriangleColor({
             triangle: [point1, point2, point3],
             colorSpots,
-            colorFuzz
+            colorFuzz,
+            colorDeviation: point1.topTriangleColorDeviation
           })
         },
         {
@@ -187,7 +194,8 @@ const getTriangles = ({
           color: getTriangleColor({
             triangle: [point2, point3, point4],
             colorSpots,
-            colorFuzz
+            colorFuzz,
+            colorDeviation: point1.bottomTriangleColorDeviation
           })
         }
       )
@@ -197,47 +205,74 @@ const getTriangles = ({
   return triangles
 }
 
-const getTrianglesBackground = ({
-  width = 1280,
-  height = 720,
-  xResolution = 16,
-  yResolution = 9,
-  shapeFuzz = 0.65,
-  colorFuzz = 0.15,
-  colorSpots = [
-    {
-      x: 0,
-      y: 0,
-      color: '#ffc107'
-    },
-    {
-      x: 1280,
-      y: 720,
-      color: '#f44336'
-    }
-  ]
-} = {}) => {
-  const grid = getGrid({
-    width,
-    height,
-    xResolution,
-    yResolution
-  })
+class TrianglesBackground {
+  constructor({
+    width = 1280,
+    height = 720,
+    xResolution = 16,
+    yResolution = 9,
+    shapeFuzz = 0.65,
+    colorFuzz = 0.15,
+    colorSpots = [
+      {
+        x: 0,
+        y: 0,
+        color: '#ffc107'
+      },
+      {
+        x: 1280,
+        y: 720,
+        color: '#f44336'
+      }
+    ]
+  } = {}) {
+    this.height = height
+    this.width = width
+    this.xResolution = xResolution
+    this.yResolution = yResolution
+    this.shapeFuzz = shapeFuzz
+    this.colorFuzz = colorFuzz
+    this.colorSpots = colorSpots
+    this.grid = getGrid({
+      width,
+      height,
+      xResolution,
+      yResolution
+    })
+  }
 
-  const horizontalDistance = height / yResolution
-  const verticalDistance = width / xResolution
-  const smallerDistance = Math.min(horizontalDistance, verticalDistance)
-  const maxVentureDistance = smallerDistance / 2
-  const triangles = getTriangles({
-    grid,
-    shapeFuzz: shapeFuzz * maxVentureDistance,
+  render() {
+    const horizontalDistance = this.height / this.yResolution
+    const verticalDistance = this.width / this.xResolution
+    const smallerDistance = Math.min(horizontalDistance, verticalDistance)
+    const maxVentureDistance = smallerDistance / 2
+    const triangles = getTriangles({
+      grid: this.grid,
+      shapeFuzz: this.shapeFuzz * maxVentureDistance,
+      colorFuzz: this.colorFuzz,
+      colorSpots: this.colorSpots
+    })
+    return renderSvg({
+      width: this.width,
+      height: this.height,
+      children: triangles.map(renderTriangle).join('')
+    })
+  }
+
+  rehydrate({
+    shapeFuzz,
     colorFuzz,
     colorSpots
-  })
-
-  return renderSvg({
-    width,
-    height,
-    children: triangles.map(renderTriangle).join('')
-  })
+  } = {}) {
+    if (shapeFuzz !== undefined) {
+      this.shapeFuzz = shapeFuzz
+    }
+    if (colorFuzz !== undefined) {
+      this.colorFuzz = colorFuzz
+    }
+    if (colorSpots !== undefined) {
+      this.colorSpots = colorSpots
+    }
+    return this.render()
+  }
 }

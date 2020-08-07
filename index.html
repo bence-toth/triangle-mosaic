@@ -28,11 +28,11 @@
   <div id="svgRoot">
     <div id="output"></div>
   </div>
-  <script src="./triangles.js"></script>
+  <script src="./triangles_class.js"></script>
   <script>
     const output = document.getElementById('output')
 
-    output.innerHTML = getTrianglesBackground({
+    const trianglesBackground = new TrianglesBackground({
       width: 960,
       height: 960,
       xResolution: 16,
@@ -52,5 +52,16 @@
         }
       ]
     })
+
+    output.innerHTML = trianglesBackground.render()
+
+    // let fuzz = 0.65
+    // setInterval(() => {
+    //   fuzz -= 0.05
+    //   output.innerHTML = trianglesBackground.rehydrate({
+    //     shapeFuzz: fuzz,
+    //     colorFuzz: fuzz
+    //   })
+    // }, 200)
   </script>
 </body></html>
