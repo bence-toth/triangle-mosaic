@@ -91,9 +91,9 @@ const getTriangleColor = ({
     y: (triangle[0].y + triangle[1].y + triangle[2].y) / 3
   }
 
-  const sumOfDistances = (
+  const fullWeight = (
     colorSpots
-      .map(colorSpot => getDistance(colorSpot, center))
+      .map(colorSpot => (getDistance(colorSpot, center) ** colorSpots.length))
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
   )
 
@@ -101,7 +101,7 @@ const getTriangleColor = ({
     colorSpots
       .map(colorSpot => ({
         color: hexToRgb(colorSpot.color),
-        factor: getDistance(colorSpot, center) / sumOfDistances
+        factor: (getDistance(colorSpot, center) ** colorSpots.length) / fullWeight
       }))
       .map(({
         color: {r, g, b},
@@ -202,12 +202,12 @@ const getTrianglesBackground = ({
   colorSpots = [
     {
       x: 0,
-      y: 360,
+      y: 0,
       color: '#ffc107'
     },
     {
       x: 1280,
-      y: 360,
+      y: 720,
       color: '#f44336'
     }
   ]
