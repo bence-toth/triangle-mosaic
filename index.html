@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Triangles background generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body, #svgRoot {
+      height: 100%;
+    }
+    #svgRoot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0;
+      background-color: hsl(0, 0%, 97.5%);
+    }
+    #output {
+      background-color: white;
+      box-shadow: 0 0 30px hsl(0, 0%, 75%);
+    }
+    #output svg polygon {
+      stroke-width: 0;
+    }
+  </style>
+</head><body>
+  <div id="svgRoot">
+    <div id="output"></div>
+  </div>
+  <script>
+    const output = document.getElementById('output')
+    const getSvg = ({width, height, children} = {}) => `
+      <svg width="${width}" height="${height}">
+        ${children}
+      </svg>
+    `
+    const getRandomColor = () => {
+      const r = Math.floor(Math.random() * 255)
+      const g = Math.floor(Math.random() * 255)
+      const b = Math.floor(Math.random() * 255)
+      return `rgb(${r}, ${g}, ${b})`
+    }
+    const getTrianglesBackground = ({
+      width = 1280,
+      height = 720,
+      xResolution = 32,
+      yResolution = 18
+    } = {}) => {
+      return getSvg({
+        width,
+        height,
+        children: `
+          <polygon
+            points="200,10 250,190 160,210"
+            style="fill: ${getRandomColor()};"
+          />
+        `
+      })
+    }
+    output.innerHTML = getTrianglesBackground()
+  </script>
+</body></html>
