@@ -33,34 +33,133 @@
   </div>
   <script>
     const output = document.getElementById('output')
+
     const getSvg = ({width, height, children} = {}) => `
       <svg width="${width}" height="${height}">
         ${children}
       </svg>
     `
+
+    const getRandomColorComponent = () => (
+      Math.floor(Math.random() * 255)
+    )
+
     const getRandomColor = () => {
-      const r = Math.floor(Math.random() * 255)
-      const g = Math.floor(Math.random() * 255)
-      const b = Math.floor(Math.random() * 255)
+      const r = getRandomColorComponent()
+      const g = getRandomColorComponent()
+      const b = getRandomColorComponent()
       return `rgb(${r}, ${g}, ${b})`
     }
+
+    const getGrid = ({
+      width,
+      height,
+      xResolution,
+      yResolution
+    }) => {
+      const numberOfRows = yResolution + 1
+      const numberOfColumns = xResolution + 1
+      const horizontalDistance = height / yResolution
+      const verticalDistance = width / xResolution
+
+      const gridPoints = []
+
+      for (rowCounter = 0; rowCounter < numberOfRows; ++rowCounter) {
+        const gridPointsInRow = []
+        for (columnCounter = 0; columnCounter < numberOfColumns; ++columnCounter) {
+          gridPointsInRow.push({
+            x: columnCounter * horizontalDistance,
+            y: rowCounter * verticalDistance
+          })
+        }
+        gridPoints.push(gridPointsInRow)
+      }
+
+      return gridPoints
+    }
+
+    const getTriangle = ({
+      edges,
+      color
+    }) => `
+      <polygon
+        points="
+          ${edges[0].x},${edges[0].y}
+          ${edges[1].x},${edges[1].y}
+          ${edges[2].x},${edges[2].y}"
+        style="fill: ${color};"
+      />
+    `
+    const getTriangles = ({
+      grid
+    }) => {
+      const numberOfRows = grid.length
+      const numberOfColumns = grid[0].length
+
+      const triangles = []
+
+      for (rowCounter = 0; rowCounter < numberOfRows - 1; ++rowCounter) {
+        for (columnCounter = 0; columnCounter < numberOfColumns - 1; ++columnCounter) {
+          const point1 = {
+            x: grid[rowCounter][columnCounter].x,
+            y: grid[rowCounter][columnCounter].y
+          }
+          const point2 = {
+            x: grid[rowCounter + 1][columnCounter].x,
+            y: grid[rowCounter + 1][columnCounter].y
+          }
+          const point3 = {
+            x: grid[rowCounter][columnCounter + 1].x,
+            y: grid[rowCounter][columnCounter + 1].y
+          }
+          const point4 = {
+            x: grid[rowCounter + 1][columnCounter + 1].x,
+            y: grid[rowCounter + 1][columnCounter + 1].y
+          }
+
+          triangles.push(
+            getTriangle({
+              edges: [point1, point2, point3],
+              color: getRandomColor()
+            }),
+            getTriangle({
+              edges: [point2, point3, point4],
+              color: getRandomColor()
+            })
+          )
+        }
+      }
+
+      return triangles
+    }
+
     const getTrianglesBackground = ({
       width = 1280,
       height = 720,
-      xResolution = 32,
-      yResolution = 18
+      xResolution = 16,
+      yResolution = 9
     } = {}) => {
+      const grid = getGrid({
+        width,
+        height,
+        xResolution,
+        yResolution
+      })
+
+      const triangles = getTriangles({grid})
+
       return getSvg({
         width,
         height,
-        children: `
-          <polygon
-            points="200,10 250,190 160,210"
-            style="fill: ${getRandomColor()};"
-          />
-        `
+        children: triangles.join('')
       })
     }
-    output.innerHTML = getTrianglesBackground()
+
+    output.innerHTML = getTrianglesBackground({
+      width: 1280,
+      height: 720,
+      xResolution: 16,
+      yResolution: 9
+    })
   </script>
 </body></html>
