@@ -259,6 +259,8 @@ class TrianglesBackground {
     })
   }
 
+  // TODO: Add rehydration for width and height
+  // TODO: Add rehydration (re-render) for xResolution and yResolution
   rehydrate({
     shapeFuzz,
     colorFuzz,
