@@ -21,8 +21,8 @@ const getGrid = ({
 }) => {
   const numberOfRows = yResolution + 1
   const numberOfColumns = xResolution + 1
-  const horizontalDistance = height / yResolution
-  const verticalDistance = width / xResolution
+  const verticalDistance = height / yResolution
+  const horizontalDistance = width / xResolution
 
   const gridPoints = []
 
