@@ -1,4 +1,6 @@
-const getSvg = ({
+// TODO: Support gradients with multiple stops points
+
+const renderSvg = ({
   width,
   height,
   children
@@ -37,7 +39,7 @@ const getGrid = ({
   return gridPoints
 }
 
-const getTriangle = ({
+const renderTriangle = ({
   edges,
   color
 }) => `
@@ -169,22 +171,22 @@ const getTriangles = ({
       })
 
       triangles.push(
-        getTriangle({
+        {
           edges: [point1, point2, point3],
           color: getTriangleColor({
             triangle: [point1, point2, point3],
             colorSpots,
             colorFuzz
           })
-        }),
-        getTriangle({
+        },
+        {
           edges: [point2, point3, point4],
           color: getTriangleColor({
             triangle: [point2, point3, point4],
             colorSpots,
             colorFuzz
           })
-        })
+        }
       )
     }
   }
@@ -230,9 +232,9 @@ const getTrianglesBackground = ({
     colorSpots
   })
 
-  return getSvg({
+  return renderSvg({
     width,
     height,
-    children: triangles.join('')
+    children: triangles.map(renderTriangle).join('')
   })
 }
