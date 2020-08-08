@@ -45,25 +45,48 @@ const movePoint = ({
   bottomTriangleColorDeviation
 })
 
-const getDistance = ({x: x1, y: y1}, {x: x2, y: y2}) => (
+const getDistance = (
+  {x: x1, y: y1},
+  {x: x2, y: y2}
+) => (
   Math.sqrt(
     ((x2 - x1) ** 2) +
     ((y2 - y1) ** 2)
   )
 )
 
-const hexToRgb = (hex) => {
+const hexToRgb = hex => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   return result ? {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
     b: parseInt(result[3], 16)
-  } : null;
+  } : null
 }
 
+const getRgbColor = ({r, g, b}) => (
+  `rgb(${r}, ${g}, ${b})`
+)
+
+const add = (a, b) => a + b
+
 const getAverage = (...numbers) => (
-  numbers.reduce((accumulator, current) => accumulator + current)
-    / numbers.length
+  numbers.reduce(add) / numbers.length
+)
+
+const getTriangleCenter = (
+  [
+    {x: x1, y: y1},
+    {x: x2, y: y2},
+    {x: x3, y: y3}
+  ]
+) => ({
+  x: getAverage(x1, x2, x3),
+  y: getAverage(y1, y2, y3)
+})
+
+const clamp = ({min, value, max}) => (
+  Math.max(min, Math.min(max, value))
 )
 
 const getTriangleColor = ({
@@ -73,10 +96,8 @@ const getTriangleColor = ({
   colorDeviation,
   colorSpotStrength
 }) => {
-  const center = {
-    x: getAverage(triangle[0].x, triangle[1].x, triangle[2].x),
-    y: getAverage(triangle[0].y, triangle[1].y, triangle[2].y)
-  }
+  // Calculate color based on spots
+  const center = getTriangleCenter(triangle)
 
   const getWeight = colorSpot => (
     1 / (getDistance(colorSpot, center) ** colorSpotStrength)
@@ -84,42 +105,64 @@ const getTriangleColor = ({
 
   const fullWeight = (
     colorSpots
-      .map(colorSpot => getWeight(colorSpot))
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+      .map(getWeight)
+      .reduce(add, 0)
   )
 
   const color = (
     colorSpots
       .map(colorSpot => ({
+        // Get color components of the spot
         color: hexToRgb(colorSpot.color),
+        // Calculate how much this spot contributes to the color
         factor: getWeight(colorSpot) / fullWeight
       }))
       .map(({
         color: {r, g, b},
         factor
       }) => ({
+        // Calculate the color this spot contributes to the mix with
         r: r * factor,
         g: g * factor,
         b: b * factor
       }))
       .reduce((accumulator, currentValue) => ({
+        // Add color values of all spots (by color component)
         r: accumulator.r + currentValue.r,
         g: accumulator.g + currentValue.g,
         b: accumulator.b + currentValue.b
       }), {r: 0, g: 0, b: 0})
   )
 
-  const adjustValue = (value, maxDeviation = 0.5) => (
-    value * (1 + ((colorDeviation * colorFuzz * maxDeviation * 2) - (colorFuzz * maxDeviation)))
+  // Add color fuzz
+  const getAdjustedValue = (value, maxDeviation = 0.5) => (
+    value * (
+      1 + (
+        (colorDeviation * maxDeviation * colorFuzz * 2)
+          - (colorFuzz * maxDeviation)
+      )
+    )
   )
 
   const adjustedColor = {
-    r: Math.max(0, Math.min(255, adjustValue(color.r))),
-    g: Math.max(0, Math.min(255, adjustValue(color.g))),
-    b: Math.max(0, Math.min(255, adjustValue(color.b)))
+    r: clamp({
+      min: 0,
+      max: 255,
+      value: getAdjustedValue(color.r)
+    }),
+    g: clamp({
+      min: 0,
+      max: 255,
+      value: getAdjustedValue(color.g)
+    }),
+    b: clamp({
+      min: 0,
+      max: 255,
+      value: getAdjustedValue(color.b)
+    })
   }
 
-  return `rgb(${adjustedColor.r}, ${adjustedColor.g}, ${adjustedColor.b})`
+  return getRgbColor(adjustedColor)
 }
 
 // ----------------------------------------------------------------------------
@@ -350,7 +393,7 @@ const perpendicularPoint = getPerpendicularPoint({
   external
 })
 
-console.log(
-  getRatio(start.x, end.x, perpendicularPoint.x),
-  getRatio(start.y, end.y, perpendicularPoint.y)
-)
+// console.log(
+//   getRatio(start.x, end.x, perpendicularPoint.x),
+//   getRatio(start.y, end.y, perpendicularPoint.y)
+// )
