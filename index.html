@@ -28,6 +28,7 @@
   <div id="svgRoot">
     <div id="output"></div>
   </div>
+  <button id="random">Random</button>
   <script type="module" src="./triangles.js"></script>
   <script type="module">
     import TrianglesBackground from './triangles.js';
@@ -73,13 +74,37 @@
 
     output.innerHTML = trianglesBackground.render()
 
-    // let fuzz = 0.65
-    // setInterval(() => {
-    //   fuzz -= 0.05
-    //   output.innerHTML = trianglesBackground.rehydrate({
-    //     shapeFuzz: fuzz,
-    //     colorFuzz: fuzz
-    //   })
-    // }, 200)
+    const getRandomBetween = (min, max) => min + (Math.random() * (max - min))
+
+    document
+      .getElementById('random')
+      .addEventListener('click', () => {
+        const width = getRandomBetween(720, 1280)
+        const height = getRandomBetween(720, 1280)
+        output.innerHTML = trianglesBackground.rehydrate({
+          shapeFuzz: Math.random(),
+          colorFuzz: Math.random(),
+          colorSpots: [
+            {
+              x: getRandomBetween(0, width),
+              y: getRandomBetween(0, height),
+              color: '#ffc107'
+            },
+            {
+              x: getRandomBetween(0, width),
+              y: getRandomBetween(0, height),
+              color: '#f44336'
+            },
+            {
+              x: getRandomBetween(0, width),
+              y: getRandomBetween(0, height),
+              color: '#2196f3'
+            }
+          ],
+          colorSpotStrength: getRandomBetween(1, 5),
+          width,
+          height,
+        })
+      })
   </script>
 </body></html>
