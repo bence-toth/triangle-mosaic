@@ -82,8 +82,22 @@
       shapeFuzz: 0.65,
       colorFuzz: 0.15,
       coloring: {
-        mode: 'single',
-        color: '#ffc107'
+        mode: 'radialGradient',
+        start: {
+          x: 480,
+          y: 360
+        },
+        end: {
+          x: 0,
+          y: 0
+        },
+        stops: [
+          [0, '#ff0000'],
+          [0.25, '#00ff00'],
+          [0.5, '#0000ff'],
+          [0.75, '#00ffff'],
+          [1, '#ff00ff']
+        ]
       }
     })
 
