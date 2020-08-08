@@ -377,7 +377,9 @@ class TrianglesBackground {
     colorSpots,
     colorSpotStrength,
     width,
-    height
+    height,
+    xResolution,
+    yResolution
   } = {}) {
     if (shapeFuzz !== undefined) {
       this.shapeFuzz = shapeFuzz
@@ -396,6 +398,20 @@ class TrianglesBackground {
     }
     if (height !== undefined) {
       this.height = height
+    }
+    if (xResolution !== undefined) {
+      this.xResolution = xResolution
+    }
+    if (yResolution !== undefined) {
+      this.yResolution = yResolution
+    }
+    if (![xResolution, yResolution].includes(undefined)) {
+      this.grid = getGrid({
+        width: this.width,
+        height: this.height,
+        xResolution: this.xResolution,
+        yResolution: this.yResolution
+      })
     }
     return this.render()
   }
