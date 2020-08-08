@@ -12,7 +12,17 @@
     html, body, #svgRoot {
       height: 100%;
     }
+    #root {
+      height: 100%;
+      display: flex;
+    }
+    #sidebar {
+      flex-shrink: 0;
+      width: 320px;
+      height: 100%;
+    }
     #svgRoot {
+      width: calc(100% - 320px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -25,11 +35,15 @@
     }
   </style>
 </head><body>
-  <div id="svgRoot">
-    <div id="output"></div>
+  <div id="root">
+    <aside id="sidebar">
+      <button id="random">Random</button>
+      <button id="randomResolution">Random (with resolution change)</button>
+    </aside>
+    <div id="svgRoot">
+      <div id="output"></div>
+    </div>
   </div>
-  <button id="random">Random</button>
-  <button id="randomResolution">Random (with resolution change)</button>
   <script type="module" src="./triangles.js"></script>
   <script type="module">
     import TrianglesBackground from './triangles.js';
