@@ -94,6 +94,9 @@ const getTriangleColor = ({
   coloring
 }) => {
   let color = {r: 0, g: 0, b: 0}
+  if (coloring.mode === 'single') {
+    color = hexToRgb(coloring.color)
+  }
   if (coloring.mode === 'spots') {
     // Calculate color based on spots
     const {spots, spotStrength} = coloring
