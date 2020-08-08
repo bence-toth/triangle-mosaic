@@ -374,8 +374,7 @@ class TrianglesBackground {
   rehydrate({
     shapeFuzz,
     colorFuzz,
-    colorSpots,
-    colorSpotStrength,
+    coloring,
     width,
     height,
     xResolution,
@@ -387,11 +386,8 @@ class TrianglesBackground {
     if (colorFuzz !== undefined) {
       this.colorFuzz = colorFuzz
     }
-    if (colorSpots !== undefined) {
-      this.colorSpots = colorSpots
-    }
-    if (colorSpotStrength !== undefined) {
-      this.colorSpotStrength = colorSpotStrength
+    if (coloring !== undefined) {
+      this.coloring = coloring
     }
     if (width !== undefined) {
       this.width = width
