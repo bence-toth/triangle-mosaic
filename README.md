@@ -13,6 +13,30 @@ coloring: {
 }
 ```
 
+#### Radial gradient
+
+```js
+coloring: {
+  mode: 'radialGradient',
+  start: {
+    x: 480,
+    y: 360
+  },
+  end: {
+    x: 0,
+    y: 0
+  },
+  stops: [
+    [0, '#ffc107'],
+    [0.25, '#03a9f4'],
+    [0.5, '#8bc34a'],
+    [0.75, '#ffc107'],
+    [1, '#f44336']
+  ]
+}
+```
+
+
 #### Spots
 
 ```js
@@ -36,28 +60,5 @@ coloring: {
     }
   ],
   spotStrength: 2.5,
-}
-```
-
-#### Radial gradient
-
-```js
-coloring: {
-  mode: 'radialGradient',
-  start: {
-    x: 480,
-    y: 360
-  },
-  end: {
-    x: 0,
-    y: 0
-  },
-  stops: [
-    [0, '#ffc107'],
-    [0.25, '#03a9f4'],
-    [0.5, '#8bc34a'],
-    [0.75, '#ffc107'],
-    [1, '#f44336']
-  ]
 }
 ```
