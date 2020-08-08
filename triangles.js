@@ -169,15 +169,11 @@ const getTriangleColor = ({
 // Engine
 
 const getGrid = ({
-  width,
-  height,
   xResolution,
   yResolution
 }) => {
   const numberOfRows = yResolution + 1
   const numberOfColumns = xResolution + 1
-  const verticalDistance = height / yResolution
-  const horizontalDistance = width / xResolution
 
   const gridPoints = []
 
@@ -185,8 +181,8 @@ const getGrid = ({
     const gridPointsInRow = []
     for (columnCounter = 0; columnCounter < numberOfColumns; ++columnCounter) {
       gridPointsInRow.push({
-        x: columnCounter * horizontalDistance,
-        y: rowCounter * verticalDistance,
+        x: columnCounter,
+        y: rowCounter,
         direction: Math.random() * Math.PI * 2,
         factor: Math.random(),
         topTriangleColorDeviation: Math.random(),
@@ -204,10 +200,14 @@ const getTriangles = ({
   shapeFuzz,
   colorFuzz,
   colorSpots,
-  colorSpotStrength
+  colorSpotStrength,
+  width,
+  height,
 }) => {
   const numberOfRows = grid.length
   const numberOfColumns = grid[0].length
+  const verticalDistance = height / (numberOfRows - 1)
+  const horizontalDistance = width / (numberOfColumns - 1)
 
   const triangles = []
 
@@ -221,18 +221,26 @@ const getTriangles = ({
       // TODO: Clean this up
       const point1 = movePoint({
         ...grid[rowCounter][columnCounter],
+        x: grid[rowCounter][columnCounter].x * horizontalDistance,
+        y: grid[rowCounter][columnCounter].y * verticalDistance,
         distance: grid[rowCounter][columnCounter].factor * ((isFirstRow || isFirstColumn) ? 0 : shapeFuzz)
       })
       const point2 = movePoint({
         ...grid[rowCounter][columnCounter + 1],
+        x: grid[rowCounter][columnCounter + 1].x * horizontalDistance,
+        y: grid[rowCounter][columnCounter + 1].y * verticalDistance,
         distance: grid[rowCounter][columnCounter + 1].factor * ((isFirstRow || isLastColumn) ? 0 : shapeFuzz)
       })
       const point3 = movePoint({
         ...grid[rowCounter + 1][columnCounter],
+        x: grid[rowCounter + 1][columnCounter].x * horizontalDistance,
+        y: grid[rowCounter + 1][columnCounter].y * verticalDistance,
         distance: grid[rowCounter + 1][columnCounter].factor * ((isFirstColumn || isLastRow) ? 0 : shapeFuzz)
       })
       const point4 = movePoint({
         ...grid[rowCounter + 1][columnCounter + 1],
+        x: grid[rowCounter + 1][columnCounter + 1].x * horizontalDistance,
+        y: grid[rowCounter + 1][columnCounter + 1].y * verticalDistance,
         distance: grid[rowCounter + 1][columnCounter + 1].factor * ((isLastRow || isLastColumn) ? 0 : shapeFuzz)
       })
 
@@ -315,7 +323,9 @@ class TrianglesBackground {
       shapeFuzz: this.shapeFuzz * maxVentureDistance,
       colorFuzz: this.colorFuzz,
       colorSpots: this.colorSpots,
-      colorSpotStrength: this.colorSpotStrength
+      colorSpotStrength: this.colorSpotStrength,
+      width: this.width,
+      height: this.height
     })
     return renderSvg({
       width: this.width,
