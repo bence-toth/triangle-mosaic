@@ -28,8 +28,10 @@
   <div id="svgRoot">
     <div id="output"></div>
   </div>
-  <script src="./triangles.js"></script>
-  <script>
+  <script type="module" src="./triangles.js"></script>
+  <script type="module">
+    import TrianglesBackground from './triangles.js';
+
     const output = document.getElementById('output')
 
     const trianglesBackground = new TrianglesBackground({

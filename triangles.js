@@ -188,9 +188,9 @@ const getGrid = ({
 
   const gridPoints = []
 
-  for (rowCounter = 0; rowCounter < numberOfRows; ++rowCounter) {
+  for (let rowCounter = 0; rowCounter < numberOfRows; ++rowCounter) {
     const gridPointsInRow = []
-    for (columnCounter = 0; columnCounter < numberOfColumns; ++columnCounter) {
+    for (let columnCounter = 0; columnCounter < numberOfColumns; ++columnCounter) {
       gridPointsInRow.push({
         x: columnCounter,
         y: rowCounter,
@@ -223,8 +223,8 @@ const getTriangles = ({
   const triangles = []
 
   // We'll take 4 grid points in one go to form 2 triangles
-  for (rowCounter = 0; rowCounter < numberOfRows - 1; ++rowCounter) {
-    for (columnCounter = 0; columnCounter < numberOfColumns - 1; ++columnCounter) {
+  for (let rowCounter = 0; rowCounter < numberOfRows - 1; ++rowCounter) {
+    for (let columnCounter = 0; columnCounter < numberOfColumns - 1; ++columnCounter) {
       const isFirstRow = (rowCounter === 0)
       const isFirstColumn = (columnCounter === 0)
       const isLastRow = (rowCounter === numberOfRows - 2)
@@ -392,6 +392,8 @@ class TrianglesBackground {
     return this.render()
   }
 }
+
+export default TrianglesBackground 
 
 // ----------------------------------------------------------------------------
 // Experiments
