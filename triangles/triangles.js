@@ -87,6 +87,10 @@ const clamp = ({min, value, max}) => (
   Math.max(min, Math.min(max, value))
 )
 
+const getRatio = (start, end, target) => (
+  (target - start) / (end - start)
+)
+
 const getTriangleColor = ({
   triangle,
   colorFuzz,
@@ -97,10 +101,42 @@ const getTriangleColor = ({
   if (coloring.mode === 'single') {
     color = hexToRgb(coloring.color)
   }
+  const center = getTriangleCenter(triangle)
+  if (coloring.mode === 'radialGradient') {
+    const {start, end, stops} = coloring
+    const gradientLength = getDistance(start, end)
+    const triangleDistance = getDistance(start, center)
+    const ratio = triangleDistance / gradientLength
+
+    const exactMatch = stops.find(([location]) => ratio === location)
+
+    if (ratio > 1) {
+      // Went overboard
+      color = hexToRgb(stops[stops.length - 1][1])
+    }
+    else if (exactMatch) {
+      // Hit a stop exactly
+      color = hexToRgb(exactMatch[1])
+    }
+    else {
+      // Somewhere between two stops
+      const nextStopIndex = stops.findIndex(([location]) => location > ratio)
+      const previousStop = stops[nextStopIndex - 1]
+      const nextStop = stops[nextStopIndex]
+      const endRatio = getRatio(previousStop[0], nextStop[0], ratio)
+      const endColor = hexToRgb(nextStop[1])
+      const startRatio = 1 - endRatio
+      const startColor = hexToRgb(previousStop[1])
+      color = {
+        r: (startRatio * startColor.r) + (endRatio * endColor.r),
+        g: (startRatio * startColor.g) + (endRatio * endColor.g),
+        b: (startRatio * startColor.b) + (endRatio * endColor.b)
+      }
+    }
+  }
   if (coloring.mode === 'spots') {
     // Calculate color based on spots
     const {spots, spotStrength} = coloring
-    const center = getTriangleCenter(triangle)
 
     const getWeight = spot => (
       1 / (getDistance(spot, center) ** spotStrength)
@@ -331,8 +367,7 @@ class TrianglesBackground {
         },
       ],
       spotStrength: 2,
-    },
-    colorSpotStrength = 3
+    }
   } = {}) {
     this.height = height
     this.width = width

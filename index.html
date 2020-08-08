@@ -64,17 +64,13 @@
       <div>
         <button id="random">Random</button>
       </div>
-      <div>
-        <button id="randomResolution">Random (with resolution change)</button>
-      </div>
     </aside>
     <div id="svgRoot">
       <div id="output"></div>
     </div>
   </div>
-  <script type="module" src="./triangles.js"></script>
   <script type="module">
-    import TrianglesBackground from './triangles.js';
+    import TrianglesBackground from './triangles/triangles.js';
 
     const output = document.getElementById('output')
 
@@ -86,8 +82,22 @@
       shapeFuzz: 0.65,
       colorFuzz: 0.15,
       coloring: {
-        mode: 'single',
-        color: '#ffc107'
+        mode: 'radialGradient',
+        start: {
+          x: 480,
+          y: 360
+        },
+        end: {
+          x: 0,
+          y: 0
+        },
+        stops: [
+          [0, '#9c27b0'],
+          [0.3333, '#03a9f4'],
+          [0.5, '#8bc34a'],
+          [0.6667, '#ffc107'],
+          [1, '#f44336']
+        ]
       }
     })
 
@@ -97,40 +107,6 @@
 
     document
       .getElementById('random')
-      .addEventListener('click', () => {
-        const width = getRandomBetween(720, 1280)
-        const height = getRandomBetween(720, 1280)
-        output.innerHTML = trianglesBackground.rehydrate({
-          shapeFuzz: Math.random(),
-          colorFuzz: Math.random(),
-          coloring: {
-            mode: 'spots',
-            spots: [
-              {
-                x: getRandomBetween(0, width),
-                y: getRandomBetween(0, height),
-                color: '#ffc107'
-              },
-              {
-                x: getRandomBetween(0, width),
-                y: getRandomBetween(0, height),
-                color: '#f44336'
-              },
-              {
-                x: getRandomBetween(0, width),
-                y: getRandomBetween(0, height),
-                color: '#2196f3'
-              }
-            ],
-            spotStrength: getRandomBetween(1, 5),
-          },
-          width,
-          height
-        })
-      })
-
-    document
-      .getElementById('randomResolution')
       .addEventListener('click', () => {
         const width = getRandomBetween(480, 960)
         const height = getRandomBetween(480, 960)
