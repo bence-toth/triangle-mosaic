@@ -374,8 +374,7 @@ class TrianglesBackground {
   rehydrate({
     shapeFuzz,
     colorFuzz,
-    colorSpots,
-    colorSpotStrength,
+    coloring,
     width,
     height,
     xResolution,
@@ -387,11 +386,8 @@ class TrianglesBackground {
     if (colorFuzz !== undefined) {
       this.colorFuzz = colorFuzz
     }
-    if (colorSpots !== undefined) {
-      this.colorSpots = colorSpots
-    }
-    if (colorSpotStrength !== undefined) {
-      this.colorSpotStrength = colorSpotStrength
+    if (coloring !== undefined) {
+      this.coloring = coloring
     }
     if (width !== undefined) {
       this.width = width
@@ -405,7 +401,7 @@ class TrianglesBackground {
     if (yResolution !== undefined) {
       this.yResolution = yResolution
     }
-    if (![xResolution, yResolution].includes(undefined)) {
+    if (xResolution !== undefined || yResolution !== undefined) {
       this.grid = getGrid({
         width: this.width,
         height: this.height,

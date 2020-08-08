@@ -12,7 +12,17 @@
     html, body, #svgRoot {
       height: 100%;
     }
+    #root {
+      height: 100%;
+      display: flex;
+    }
+    #sidebar {
+      flex-shrink: 0;
+      width: 320px;
+      height: 100%;
+    }
     #svgRoot {
+      width: calc(100% - 320px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -25,11 +35,43 @@
     }
   </style>
 </head><body>
-  <div id="svgRoot">
-    <div id="output"></div>
+  <div id="root">
+    <aside id="sidebar">
+      <div>
+        <label for="form-width">Width</label>
+        <input id="form-width" type="range" min="640" max="1280" value="960" />
+      </div>
+      <div>
+        <label for="form-height">Height</label>
+        <input id="form-height" type="range" min="320" max="960" value="720" />
+      </div>
+      <div>
+        <label for="form-color-fuzz">Color fuzz</label>
+        <input id="form-color-fuzz" type="range" min="0" max="1" value="0.15" step="0.01" />
+      </div>
+      <div>
+        <label for="form-shape-fuzz">Shape fuzz</label>
+        <input id="form-shape-fuzz" type="range" min="0" max="1" value="0.65" step="0.01" />
+      </div>
+      <div>
+        <label for="form-x-resolution">Horizontal resolution</label>
+        <input id="form-x-resolution" type="range" min="10" max="72" value="16" />
+      </div>
+      <div>
+        <label for="form-y-resolution">Vertical resolution</label>
+        <input id="form-y-resolution" type="range" min="10" max="72" value="16" />
+      </div>
+      <div>
+        <button id="random">Random</button>
+      </div>
+      <div>
+        <button id="randomResolution">Random (with resolution change)</button>
+      </div>
+    </aside>
+    <div id="svgRoot">
+      <div id="output"></div>
+    </div>
   </div>
-  <button id="random">Random</button>
-  <button id="randomResolution">Random (with resolution change)</button>
   <script type="module" src="./triangles.js"></script>
   <script type="module">
     import TrianglesBackground from './triangles.js';
@@ -37,8 +79,8 @@
     const output = document.getElementById('output')
 
     const trianglesBackground = new TrianglesBackground({
-      width: 1280,
-      height: 960,
+      width: 960,
+      height: 720,
       xResolution: 16,
       yResolution: 16,
       shapeFuzz: 0.65,
@@ -122,5 +164,25 @@
           yResolution: getRandomBetween(10, 20)
         })
       })
-  </script>
+
+    const rehydrateOn = ({id, propertyName}) => {
+      document
+        .getElementById(id)
+        .addEventListener('change', ({
+          target: {value}
+        }) => {
+          const data = {
+            [propertyName]: Number(value)
+          }
+          output.innerHTML = trianglesBackground.rehydrate(data)
+        })
+    }
+
+    rehydrateOn({id: 'form-width', propertyName: 'width'})
+    rehydrateOn({id: 'form-height', propertyName: 'height'})
+    rehydrateOn({id: 'form-color-fuzz', propertyName: 'colorFuzz'})
+    rehydrateOn({id: 'form-shape-fuzz', propertyName: 'shapeFuzz'})
+    rehydrateOn({id: 'form-x-resolution', propertyName: 'xResolution'})
+    rehydrateOn({id: 'form-y-resolution', propertyName: 'yResolution'})
+</script>
 </body></html>
