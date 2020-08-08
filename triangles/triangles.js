@@ -96,16 +96,16 @@ const getPerpendicularPoint = ({
   const b = t.y - s.y
   const c = e.x - s.x
   const d = e.y - s.y
-  const dot = a * c + b * d
-  const lengthSquared = c * c + d * d
+  const dot = (a * c) + (b * d)
+  const lengthSquared = (c ** 2) + (d ** 2)
   const projectionLength = (
     (lengthSquared != 0)
       ? (dot / lengthSquared)
       : -1
   )
   return {
-    x: s.x + projectionLength * c,
-    y: s.y + projectionLength * d
+    x: s.x + (projectionLength * c),
+    y: s.y + (projectionLength * d)
   }
 }
 
