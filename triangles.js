@@ -102,8 +102,7 @@ const getTriangleColor = ({
   colorSpots,
   colorFuzz,
   colorDeviation,
-  // TODO: Should be a knob
-  colorSpotStrength = 3
+  colorSpotStrength
 }) => {
   // TODO: Clean this up
   const center = {
@@ -155,7 +154,8 @@ const getTriangles = ({
   grid,
   shapeFuzz,
   colorFuzz,
-  colorSpots
+  colorSpots,
+  colorSpotStrength
 }) => {
   const numberOfRows = grid.length
   const numberOfColumns = grid[0].length
@@ -194,7 +194,8 @@ const getTriangles = ({
             triangle: [point1, point2, point3],
             colorSpots,
             colorFuzz,
-            colorDeviation: point1.topTriangleColorDeviation
+            colorDeviation: point1.topTriangleColorDeviation,
+            colorSpotStrength
           })
         },
         {
@@ -203,7 +204,8 @@ const getTriangles = ({
             triangle: [point2, point3, point4],
             colorSpots,
             colorFuzz,
-            colorDeviation: point1.bottomTriangleColorDeviation
+            colorDeviation: point1.bottomTriangleColorDeviation,
+            colorSpotStrength
           })
         }
       )
@@ -232,7 +234,8 @@ class TrianglesBackground {
         y: 720,
         color: '#f44336'
       }
-    ]
+    ],
+    colorSpotStrength = 3
   } = {}) {
     this.height = height
     this.width = width
@@ -241,6 +244,7 @@ class TrianglesBackground {
     this.shapeFuzz = shapeFuzz
     this.colorFuzz = colorFuzz
     this.colorSpots = colorSpots
+    this.colorSpotStrength = colorSpotStrength
     this.grid = getGrid({
       width,
       height,
@@ -258,7 +262,8 @@ class TrianglesBackground {
       grid: this.grid,
       shapeFuzz: this.shapeFuzz * maxVentureDistance,
       colorFuzz: this.colorFuzz,
-      colorSpots: this.colorSpots
+      colorSpots: this.colorSpots,
+      colorSpotStrength: this.colorSpotStrength
     })
     return renderSvg({
       width: this.width,
@@ -272,7 +277,8 @@ class TrianglesBackground {
   rehydrate({
     shapeFuzz,
     colorFuzz,
-    colorSpots
+    colorSpots,
+    colorSpotStrength
   } = {}) {
     if (shapeFuzz !== undefined) {
       this.shapeFuzz = shapeFuzz
@@ -282,6 +288,9 @@ class TrianglesBackground {
     }
     if (colorSpots !== undefined) {
       this.colorSpots = colorSpots
+    }
+    if (colorSpotStrength !== undefined) {
+      this.colorSpotStrength = colorSpotStrength
     }
     return this.render()
   }
