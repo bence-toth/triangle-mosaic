@@ -163,6 +163,19 @@ const getTriangleColor = ({
   return getRgbColor(adjustedColor)
 }
 
+const getMaxVentureDistance = ({
+  width,
+  height,
+  xResolution,
+  yResolution
+}) => {
+  const horizontalDistance = height / yResolution
+  const verticalDistance = width / xResolution
+  const smallerDistance = Math.min(horizontalDistance, verticalDistance)
+  const maxVentureDistance = smallerDistance / 2
+  return maxVentureDistance
+}
+
 // ----------------------------------------------------------------------------
 // Engine
 
@@ -336,10 +349,12 @@ class TrianglesBackground {
   }
 
   render() {
-    const horizontalDistance = this.height / this.yResolution
-    const verticalDistance = this.width / this.xResolution
-    const smallerDistance = Math.min(horizontalDistance, verticalDistance)
-    const maxVentureDistance = smallerDistance / 2
+    const maxVentureDistance = getMaxVentureDistance({
+      width: this.width,
+      height: this.height,
+      xResolution: this.xResolution,
+      yResolution: this.yResolution
+    })
     const triangles = getTriangles({
       grid: this.grid,
       shapeFuzz: this.shapeFuzz * maxVentureDistance,
@@ -392,8 +407,11 @@ const getPerpendicularPoint = ({
   const d = e.y - s.y
   const dot = a * c + b * d
   const lengthSquared = c * c + d * d
-  const projectionLength = (lengthSquared != 0) ? (dot / lengthSquared) : -1
-
+  const projectionLength = (
+    (lengthSquared != 0)
+      ? (dot / lengthSquared)
+      : -1
+  )
   return {
     x: s.x + projectionLength * c,
     y: s.y + projectionLength * d
