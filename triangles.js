@@ -1,7 +1,5 @@
-// TODO: Support gradients with multiple stops points (and better maths for color interpolation)
-// TODO: ADD LICENSE
-// TODO: Add README
-// TODO: Add GitHub pages
+// ----------------------------------------------------------------------------
+// Render
 
 const renderSvg = ({
   width,
@@ -12,37 +10,6 @@ const renderSvg = ({
     ${children}
   </svg>
 `
-
-const getGrid = ({
-  width,
-  height,
-  xResolution,
-  yResolution
-}) => {
-  const numberOfRows = yResolution + 1
-  const numberOfColumns = xResolution + 1
-  const verticalDistance = height / yResolution
-  const horizontalDistance = width / xResolution
-
-  const gridPoints = []
-
-  for (rowCounter = 0; rowCounter < numberOfRows; ++rowCounter) {
-    const gridPointsInRow = []
-    for (columnCounter = 0; columnCounter < numberOfColumns; ++columnCounter) {
-      gridPointsInRow.push({
-        x: columnCounter * horizontalDistance,
-        y: rowCounter * verticalDistance,
-        direction: Math.random() * Math.PI * 2,
-        factor: Math.random(),
-        topTriangleColorDeviation: Math.random(),
-        bottomTriangleColorDeviation: Math.random()
-      })
-    }
-    gridPoints.push(gridPointsInRow)
-  }
-
-  return gridPoints
-}
 
 const renderTriangle = ({
   edges,
@@ -60,6 +27,9 @@ const renderTriangle = ({
     "
   />
 `
+
+// ----------------------------------------------------------------------------
+// Utility
 
 const movePoint = ({
   x,
@@ -91,11 +61,10 @@ const hexToRgb = (hex) => {
   } : null;
 }
 
-// TODO: 4 coloring options:
-// - Single color
-// - Spots
-// - Linear gradient
-// - Radial gradient
+const getAverage = (...numbers) => (
+  numbers.reduce((accumulator, current) => accumulator + current)
+    / numbers.length
+)
 
 const getTriangleColor = ({
   triangle,
@@ -104,15 +73,18 @@ const getTriangleColor = ({
   colorDeviation,
   colorSpotStrength
 }) => {
-  // TODO: Clean this up
   const center = {
-    x: (triangle[0].x + triangle[1].x + triangle[2].x) / 3,
-    y: (triangle[0].y + triangle[1].y + triangle[2].y) / 3
+    x: getAverage(triangle[0].x, triangle[1].x, triangle[2].x),
+    y: getAverage(triangle[0].y, triangle[1].y, triangle[2].y)
   }
+
+  const getWeight = colorSpot => (
+    1 / (getDistance(colorSpot, center) ** colorSpotStrength)
+  )
 
   const fullWeight = (
     colorSpots
-      .map(colorSpot => (1 / (getDistance(colorSpot, center) ** colorSpotStrength)))
+      .map(colorSpot => getWeight(colorSpot))
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
   )
 
@@ -120,7 +92,7 @@ const getTriangleColor = ({
     colorSpots
       .map(colorSpot => ({
         color: hexToRgb(colorSpot.color),
-        factor: (1 / (getDistance(colorSpot, center) ** colorSpotStrength)) / fullWeight
+        factor: getWeight(colorSpot) / fullWeight
       }))
       .map(({
         color: {r, g, b},
@@ -148,6 +120,40 @@ const getTriangleColor = ({
   }
 
   return `rgb(${adjustedColor.r}, ${adjustedColor.g}, ${adjustedColor.b})`
+}
+
+// ----------------------------------------------------------------------------
+// Engine
+
+const getGrid = ({
+  width,
+  height,
+  xResolution,
+  yResolution
+}) => {
+  const numberOfRows = yResolution + 1
+  const numberOfColumns = xResolution + 1
+  const verticalDistance = height / yResolution
+  const horizontalDistance = width / xResolution
+
+  const gridPoints = []
+
+  for (rowCounter = 0; rowCounter < numberOfRows; ++rowCounter) {
+    const gridPointsInRow = []
+    for (columnCounter = 0; columnCounter < numberOfColumns; ++columnCounter) {
+      gridPointsInRow.push({
+        x: columnCounter * horizontalDistance,
+        y: rowCounter * verticalDistance,
+        direction: Math.random() * Math.PI * 2,
+        factor: Math.random(),
+        topTriangleColorDeviation: Math.random(),
+        bottomTriangleColorDeviation: Math.random()
+      })
+    }
+    gridPoints.push(gridPointsInRow)
+  }
+
+  return gridPoints
 }
 
 const getTriangles = ({
@@ -215,6 +221,9 @@ const getTriangles = ({
   return triangles
 }
 
+// ----------------------------------------------------------------------------
+// State and API
+
 class TrianglesBackground {
   constructor({
     width = 1280,
@@ -272,8 +281,6 @@ class TrianglesBackground {
     })
   }
 
-  // TODO: Add rehydration for width and height
-  // TODO: Add rehydration (re-render) for xResolution and yResolution
   rehydrate({
     shapeFuzz,
     colorFuzz,
@@ -296,8 +303,8 @@ class TrianglesBackground {
   }
 }
 
-// ---
-// For linear gradients
+// ----------------------------------------------------------------------------
+// Experiments
 
 const getPerpendicularPoint = ({
   start: s,
