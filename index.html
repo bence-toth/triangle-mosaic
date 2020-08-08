@@ -64,9 +64,6 @@
       <div>
         <button id="random">Random</button>
       </div>
-      <div>
-        <button id="randomResolution">Random (with resolution change)</button>
-      </div>
     </aside>
     <div id="svgRoot">
       <div id="output"></div>
@@ -97,40 +94,6 @@
 
     document
       .getElementById('random')
-      .addEventListener('click', () => {
-        const width = getRandomBetween(720, 1280)
-        const height = getRandomBetween(720, 1280)
-        output.innerHTML = trianglesBackground.rehydrate({
-          shapeFuzz: Math.random(),
-          colorFuzz: Math.random(),
-          coloring: {
-            mode: 'spots',
-            spots: [
-              {
-                x: getRandomBetween(0, width),
-                y: getRandomBetween(0, height),
-                color: '#ffc107'
-              },
-              {
-                x: getRandomBetween(0, width),
-                y: getRandomBetween(0, height),
-                color: '#f44336'
-              },
-              {
-                x: getRandomBetween(0, width),
-                y: getRandomBetween(0, height),
-                color: '#2196f3'
-              }
-            ],
-            spotStrength: getRandomBetween(1, 5),
-          },
-          width,
-          height
-        })
-      })
-
-    document
-      .getElementById('randomResolution')
       .addEventListener('click', () => {
         const width = getRandomBetween(480, 960)
         const height = getRandomBetween(480, 960)
