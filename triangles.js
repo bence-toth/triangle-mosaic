@@ -91,7 +91,8 @@ const hexToRgb = (hex) => {
   } : null;
 }
 
-// TODO: 3 coloring options:
+// TODO: 4 coloring options:
+// - Single color
 // - Spots
 // - Linear gradient
 // - Radial gradient
