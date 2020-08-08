@@ -36,13 +36,11 @@ const movePoint = ({
   y,
   direction,
   distance,
-  topTriangleColorDeviation,
-  bottomTriangleColorDeviation
+  ...rest
 }) => ({
   x: x + (distance * Math.cos(direction)),
   y: y + (distance * Math.sin(direction)),
-  topTriangleColorDeviation,
-  bottomTriangleColorDeviation
+  ...rest
 })
 
 const getDistance = (
@@ -211,6 +209,7 @@ const getTriangles = ({
 
   const triangles = []
 
+  // We'll take 4 grid points in one go to form 2 triangles
   for (rowCounter = 0; rowCounter < numberOfRows - 1; ++rowCounter) {
     for (columnCounter = 0; columnCounter < numberOfColumns - 1; ++columnCounter) {
       const isFirstRow = (rowCounter === 0)
@@ -218,54 +217,77 @@ const getTriangles = ({
       const isLastRow = (rowCounter === numberOfRows - 2)
       const isLastColumn = (columnCounter === numberOfColumns - 2)
 
-      // TODO: Clean this up
-      const point1 = movePoint({
-        ...grid[rowCounter][columnCounter],
-        x: grid[rowCounter][columnCounter].x * horizontalDistance,
-        y: grid[rowCounter][columnCounter].y * verticalDistance,
-        distance: grid[rowCounter][columnCounter].factor * ((isFirstRow || isFirstColumn) ? 0 : shapeFuzz)
-      })
-      const point2 = movePoint({
-        ...grid[rowCounter][columnCounter + 1],
-        x: grid[rowCounter][columnCounter + 1].x * horizontalDistance,
-        y: grid[rowCounter][columnCounter + 1].y * verticalDistance,
-        distance: grid[rowCounter][columnCounter + 1].factor * ((isFirstRow || isLastColumn) ? 0 : shapeFuzz)
-      })
-      const point3 = movePoint({
-        ...grid[rowCounter + 1][columnCounter],
-        x: grid[rowCounter + 1][columnCounter].x * horizontalDistance,
-        y: grid[rowCounter + 1][columnCounter].y * verticalDistance,
-        distance: grid[rowCounter + 1][columnCounter].factor * ((isFirstColumn || isLastRow) ? 0 : shapeFuzz)
-      })
-      const point4 = movePoint({
-        ...grid[rowCounter + 1][columnCounter + 1],
-        x: grid[rowCounter + 1][columnCounter + 1].x * horizontalDistance,
-        y: grid[rowCounter + 1][columnCounter + 1].y * verticalDistance,
-        distance: grid[rowCounter + 1][columnCounter + 1].factor * ((isLastRow || isLastColumn) ? 0 : shapeFuzz)
-      })
-
-      triangles.push(
-        {
-          edges: [point1, point2, point3],
-          color: getTriangleColor({
-            triangle: [point1, point2, point3],
-            colorSpots,
-            colorFuzz,
-            colorDeviation: point1.topTriangleColorDeviation,
-            colorSpotStrength
-          })
-        },
-        {
-          edges: [point2, point3, point4],
-          color: getTriangleColor({
-            triangle: [point2, point3, point4],
-            colorSpots,
-            colorFuzz,
-            colorDeviation: point1.bottomTriangleColorDeviation,
-            colorSpotStrength
-          })
+      const isPointStatic = pointPosition => {
+        if (pointPosition === 0) {
+          return isFirstRow || isFirstColumn
         }
-      )
+        if (pointPosition === 1) {
+          return isFirstRow || isLastColumn
+        }
+        if (pointPosition === 2) {
+          return isFirstColumn || isLastRow
+        }
+        if (pointPosition === 3) {
+          return isLastRow || isLastColumn
+        }
+      }
+
+      const points = [
+        // 0----1
+        // |  / |
+        // | /  |
+        // 2----3
+        grid[rowCounter][columnCounter],
+        grid[rowCounter][columnCounter + 1],
+        grid[rowCounter + 1][columnCounter],
+        grid[rowCounter + 1][columnCounter + 1]
+      ].map((point, pointIndex) => ({
+        ...point,
+        x: point.x * horizontalDistance,
+        y: point.y * verticalDistance,
+        direction: point.direction,
+        distance: (
+          !isPointStatic(pointIndex)
+            ? (point.factor * shapeFuzz)
+            : 0
+        )
+      })).map(movePoint)
+
+      const topTriangle = {
+        // Top triangle
+        //
+        // 0----1
+        // |  /
+        // | /
+        // 2
+        edges: [points[0], points[1], points[2]],
+        color: getTriangleColor({
+          triangle: [points[0], points[1], points[2]],
+          colorSpots,
+          colorFuzz,
+          colorDeviation: points[0].topTriangleColorDeviation,
+          colorSpotStrength
+        })
+      }
+
+      const bottomTriangle = {
+        // Bottom triangle
+        //
+        //      1
+        //    / |
+        //   /  |
+        // 2----3
+        edges: [points[1], points[2], points[3]],
+        color: getTriangleColor({
+          triangle: [points[1], points[2], points[3]],
+          colorSpots,
+          colorFuzz,
+          colorDeviation: points[0].bottomTriangleColorDeviation,
+          colorSpotStrength
+        })
+      }
+
+      triangles.push(topTriangle, bottomTriangle)
     }
   }
 
