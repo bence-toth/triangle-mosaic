@@ -13,6 +13,7 @@ coloring: {
 }
 ```
 
+
 #### Radial gradient
 
 ```js
