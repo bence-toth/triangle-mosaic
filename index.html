@@ -29,6 +29,7 @@
     <div id="output"></div>
   </div>
   <button id="random">Random</button>
+  <button id="randomResolution">Random (with resolution change)</button>
   <script type="module" src="./triangles.js"></script>
   <script type="module">
     import TrianglesBackground from './triangles.js';
@@ -103,7 +104,40 @@
           ],
           colorSpotStrength: getRandomBetween(1, 5),
           width,
+          height
+        })
+      })
+
+    document
+      .getElementById('randomResolution')
+      .addEventListener('click', () => {
+        const width = getRandomBetween(480, 960)
+        const height = getRandomBetween(480, 960)
+        output.innerHTML = trianglesBackground.rehydrate({
+          shapeFuzz: Math.random(),
+          colorFuzz: Math.random(),
+          colorSpots: [
+            {
+              x: getRandomBetween(0, width),
+              y: getRandomBetween(0, height),
+              color: '#ffc107'
+            },
+            {
+              x: getRandomBetween(0, width),
+              y: getRandomBetween(0, height),
+              color: '#f44336'
+            },
+            {
+              x: getRandomBetween(0, width),
+              y: getRandomBetween(0, height),
+              color: '#2196f3'
+            }
+          ],
+          colorSpotStrength: getRandomBetween(1, 5),
+          width,
           height,
+          xResolution: getRandomBetween(10, 20),
+          yResolution: getRandomBetween(10, 20)
         })
       })
   </script>
