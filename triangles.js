@@ -375,7 +375,9 @@ class TrianglesBackground {
     shapeFuzz,
     colorFuzz,
     colorSpots,
-    colorSpotStrength
+    colorSpotStrength,
+    width,
+    height
   } = {}) {
     if (shapeFuzz !== undefined) {
       this.shapeFuzz = shapeFuzz
@@ -389,11 +391,17 @@ class TrianglesBackground {
     if (colorSpotStrength !== undefined) {
       this.colorSpotStrength = colorSpotStrength
     }
+    if (width !== undefined) {
+      this.width = width
+    }
+    if (height !== undefined) {
+      this.height = height
+    }
     return this.render()
   }
 }
 
-export default TrianglesBackground 
+export default TrianglesBackground
 
 // ----------------------------------------------------------------------------
 // Experiments
