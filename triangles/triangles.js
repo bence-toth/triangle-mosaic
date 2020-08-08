@@ -119,7 +119,7 @@ const getTriangleColor = ({
       color = hexToRgb(exactMatch[1])
     }
     else {
-      // Somewhere between top stops
+      // Somewhere between two stops
       const nextStopIndex = stops.findIndex(([location]) => location > ratio)
       const previousStop = stops[nextStopIndex - 1]
       const nextStop = stops[nextStopIndex]
