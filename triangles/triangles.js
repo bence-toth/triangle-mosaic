@@ -87,6 +87,28 @@ const clamp = ({min, value, max}) => (
   Math.max(min, Math.min(max, value))
 )
 
+const getPerpendicularPoint = ({
+  start: s,
+  end: e,
+  external: t
+}) => {
+  const a = t.x - s.x
+  const b = t.y - s.y
+  const c = e.x - s.x
+  const d = e.y - s.y
+  const dot = a * c + b * d
+  const lengthSquared = c * c + d * d
+  const projectionLength = (
+    (lengthSquared != 0)
+      ? (dot / lengthSquared)
+      : -1
+  )
+  return {
+    x: s.x + projectionLength * c,
+    y: s.y + projectionLength * d
+  }
+}
+
 const getRatio = (start, end, target) => (
   (target - start) / (end - start)
 )
@@ -102,16 +124,34 @@ const getTriangleColor = ({
     color = hexToRgb(coloring.color)
   }
   const center = getTriangleCenter(triangle)
-  if (coloring.mode === 'radialGradient') {
+  if (['linearGradient', 'radialGradient'].includes(coloring.mode)) {
     const {start, end, stops} = coloring
-    const gradientLength = getDistance(start, end)
-    const triangleDistance = getDistance(start, center)
-    const ratio = triangleDistance / gradientLength
+    let ratio
+
+    if (coloring.mode === 'linearGradient') {
+      const perpendicularPoint = getPerpendicularPoint({
+        start,
+        end,
+        external: center
+      })
+
+      ratio = getRatio(start.x, end.x, perpendicularPoint.x)
+    }
+    if (coloring.mode === 'radialGradient') {
+      const gradientLength = getDistance(start, end)
+      const triangleDistance = getDistance(start, center)
+
+      ratio = triangleDistance / gradientLength
+    }
 
     const exactMatch = stops.find(([location]) => ratio === location)
 
-    if (ratio > 1) {
-      // Went overboard
+    if (ratio < 0) {
+      // Went negative overboard
+      color = hexToRgb(stops[0][1])
+    }
+    else if (ratio > 1) {
+      // Went positive overboard
       color = hexToRgb(stops[stops.length - 1][1])
     }
     else if (exactMatch) {
@@ -127,6 +167,7 @@ const getTriangleColor = ({
       const endColor = hexToRgb(nextStop[1])
       const startRatio = 1 - endRatio
       const startColor = hexToRgb(previousStop[1])
+
       color = {
         r: (startRatio * startColor.r) + (endRatio * endColor.r),
         g: (startRatio * startColor.g) + (endRatio * endColor.g),
@@ -449,58 +490,3 @@ class TrianglesBackground {
 }
 
 export default TrianglesBackground
-
-// ----------------------------------------------------------------------------
-// Experiments
-
-const getPerpendicularPoint = ({
-  start: s,
-  end: e,
-  external: t
-}) => {
-  const a = t.x - s.x
-  const b = t.y - s.y
-  const c = e.x - s.x
-  const d = e.y - s.y
-  const dot = a * c + b * d
-  const lengthSquared = c * c + d * d
-  const projectionLength = (
-    (lengthSquared != 0)
-      ? (dot / lengthSquared)
-      : -1
-  )
-  return {
-    x: s.x + projectionLength * c,
-    y: s.y + projectionLength * d
-  }
-}
-
-const getRatio = (start, end, target) => (
-  (target - start) / (end - start)
-)
-
-const start = {
-  x: 1,
-  y: 1
-}
-
-const end = {
-  x: 11,
-  y: 2
-}
-
-const external = {
-  x: 6,
-  y: 10
-}
-
-const perpendicularPoint = getPerpendicularPoint({
-  start,
-  end,
-  external
-})
-
-// console.log(
-//   getRatio(start.x, end.x, perpendicularPoint.x),
-//   getRatio(start.y, end.y, perpendicularPoint.y)
-// )
