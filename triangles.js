@@ -401,7 +401,7 @@ class TrianglesBackground {
     if (yResolution !== undefined) {
       this.yResolution = yResolution
     }
-    if (![xResolution, yResolution].includes(undefined)) {
+    if (xResolution !== undefined || yResolution !== undefined) {
       this.grid = getGrid({
         width: this.width,
         height: this.height,
