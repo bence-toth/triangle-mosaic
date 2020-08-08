@@ -43,34 +43,10 @@
       yResolution: 16,
       shapeFuzz: 0.65,
       colorFuzz: 0.15,
-      colorSpots: [
-        {
-          x: 0,
-          y: 0,
-          color: '#ffc107'
-        },
-        {
-          x: 1280,
-          y: 0,
-          color: '#f44336'
-        },
-        {
-          x: 0,
-          y: 960,
-          color: '#2196f3'
-        },
-        {
-          x: 1280,
-          y: 960,
-          color: '#8bc34a'
-        },
-        {
-          x: 640,
-          y: 480,
-          color: '#e91e63'
-        },
-      ],
-      colorSpotStrength: 2.5
+      coloring: {
+        mode: 'single',
+        color: '#ffc107'
+      }
     })
 
     output.innerHTML = trianglesBackground.render()
@@ -85,24 +61,27 @@
         output.innerHTML = trianglesBackground.rehydrate({
           shapeFuzz: Math.random(),
           colorFuzz: Math.random(),
-          colorSpots: [
-            {
-              x: getRandomBetween(0, width),
-              y: getRandomBetween(0, height),
-              color: '#ffc107'
-            },
-            {
-              x: getRandomBetween(0, width),
-              y: getRandomBetween(0, height),
-              color: '#f44336'
-            },
-            {
-              x: getRandomBetween(0, width),
-              y: getRandomBetween(0, height),
-              color: '#2196f3'
-            }
-          ],
-          colorSpotStrength: getRandomBetween(1, 5),
+          coloring: {
+            mode: 'spots',
+            spots: [
+              {
+                x: getRandomBetween(0, width),
+                y: getRandomBetween(0, height),
+                color: '#ffc107'
+              },
+              {
+                x: getRandomBetween(0, width),
+                y: getRandomBetween(0, height),
+                color: '#f44336'
+              },
+              {
+                x: getRandomBetween(0, width),
+                y: getRandomBetween(0, height),
+                color: '#2196f3'
+              }
+            ],
+            spotStrength: getRandomBetween(1, 5),
+          },
           width,
           height
         })
@@ -116,24 +95,27 @@
         output.innerHTML = trianglesBackground.rehydrate({
           shapeFuzz: Math.random(),
           colorFuzz: Math.random(),
-          colorSpots: [
-            {
-              x: getRandomBetween(0, width),
-              y: getRandomBetween(0, height),
-              color: '#ffc107'
-            },
-            {
-              x: getRandomBetween(0, width),
-              y: getRandomBetween(0, height),
-              color: '#f44336'
-            },
-            {
-              x: getRandomBetween(0, width),
-              y: getRandomBetween(0, height),
-              color: '#2196f3'
-            }
-          ],
-          colorSpotStrength: getRandomBetween(1, 5),
+          coloring: {
+            mode: 'spots',
+            spots: [
+              {
+                x: getRandomBetween(0, width),
+                y: getRandomBetween(0, height),
+                color: '#ffc107'
+              },
+              {
+                x: getRandomBetween(0, width),
+                y: getRandomBetween(0, height),
+                color: '#f44336'
+              },
+              {
+                x: getRandomBetween(0, width),
+                y: getRandomBetween(0, height),
+                color: '#2196f3'
+              }
+            ],
+            spotStrength: getRandomBetween(1, 5),
+          },
           width,
           height,
           xResolution: getRandomBetween(10, 20),

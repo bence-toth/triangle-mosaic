@@ -89,48 +89,54 @@ const clamp = ({min, value, max}) => (
 
 const getTriangleColor = ({
   triangle,
-  colorSpots,
   colorFuzz,
   colorDeviation,
-  colorSpotStrength
+  coloring
 }) => {
-  // Calculate color based on spots
-  const center = getTriangleCenter(triangle)
+  let color = {r: 0, g: 0, b: 0}
+  if (coloring.mode === 'single') {
+    color = hexToRgb(coloring.color)
+  }
+  if (coloring.mode === 'spots') {
+    // Calculate color based on spots
+    const {spots, spotStrength} = coloring
+    const center = getTriangleCenter(triangle)
 
-  const getWeight = colorSpot => (
-    1 / (getDistance(colorSpot, center) ** colorSpotStrength)
-  )
+    const getWeight = spot => (
+      1 / (getDistance(spot, center) ** spotStrength)
+    )
 
-  const fullWeight = (
-    colorSpots
-      .map(getWeight)
-      .reduce(add, 0)
-  )
+    const fullWeight = (
+      spots
+        .map(getWeight)
+        .reduce(add, 0)
+    )
 
-  const color = (
-    colorSpots
-      .map(colorSpot => ({
-        // Get color components of the spot
-        color: hexToRgb(colorSpot.color),
-        // Calculate how much this spot contributes to the color
-        factor: getWeight(colorSpot) / fullWeight
-      }))
-      .map(({
-        color: {r, g, b},
-        factor
-      }) => ({
-        // Calculate the color this spot contributes to the mix with
-        r: r * factor,
-        g: g * factor,
-        b: b * factor
-      }))
-      .reduce((accumulator, currentValue) => ({
-        // Add color values of all spots (by color component)
-        r: accumulator.r + currentValue.r,
-        g: accumulator.g + currentValue.g,
-        b: accumulator.b + currentValue.b
-      }), {r: 0, g: 0, b: 0})
-  )
+    color = (
+      spots
+        .map(spot => ({
+          // Get color components of the spot
+          color: hexToRgb(spot.color),
+          // Calculate how much this spot contributes to the color
+          factor: getWeight(spot) / fullWeight
+        }))
+        .map(({
+          color: {r, g, b},
+          factor
+        }) => ({
+          // Calculate the color this spot contributes to the mix with
+          r: r * factor,
+          g: g * factor,
+          b: b * factor
+        }))
+        .reduce((accumulator, currentValue) => ({
+          // Add color values of all spots (by color component)
+          r: accumulator.r + currentValue.r,
+          g: accumulator.g + currentValue.g,
+          b: accumulator.b + currentValue.b
+        }), {r: 0, g: 0, b: 0})
+    )
+  }
 
   // Add color fuzz
   const getAdjustedValue = (value, maxDeviation = 0.5) => (
@@ -210,8 +216,7 @@ const getTriangles = ({
   grid,
   shapeFuzz,
   colorFuzz,
-  colorSpots,
-  colorSpotStrength,
+  coloring,
   width,
   height,
 }) => {
@@ -276,10 +281,9 @@ const getTriangles = ({
         edges: [points[0], points[1], points[2]],
         color: getTriangleColor({
           triangle: [points[0], points[1], points[2]],
-          colorSpots,
+          coloring,
           colorFuzz,
           colorDeviation: points[0].topTriangleColorDeviation,
-          colorSpotStrength
         })
       }
 
@@ -293,10 +297,9 @@ const getTriangles = ({
         edges: [points[1], points[2], points[3]],
         color: getTriangleColor({
           triangle: [points[1], points[2], points[3]],
-          colorSpots,
+          coloring,
           colorFuzz,
           colorDeviation: points[0].bottomTriangleColorDeviation,
-          colorSpotStrength
         })
       }
 
@@ -318,18 +321,17 @@ class TrianglesBackground {
     yResolution = 9,
     shapeFuzz = 0.65,
     colorFuzz = 0.15,
-    colorSpots = [
-      {
-        x: 0,
-        y: 0,
-        color: '#ffc107'
-      },
-      {
-        x: 1280,
-        y: 720,
-        color: '#f44336'
-      }
-    ],
+    coloring = {
+      mode: 'spots',
+      spots: [
+        {
+          x: 640,
+          y: 320,
+          color: '#ffc107'
+        },
+      ],
+      spotStrength: 2,
+    },
     colorSpotStrength = 3
   } = {}) {
     this.height = height
@@ -338,8 +340,7 @@ class TrianglesBackground {
     this.yResolution = yResolution
     this.shapeFuzz = shapeFuzz
     this.colorFuzz = colorFuzz
-    this.colorSpots = colorSpots
-    this.colorSpotStrength = colorSpotStrength
+    this.coloring = coloring
     this.grid = getGrid({
       width,
       height,
@@ -359,8 +360,7 @@ class TrianglesBackground {
       grid: this.grid,
       shapeFuzz: this.shapeFuzz * maxVentureDistance,
       colorFuzz: this.colorFuzz,
-      colorSpots: this.colorSpots,
-      colorSpotStrength: this.colorSpotStrength,
+      coloring: this.coloring,
       width: this.width,
       height: this.height
     })
