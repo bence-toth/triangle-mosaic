@@ -100,9 +100,10 @@ const getTriangleColor = ({
   triangle,
   colorSpots,
   colorFuzz,
-  colorDeviation
+  colorDeviation,
+  // TODO: Should be a knob
+  colorSpotStrength = 3
 }) => {
-  // TODO: This is wrong, distance from the spot should _decrease_ weight, not _increase_
   // TODO: Clean this up
   const center = {
     x: (triangle[0].x + triangle[1].x + triangle[2].x) / 3,
@@ -111,7 +112,7 @@ const getTriangleColor = ({
 
   const fullWeight = (
     colorSpots
-      .map(colorSpot => (getDistance(colorSpot, center) ** colorSpots.length))
+      .map(colorSpot => (1 / (getDistance(colorSpot, center) ** colorSpotStrength)))
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
   )
 
@@ -119,7 +120,7 @@ const getTriangleColor = ({
     colorSpots
       .map(colorSpot => ({
         color: hexToRgb(colorSpot.color),
-        factor: (getDistance(colorSpot, center) ** colorSpots.length) / fullWeight
+        factor: (1 / (getDistance(colorSpot, center) ** colorSpotStrength)) / fullWeight
       }))
       .map(({
         color: {r, g, b},
