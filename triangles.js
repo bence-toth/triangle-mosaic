@@ -91,12 +91,18 @@ const hexToRgb = (hex) => {
   } : null;
 }
 
+// TODO: 3 coloring options:
+// - Spots
+// - Linear gradient
+// - Radial gradient
+
 const getTriangleColor = ({
   triangle,
   colorSpots,
   colorFuzz,
   colorDeviation
 }) => {
+  // TODO: This is wrong, distance from the spot should _decrease_ weight, not _increase_
   // TODO: Clean this up
   const center = {
     x: (triangle[0].x + triangle[1].x + triangle[2].x) / 3,
@@ -278,3 +284,55 @@ class TrianglesBackground {
     return this.render()
   }
 }
+
+// ---
+// For linear gradients
+
+const getPerpendicularPoint = ({
+  start: s,
+  end: e,
+  external: t
+}) => {
+  const a = t.x - s.x
+  const b = t.y - s.y
+  const c = e.x - s.x
+  const d = e.y - s.y
+  const dot = a * c + b * d
+  const lengthSquared = c * c + d * d
+  const projectionLength = (lengthSquared != 0) ? (dot / lengthSquared) : -1
+
+  return {
+    x: s.x + projectionLength * c,
+    y: s.y + projectionLength * d
+  }
+}
+
+const getRatio = (start, end, target) => (
+  (target - start) / (end - start)
+)
+
+const start = {
+  x: 1,
+  y: 1
+}
+
+const end = {
+  x: 11,
+  y: 2
+}
+
+const external = {
+  x: 6,
+  y: 10
+}
+
+const perpendicularPoint = getPerpendicularPoint({
+  start,
+  end,
+  external
+})
+
+console.log(
+  getRatio(start.x, end.x, perpendicularPoint.x),
+  getRatio(start.y, end.y, perpendicularPoint.y)
+)
