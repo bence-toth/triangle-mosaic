@@ -123,25 +123,28 @@
               {
                 x: getRandomBetween(0, width),
                 y: getRandomBetween(0, height),
-                color: '#ffc107'
+                color: '#ffc107',
+                intensity: getRandomBetween(0.4, 0.6)
               },
               {
                 x: getRandomBetween(0, width),
                 y: getRandomBetween(0, height),
-                color: '#f44336'
+                color: '#f44336',
+                intensity: getRandomBetween(0.4, 0.6)
               },
               {
                 x: getRandomBetween(0, width),
                 y: getRandomBetween(0, height),
-                color: '#2196f3'
+                color: '#2196f3',
+                intensity: getRandomBetween(0.4, 0.6)
               }
             ],
-            spotIntensity: getRandomBetween(1, 5),
+            spotIntensity: 0.5,
           },
           width,
           height,
           xResolution: getRandomBetween(10, 20),
-          yResolution: getRandomBetween(10, 20)
+          yResolution: getRandomBetween(10, 20),
         })
       })
 
