@@ -177,10 +177,10 @@ const getTriangleColor = ({
   }
   if (coloring.mode === 'spots') {
     // Calculate color based on spots
-    const {spots, spotStrength} = coloring
+    const {spots, spotIntensity} = coloring
 
     const getWeight = spot => (
-      1 / (getDistance(spot, center) ** (1 / (spot.strength || spotStrength || 0.5)))
+      1 / (getDistance(spot, center) ** (1 / (spot.intensity || spotIntensity || 0.5)))
     )
 
     const fullWeight = (
