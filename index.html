@@ -189,6 +189,7 @@
       }
     }
 
+    // TODO: Do all this based on state
     document.getElementById('form-width').value = state.width
     document.getElementById('form-height').value = state.height
 
@@ -218,11 +219,23 @@
         ...((coloringMode === 'spots') && coloringSpots)
       }
     })
-    const triangleMosaic = new TriangleMosaic(getFullConfigFromState(state))
 
-    output.innerHTML = triangleMosaic.render()
+    const getColoringConfigFromState = ({
+      coloringMode,
+      coloringSingle,
+      coloringGradient,
+      coloringSpots
+    }) => ({
+      coloring: {
+        mode: coloringMode,
+        ...((coloringMode === 'single') && coloringSingle),
+        ...((coloringMode === 'linearGradient') && coloringGradient),
+        ...((coloringMode === 'radialGradient') && coloringGradient),
+        ...((coloringMode === 'spots') && coloringSpots)
+      }
+    })
 
-    const updateStateOnFormInteraction = ({id, propertyName, parentPropertyName}) => {
+    const handleSimpleFormInteraction = ({id, propertyName, parentPropertyName}) => {
       const formElement = document.getElementById(id)
       const listenerType = formElement.type === 'range' ? 'input' : 'change'
 
@@ -253,51 +266,53 @@
       })
     }
 
-    const setupForm = () => {
-      // Dimensions
-      updateStateOnFormInteraction({
+    const setupFormDimensions = () => {
+      handleSimpleFormInteraction({
         id: 'form-width',
         propertyName: 'width'
       })
-      updateStateOnFormInteraction({
+      handleSimpleFormInteraction({
         id: 'form-height',
         propertyName: 'height'
       })
-      updateStateOnFormInteraction({
+      handleSimpleFormInteraction({
         id: 'form-x-resolution',
         propertyName: 'xResolution'
       })
-      updateStateOnFormInteraction({
+      handleSimpleFormInteraction({
         id: 'form-y-resolution',
         propertyName: 'yResolution'
       })
+    }
 
-      // Variance
-      updateStateOnFormInteraction({
+    const setupFormVariance = () => {
+      handleSimpleFormInteraction({
         id: 'form-shape-fuzz',
         propertyName: 'shapeFuzz'
       })
-      updateStateOnFormInteraction({
+      handleSimpleFormInteraction({
         id: 'form-hue-fuzz',
         parentPropertyName: 'colorFuzz',
         propertyName: 'hue'
       })
-      updateStateOnFormInteraction({
+      handleSimpleFormInteraction({
         id: 'form-saturation-fuzz',
         parentPropertyName: 'colorFuzz',
         propertyName: 'saturation'
       })
-      updateStateOnFormInteraction({
+      handleSimpleFormInteraction({
         id: 'form-lightness-fuzz',
         parentPropertyName: 'colorFuzz',
         propertyName: 'lightness'
       })
-      updateStateOnFormInteraction({
+      handleSimpleFormInteraction({
         id: 'form-alpha-fuzz',
         parentPropertyName: 'colorFuzz',
         propertyName: 'alpha'
       })
+    }
 
+    const setupFormColoring = () => {
       // Coloring
       document
         .getElementById('form-coloring-mode-select')
@@ -305,23 +320,8 @@
           target: {value: mode}
         }) => {
           state.coloringMode = mode
-          const {
-            coloringMode,
-            coloringSingle,
-            coloringGradient,
-            coloringSpots
-          } = state
-          const data = {
-            coloring: {
-              mode: coloringMode,
-              ...((coloringMode === 'single') && coloringSingle),
-              ...((coloringMode === 'linearGradient') && coloringGradient),
-              ...((coloringMode === 'radialGradient') && coloringGradient),
-              ...((coloringMode === 'spots') && coloringSpots)
-            }
-          }
+          const data = getColoringConfigFromState(state)
           output.innerHTML = triangleMosaic.rehydrate(data)
-
           document
             .querySelector('.coloringOptions[data-mode="single"]')
             .style.display = (mode === 'single') ? 'block' : 'none';
@@ -330,22 +330,28 @@
             .style.display = (['linearGradient', 'radialGradient'].includes(mode)) ? 'block' : 'none';
         })
 
+      // Coloring: Single color
       document
         .getElementById('form-coloring-single-color')
         .addEventListener('input', ({
           target: {value: color}
         }) => {
           state.coloringSingle.color = color
-          const data = {
-            coloring: {
-              mode: 'single',
-              color: state.coloringSingle.color
-            }
-          }
+          const data = getColoringConfigFromState(state)
           output.innerHTML = triangleMosaic.rehydrate(data)
         })
+
+      // Coloring: Gradient
+    }
+
+    const setupForm = () => {
+      setupFormDimensions()
+      setupFormVariance()
+      setupFormColoring()
     }
 
     setupForm()
+    const triangleMosaic = new TriangleMosaic(getFullConfigFromState(state))
+    output.innerHTML = triangleMosaic.render()
   </script>
 </body></html>
