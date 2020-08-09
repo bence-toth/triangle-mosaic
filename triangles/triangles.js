@@ -397,7 +397,11 @@ class TrianglesBackground {
     xResolution = 16,
     yResolution = 9,
     shapeFuzz = 0.65,
-    colorFuzz = 0.15,
+    colorFuzz = {
+      hue: 0.1,
+      saturation: 0.1,
+      lightness: 0.1
+    },
     coloring = {
       mode: 'spots',
       spots: [
@@ -468,8 +472,14 @@ class TrianglesBackground {
     if (shapeFuzz !== undefined) {
       this.shapeFuzz = shapeFuzz
     }
-    if (colorFuzz !== undefined) {
-      this.colorFuzz = colorFuzz
+    if (colorFuzz?.hue !== undefined) {
+      this.colorFuzz.hue = colorFuzz.hue
+    }
+    if (colorFuzz?.saturation !== undefined) {
+      this.colorFuzz.saturation = colorFuzz.saturation
+    }
+    if (colorFuzz?.lightness !== undefined) {
+      this.colorFuzz.lightness = colorFuzz.lightness
     }
     if (coloring !== undefined) {
       this.coloring = coloring
