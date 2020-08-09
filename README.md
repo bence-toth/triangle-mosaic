@@ -97,6 +97,7 @@ coloring: {
 colorFuzz: {
   hue: 0.1,
   saturation: 0.1,
-  lightness: 0.1
+  lightness: 0.1,
+  alpha: 0.1
 },
 ```
