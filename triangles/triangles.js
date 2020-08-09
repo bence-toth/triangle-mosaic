@@ -180,7 +180,7 @@ const getTriangleColor = ({
     const {spots, spotStrength} = coloring
 
     const getWeight = spot => (
-      1 / (getDistance(spot, center) ** spotStrength)
+      1 / (getDistance(spot, center) ** (1 / (spot.strength || spotStrength || 0.5)))
     )
 
     const fullWeight = (
@@ -402,12 +402,21 @@ class TrianglesBackground {
       mode: 'spots',
       spots: [
         {
-          x: 640,
-          y: 320,
+          x: 0,
+          y: 0,
           color: '#ffc107'
         },
-      ],
-      spotStrength: 2,
+        {
+          x: 1280,
+          y: 0,
+          color: '#f44336'
+        },
+        {
+          x: 640,
+          y: 720,
+          color: '#2196f3'
+        }
+      ]
     }
   } = {}) {
     this.height = height
