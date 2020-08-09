@@ -214,7 +214,96 @@ const adjustColor = ({color, adjustments}) => {
   return hslaToRgba(adjustedHslaColor)
 }
 
-// TODO: Clean this up
+const getTriangleColorForGradient = ({coloring, center}) => {
+  const {start, end, stops, mode} = coloring
+  let ratio
+
+  if (mode === 'linearGradient') {
+    const perpendicularPoint = getPerpendicularPoint({
+      start,
+      end,
+      external: center
+    })
+
+    ratio = getRatio(start.x, end.x, perpendicularPoint.x)
+  }
+
+  if (mode === 'radialGradient') {
+    const gradientLength = getDistance(start, end)
+    const triangleDistance = getDistance(start, center)
+
+    ratio = triangleDistance / gradientLength
+  }
+
+  const exactMatch = stops.find(([location]) => ratio === location)
+
+  if (ratio < 0) {
+    // Went negative overboard
+    return hexToRgb(stops[0][1])
+  }
+  if (ratio > 1) {
+    // Went positive overboard
+    return hexToRgb(stops[stops.length - 1][1])
+  }
+  if (exactMatch) {
+    // Hit a stop exactly
+    return hexToRgb(exactMatch[1])
+  }
+  // Somewhere between two stops
+  const nextStopIndex = stops.findIndex(([location]) => location > ratio)
+  const previousStop = stops[nextStopIndex - 1]
+  const nextStop = stops[nextStopIndex]
+  const endRatio = getRatio(previousStop[0], nextStop[0], ratio)
+  const endColor = hexToRgb(nextStop[1])
+  const startRatio = 1 - endRatio
+  const startColor = hexToRgb(previousStop[1])
+
+  return {
+    r: (startRatio * startColor.r) + (endRatio * endColor.r),
+    g: (startRatio * startColor.g) + (endRatio * endColor.g),
+    b: (startRatio * startColor.b) + (endRatio * endColor.b)
+  }
+}
+
+const getTriangleColorForSpots = ({coloring, center}) => {
+  const {spots, spotIntensity} = coloring
+
+  const getWeight = spot => (
+    1 / (getDistance(spot, center) ** (1 / (spot.intensity || spotIntensity || 0.5)))
+  )
+
+  const fullWeight = (
+    spots
+      .map(getWeight)
+      .reduce(add, 0)
+  )
+
+  return (
+    spots
+      .map(spot => ({
+        // Get color components of the spot
+        color: hexToRgb(spot.color),
+        // Calculate how much this spot contributes to the color
+        factor: getWeight(spot) / fullWeight
+      }))
+      .map(({
+        color: {r, g, b},
+        factor
+      }) => ({
+        // Calculate the color this spot contributes to the mix with
+        r: r * factor,
+        g: g * factor,
+        b: b * factor
+      }))
+      .reduce((accumulator, currentValue) => ({
+        // Add color values of all spots (by color component)
+        r: accumulator.r + currentValue.r,
+        g: accumulator.g + currentValue.g,
+        b: accumulator.b + currentValue.b
+      }), {r: 0, g: 0, b: 0})
+  )
+}
+
 const getTriangleColor = ({
   triangle,
   colorFuzz,
@@ -222,99 +311,18 @@ const getTriangleColor = ({
   coloring
 }) => {
   let color = {r: 0, g: 0, b: 0}
+
   if (coloring.mode === 'single') {
     color = hexToRgb(coloring.color)
   }
+
   const center = getTriangleCenter(triangle)
+
   if (['linearGradient', 'radialGradient'].includes(coloring.mode)) {
-    const {start, end, stops} = coloring
-    let ratio
-
-    if (coloring.mode === 'linearGradient') {
-      const perpendicularPoint = getPerpendicularPoint({
-        start,
-        end,
-        external: center
-      })
-
-      ratio = getRatio(start.x, end.x, perpendicularPoint.x)
-    }
-    if (coloring.mode === 'radialGradient') {
-      const gradientLength = getDistance(start, end)
-      const triangleDistance = getDistance(start, center)
-
-      ratio = triangleDistance / gradientLength
-    }
-
-    const exactMatch = stops.find(([location]) => ratio === location)
-
-    if (ratio < 0) {
-      // Went negative overboard
-      color = hexToRgb(stops[0][1])
-    }
-    else if (ratio > 1) {
-      // Went positive overboard
-      color = hexToRgb(stops[stops.length - 1][1])
-    }
-    else if (exactMatch) {
-      // Hit a stop exactly
-      color = hexToRgb(exactMatch[1])
-    }
-    else {
-      // Somewhere between two stops
-      const nextStopIndex = stops.findIndex(([location]) => location > ratio)
-      const previousStop = stops[nextStopIndex - 1]
-      const nextStop = stops[nextStopIndex]
-      const endRatio = getRatio(previousStop[0], nextStop[0], ratio)
-      const endColor = hexToRgb(nextStop[1])
-      const startRatio = 1 - endRatio
-      const startColor = hexToRgb(previousStop[1])
-
-      color = {
-        r: (startRatio * startColor.r) + (endRatio * endColor.r),
-        g: (startRatio * startColor.g) + (endRatio * endColor.g),
-        b: (startRatio * startColor.b) + (endRatio * endColor.b)
-      }
-    }
+    color = getTriangleColorForGradient({coloring, center})
   }
   if (coloring.mode === 'spots') {
-    // Calculate color based on spots
-    const {spots, spotIntensity} = coloring
-
-    const getWeight = spot => (
-      1 / (getDistance(spot, center) ** (1 / (spot.intensity || spotIntensity || 0.5)))
-    )
-
-    const fullWeight = (
-      spots
-        .map(getWeight)
-        .reduce(add, 0)
-    )
-
-    color = (
-      spots
-        .map(spot => ({
-          // Get color components of the spot
-          color: hexToRgb(spot.color),
-          // Calculate how much this spot contributes to the color
-          factor: getWeight(spot) / fullWeight
-        }))
-        .map(({
-          color: {r, g, b},
-          factor
-        }) => ({
-          // Calculate the color this spot contributes to the mix with
-          r: r * factor,
-          g: g * factor,
-          b: b * factor
-        }))
-        .reduce((accumulator, currentValue) => ({
-          // Add color values of all spots (by color component)
-          r: accumulator.r + currentValue.r,
-          g: accumulator.g + currentValue.g,
-          b: accumulator.b + currentValue.b
-        }), {r: 0, g: 0, b: 0})
-    )
+    color = getTriangleColorForSpots({coloring, center})
   }
 
   const adjustedColor = adjustColor({
@@ -343,6 +351,20 @@ const getMaxVentureDistance = ({
   return maxVentureDistance
 }
 
+const getRandomTriangleColorDeviation = () => ({
+  hue: (Math.random() * 2) - 1,
+  saturation: (Math.random() * 2) - 1,
+  lightness: (Math.random() * 2) - 1,
+  alpha: Math.random()
+})
+
+const getRandomGridPointOptions = () => ({
+  direction: Math.random() * Math.PI * 2,
+  factor: Math.random(),
+  topTriangleColorDeviation: getRandomTriangleColorDeviation(),
+  bottomTriangleColorDeviation: getRandomTriangleColorDeviation()
+})
+
 // ----------------------------------------------------------------------------
 // Engine
 
@@ -361,21 +383,7 @@ const getGrid = ({
       gridPointsInRow.push({
         x: columnCounter,
         y: rowCounter,
-        direction: Math.random() * Math.PI * 2,
-        factor: Math.random(),
-        // TODO: Clean this up
-        topTriangleColorDeviation: {
-          hue: (Math.random() * 2) - 1,
-          saturation: (Math.random() * 2) - 1,
-          lightness: (Math.random() * 2) - 1,
-          alpha: Math.random()
-        },
-        bottomTriangleColorDeviation: {
-          hue: (Math.random() * 2) - 1,
-          saturation: (Math.random() * 2) - 1,
-          lightness: (Math.random() * 2) - 1,
-          alpha: Math.random()
-        }
+        ...getRandomGridPointOptions()
       })
     }
     gridPoints.push(gridPointsInRow)
