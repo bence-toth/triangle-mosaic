@@ -85,6 +85,16 @@ const getTriangleCenter = (
   y: getAverage(y1, y2, y3)
 })
 
+const modulo = (x, n) => (x % n + n) % n;
+
+const rotate = ({min, value, max}) => {
+  const returnValue = (
+    min + (modulo(value - min, max - min))
+  )
+  console.log({min, max, value, returnValue})
+  return returnValue
+}
+
 const clamp = ({min, value, max}) => (
   Math.max(min, Math.min(max, value))
 )
@@ -190,7 +200,7 @@ const rgbToHsl = ({r, g, b}) => {
 const adjustColor = ({color, adjustments}) => {
   const {h, s, l} = rgbToHsl(color)
   const adjustedHslaColor = {
-    h: clamp({
+    h: rotate({
       min: 0,
       max: 360,
       value: h * (adjustments.hue + 1)
