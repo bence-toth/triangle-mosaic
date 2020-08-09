@@ -279,8 +279,16 @@ const getGrid = ({
         y: rowCounter,
         direction: Math.random() * Math.PI * 2,
         factor: Math.random(),
-        topTriangleColorDeviation: Math.random(),
-        bottomTriangleColorDeviation: Math.random()
+        topTriangleColorDeviation: {
+          hue: (Math.random() * 2) - 1,
+          saturation: (Math.random() * 2) - 1,
+          lightness: (Math.random() * 2) - 1
+        },
+        bottomTriangleColorDeviation: {
+          hue: (Math.random() * 2) - 1,
+          saturation: (Math.random() * 2) - 1,
+          lightness: (Math.random() * 2) - 1
+        }
       })
     }
     gridPoints.push(gridPointsInRow)
