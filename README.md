@@ -1,4 +1,4 @@
-# Triangles
+# Triangle mosaic
 
 ## Options
 
