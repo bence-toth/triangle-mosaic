@@ -58,6 +58,10 @@
         <input id="form-lightness-fuzz" type="range" min="0" max="1" value="0.1" step="0.01" />
       </div>
       <div>
+        <label for="form-alpha-fuzz">Alpha fuzz</label>
+        <input id="form-alpha-fuzz" type="range" min="0" max="1" value="0.1" step="0.01" />
+      </div>
+      <div>
         <label for="form-shape-fuzz">Shape fuzz</label>
         <input id="form-shape-fuzz" type="range" min="0" max="3" value="0.65" step="0.01" />
       </div>
@@ -91,7 +95,8 @@
       colorFuzz: {
         hue: 0.1,
         saturation: 0.1,
-        lightness: 0.1
+        lightness: 0.1,
+        alpha: 0.1
       },
       coloring: {
         mode: 'spots',
@@ -131,7 +136,8 @@
           colorFuzz: {
             hue: Math.random(),
             saturation: Math.random(),
-            lightness: Math.random()
+            lightness: Math.random(),
+            alpha: Math.random()
           },
           coloring: {
             mode: 'spots',
@@ -190,6 +196,7 @@
     rehydrateOn({id: 'form-hue-fuzz', parentPropertyName: 'colorFuzz', propertyName: 'hue'})
     rehydrateOn({id: 'form-saturation-fuzz', parentPropertyName: 'colorFuzz', propertyName: 'saturation'})
     rehydrateOn({id: 'form-lightness-fuzz', parentPropertyName: 'colorFuzz', propertyName: 'lightness'})
+    rehydrateOn({id: 'form-alpha-fuzz', parentPropertyName: 'colorFuzz', propertyName: 'alpha'})
     rehydrateOn({id: 'form-shape-fuzz', propertyName: 'shapeFuzz'})
     rehydrateOn({id: 'form-x-resolution', propertyName: 'xResolution'})
     rehydrateOn({id: 'form-y-resolution', propertyName: 'yResolution'})

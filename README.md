@@ -28,7 +28,7 @@ coloring: {
     y: 720
   },
   stops: [
-    [0, '#ffc107'],
+    [0, '#9c27b0'],
     [0.25, '#03a9f4'],
     [0.5, '#8bc34a'],
     [0.75, '#ffc107'],
@@ -52,7 +52,7 @@ coloring: {
     y: 0
   },
   stops: [
-    [0, '#ffc107'],
+    [0, '#9c27b0'],
     [0.25, '#03a9f4'],
     [0.5, '#8bc34a'],
     [0.75, '#ffc107'],
@@ -97,6 +97,7 @@ coloring: {
 colorFuzz: {
   hue: 0.1,
   saturation: 0.1,
-  lightness: 0.1
+  lightness: 0.1,
+  alpha: 0.1
 },
 ```
