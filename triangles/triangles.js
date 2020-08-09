@@ -309,33 +309,14 @@ const getTriangleColor = ({
     )
   }
 
-  // Add color fuzz
-  const getAdjustedValue = (value, maxDeviation = 0.5) => (
-    value * (
-      1 + (
-        (colorDeviation * maxDeviation * colorFuzz * 2)
-          - (colorFuzz * maxDeviation)
-      )
-    )
-  )
-
-  const adjustedColor = {
-    r: clamp({
-      min: 0,
-      max: 255,
-      value: getAdjustedValue(color.r)
-    }),
-    g: clamp({
-      min: 0,
-      max: 255,
-      value: getAdjustedValue(color.g)
-    }),
-    b: clamp({
-      min: 0,
-      max: 255,
-      value: getAdjustedValue(color.b)
-    })
-  }
+  const adjustedColor = adjustColor({
+    color,
+    adjustments: {
+      hue: colorDeviation.hue * colorFuzz.hue,
+      saturation: colorDeviation.saturation * colorFuzz.saturation,
+      lightness: colorDeviation.lightness * colorFuzz.lightness
+    }
+  })
 
   return getRgbColor(adjustedColor)
 }
