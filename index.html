@@ -342,6 +342,42 @@
         })
 
       // Coloring: Gradient
+      document
+        .getElementById('form-coloring-gradient-start-x')
+        .addEventListener('change', ({
+          target: {value: x}
+        }) => {
+          state.coloringGradient.start.x = Number(x)
+          const data = getColoringConfigFromState(state)
+          output.innerHTML = triangleMosaic.rehydrate(data)
+        })
+      document
+        .getElementById('form-coloring-gradient-start-y')
+        .addEventListener('change', ({
+          target: {value: y}
+        }) => {
+          state.coloringGradient.start.y = Number(y)
+          const data = getColoringConfigFromState(state)
+          output.innerHTML = triangleMosaic.rehydrate(data)
+        })
+      document
+        .getElementById('form-coloring-gradient-end-x')
+        .addEventListener('change', ({
+          target: {value: x}
+        }) => {
+          state.coloringGradient.end.x = Number(x)
+          const data = getColoringConfigFromState(state)
+          output.innerHTML = triangleMosaic.rehydrate(data)
+        })
+      document
+        .getElementById('form-coloring-gradient-end-y')
+        .addEventListener('change', ({
+          target: {value: y}
+        }) => {
+          state.coloringGradient.end.y = Number(y)
+          const data = getColoringConfigFromState(state)
+          output.innerHTML = triangleMosaic.rehydrate(data)
+        })
     }
 
     const setupForm = () => {
