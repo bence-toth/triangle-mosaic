@@ -62,8 +62,10 @@ const hexToRgb = hex => {
   } : null
 }
 
-const getRgbColor = ({r, g, b}) => (
-  `rgb(${r}, ${g}, ${b})`
+const getRgbaColor = ({r, g, b, a}) => (
+  (a === 1)
+    ? `rgb(${r}, ${g}, ${b})`
+    : `rgba(${r}, ${g}, ${b}, ${a})`
 )
 
 const add = (a, b) => a + b
@@ -132,7 +134,7 @@ const hueToRgb = (p, q, t) => {
   return p
 }
 
-const hslToRgb = ({h, s, l}) => {
+const hslaToRgba = ({h, s, l, a}) => {
   let r, g, b
 
   if (s == 0) {
@@ -148,7 +150,8 @@ const hslToRgb = ({h, s, l}) => {
   return {
     r: r * 255,
     g: g * 255,
-    b: b * 255
+    b: b * 255,
+    a
   }
 }
 
@@ -186,7 +189,7 @@ const rgbToHsl = ({r, g, b}) => {
 
 const adjustColor = ({color, adjustments}) => {
   const {h, s, l} = rgbToHsl(color)
-  const adjustedHslColor = {
+  const adjustedHslaColor = {
     h: clamp({
       min: 0,
       max: 360,
@@ -201,9 +204,14 @@ const adjustColor = ({color, adjustments}) => {
       min: 0,
       max: 1,
       value: l * (adjustments.lightness + 1)
+    }),
+    a: clamp({
+      min: 0,
+      max: 1,
+      value: 1 - adjustments.alpha
     })
   }
-  return hslToRgb(adjustedHslColor)
+  return hslaToRgba(adjustedHslaColor)
 }
 
 // TODO: Clean this up
@@ -314,11 +322,12 @@ const getTriangleColor = ({
     adjustments: {
       hue: colorDeviation.hue * colorFuzz.hue,
       saturation: colorDeviation.saturation * colorFuzz.saturation,
-      lightness: colorDeviation.lightness * colorFuzz.lightness
+      lightness: colorDeviation.lightness * colorFuzz.lightness,
+      alpha: colorDeviation.alpha * colorFuzz.alpha
     }
   })
 
-  return getRgbColor(adjustedColor)
+  return adjustedColor
 }
 
 const getMaxVentureDistance = ({
@@ -354,15 +363,18 @@ const getGrid = ({
         y: rowCounter,
         direction: Math.random() * Math.PI * 2,
         factor: Math.random(),
+        // TODO: Clean this up
         topTriangleColorDeviation: {
           hue: (Math.random() * 2) - 1,
           saturation: (Math.random() * 2) - 1,
-          lightness: (Math.random() * 2) - 1
+          lightness: (Math.random() * 2) - 1,
+          alpha: Math.random()
         },
         bottomTriangleColorDeviation: {
           hue: (Math.random() * 2) - 1,
           saturation: (Math.random() * 2) - 1,
-          lightness: (Math.random() * 2) - 1
+          lightness: (Math.random() * 2) - 1,
+          alpha: Math.random()
         }
       })
     }
@@ -439,12 +451,12 @@ const getTriangles = ({
         // | /
         // 2
         edges: [points[0], points[1], points[2]],
-        color: getTriangleColor({
+        color: getRgbaColor(getTriangleColor({
           triangle: [points[0], points[1], points[2]],
           coloring,
           colorFuzz,
-          colorDeviation: points[0].topTriangleColorDeviation,
-        })
+          colorDeviation: points[0].topTriangleColorDeviation
+        }))
       }
 
       const bottomTriangle = {
@@ -455,12 +467,12 @@ const getTriangles = ({
         //   /  |
         // 2----3
         edges: [points[1], points[2], points[3]],
-        color: getTriangleColor({
+        color: getRgbaColor(getTriangleColor({
           triangle: [points[1], points[2], points[3]],
           coloring,
           colorFuzz,
-          colorDeviation: points[0].bottomTriangleColorDeviation,
-        })
+          colorDeviation: points[0].bottomTriangleColorDeviation
+        }))
       }
 
       triangles.push(topTriangle, bottomTriangle)
@@ -483,7 +495,8 @@ class TrianglesBackground {
     colorFuzz = {
       hue: 0.1,
       saturation: 0.1,
-      lightness: 0.1
+      lightness: 0.1,
+      alpha: 0
     },
     coloring = {
       mode: 'spots',
@@ -563,6 +576,9 @@ class TrianglesBackground {
     }
     if (colorFuzz?.lightness !== undefined) {
       this.colorFuzz.lightness = colorFuzz.lightness
+    }
+    if (colorFuzz?.alpha !== undefined) {
+      this.colorFuzz.alpha = colorFuzz.alpha
     }
     if (coloring !== undefined) {
       this.coloring = coloring
