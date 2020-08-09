@@ -90,3 +90,13 @@ coloring: {
   ]
 }
 ```
+
+### Color fuzz
+
+```js
+colorFuzz: {
+  hue: 0.1,
+  saturation: 0.1,
+  lightness: 0.1
+},
+```
