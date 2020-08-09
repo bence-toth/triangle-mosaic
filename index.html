@@ -415,7 +415,6 @@
           .join('')
       )
       state.coloringGradient.stops.forEach((stop, stopIndex) => {
-        console.log({stop, stopIndex})
         document
           .getElementById(`form-coloring-gradient-stop-${stopIndex}-location`)
           .addEventListener('change', ({
