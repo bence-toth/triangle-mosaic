@@ -67,23 +67,26 @@ coloring: {
 ```js
 coloring: {
   mode: 'spots',
+  spotStrength: 0.5,
   spots: [
     {
       x: 0,
       y: 0,
-      color: '#ffc107'
+      color: '#ffc107',
+      strength: 0.65
     },
     {
       x: 1280,
       y: 0,
       color: '#f44336'
+      // strength falls back to 0.5
     },
     {
       x: 640,
       y: 720,
-      color: '#2196f3'
+      color: '#2196f3',
+      strength: 0.6
     }
-  ],
-  spotStrength: 2.5,
+  ]
 }
 ```
