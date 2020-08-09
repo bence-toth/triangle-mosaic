@@ -171,24 +171,25 @@
       })
 
     const rehydrateOn = ({id, propertyName, parentPropertyName}) => {
-      document
-        .getElementById(id)
-        .addEventListener('change', ({
-          target: {value}
-        }) => {
-          const data = (
-            parentPropertyName
-              ? ({
-                [parentPropertyName]: {
-                  [propertyName]: Number(value)
-                }
-              })
-              : ({
+      const formElement = document.getElementById(id)
+      const listenerType = formElement.type === 'range' ? 'input' : 'change'
+
+      formElement.addEventListener(listenerType, ({
+        target: {value}
+      }) => {
+        const data = (
+          parentPropertyName
+            ? ({
+              [parentPropertyName]: {
                 [propertyName]: Number(value)
-              })
-          )
-          output.innerHTML = trianglesBackground.rehydrate(data)
-        })
+              }
+            })
+            : ({
+              [propertyName]: Number(value)
+            })
+        )
+        output.innerHTML = trianglesBackground.rehydrate(data)
+      })
     }
 
     rehydrateOn({id: 'form-width', propertyName: 'width'})
