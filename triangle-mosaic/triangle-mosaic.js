@@ -87,13 +87,9 @@ const getTriangleCenter = (
 
 const modulo = (x, n) => (x % n + n) % n;
 
-const rotate = ({min, value, max}) => {
-  const returnValue = (
-    min + (modulo(value - min, max - min))
-  )
-  console.log({min, max, value, returnValue})
-  return returnValue
-}
+const rotate = ({min, value, max}) => (
+  min + (modulo(value - min, max - min))
+)
 
 const clamp = ({min, value, max}) => (
   Math.max(min, Math.min(max, value))
@@ -503,7 +499,7 @@ const getTriangles = ({
 // ----------------------------------------------------------------------------
 // State and API
 
-class TrianglesBackground {
+class TriangleMosaic {
   constructor({
     width = 1280,
     height = 720,
@@ -625,4 +621,4 @@ class TrianglesBackground {
   }
 }
 
-export default TrianglesBackground
+export default TriangleMosaic

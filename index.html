@@ -82,11 +82,13 @@
     </div>
   </div>
   <script type="module">
-    import TrianglesBackground from './triangles/triangles.js';
+    import TriangleMosaic from './triangle-mosaic/triangle-mosaic.js';
+
+    const getRandomBetween = (min, max) => min + (Math.random() * (max - min))
 
     const output = document.getElementById('output')
 
-    const trianglesBackground = new TrianglesBackground({
+    const triangleMosaic = new TriangleMosaic({
       width: 960,
       height: 720,
       xResolution: 16,
@@ -122,16 +124,14 @@
       }
     })
 
-    output.innerHTML = trianglesBackground.render()
-
-    const getRandomBetween = (min, max) => min + (Math.random() * (max - min))
+    output.innerHTML = triangleMosaic.render()
 
     document
       .getElementById('random')
       .addEventListener('click', () => {
         const width = getRandomBetween(480, 960)
         const height = getRandomBetween(480, 960)
-        output.innerHTML = trianglesBackground.rehydrate({
+        output.innerHTML = triangleMosaic.rehydrate({
           shapeFuzz: Math.random(),
           colorFuzz: {
             hue: Math.random(),
@@ -188,7 +188,7 @@
               [propertyName]: Number(value)
             })
         )
-        output.innerHTML = trianglesBackground.rehydrate(data)
+        output.innerHTML = triangleMosaic.rehydrate(data)
       })
     }
 
