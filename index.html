@@ -82,21 +82,25 @@
       shapeFuzz: 0.65,
       colorFuzz: 0.15,
       coloring: {
-        mode: 'linearGradient',
-        start: {
-          x: 0,
-          y: 0
-        },
-        end: {
-          x: 960,
-          y: 720
-        },
-        stops: [
-          [0, '#9c27b0'],
-          [0.3333, '#03a9f4'],
-          [0.5, '#8bc34a'],
-          [0.6667, '#ffc107'],
-          [1, '#f44336']
+        mode: 'spots',
+        spots: [
+          {
+            x: 0,
+            y: 0,
+            color: '#ffc107',
+            intensity: 0.65
+          },
+          {
+            x: 1280,
+            y: 0,
+            color: '#f44336',
+            intensity: 0.6
+          },
+          {
+            x: 640,
+            y: 720,
+            color: '#2196f3'
+          }
         ]
       }
     })
@@ -119,25 +123,28 @@
               {
                 x: getRandomBetween(0, width),
                 y: getRandomBetween(0, height),
-                color: '#ffc107'
+                color: '#ffc107',
+                intensity: getRandomBetween(0.4, 0.6)
               },
               {
                 x: getRandomBetween(0, width),
                 y: getRandomBetween(0, height),
-                color: '#f44336'
+                color: '#f44336',
+                intensity: getRandomBetween(0.4, 0.6)
               },
               {
                 x: getRandomBetween(0, width),
                 y: getRandomBetween(0, height),
-                color: '#2196f3'
+                color: '#2196f3',
+                intensity: getRandomBetween(0.4, 0.6)
               }
             ],
-            spotStrength: getRandomBetween(1, 5),
+            spotIntensity: 0.5,
           },
           width,
           height,
           xResolution: getRandomBetween(10, 20),
-          yResolution: getRandomBetween(10, 20)
+          yResolution: getRandomBetween(10, 20),
         })
       })
 
