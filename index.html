@@ -269,6 +269,16 @@
       </div>
     `
 
+    const renderAddStopButton = afterIndex => `
+      <button
+        class="form-coloring-gradient-add-stop"
+        data-previous-stop-index="${afterIndex}"
+        data-next-stop-index="${afterIndex + 1}"
+      >
+        Add new stop here
+      </button>
+    `
+
     const getColoringConfigFromState = ({
       coloringMode,
       coloringSingle,
