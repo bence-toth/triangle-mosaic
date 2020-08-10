@@ -371,6 +371,75 @@
       })
     }
 
+    const setupFormGradientStops = () => {
+      document.getElementById('gradient-stops').innerHTML = (
+        state.coloringGradient.stops
+          .map(([location, color], index) => {
+            const stopHtml = renderStop({
+              id: index,
+              location,
+              color,
+              isBoundary: [0, state.coloringGradient.stops.length - 1].includes(index)
+            })
+            const buttonHtml = (
+              (index < state.coloringGradient.stops.length - 1)
+                ? renderAddStopButton(index)
+                : ''
+            )
+            return `${stopHtml}${buttonHtml}`
+          })
+          .join('')
+      )
+      document
+        .querySelectorAll('.form-coloring-gradient-add-stop')
+        .forEach(button => {
+          button.addEventListener('click', ({target}) => {
+            const previousStop = state.coloringGradient.stops[
+              target.dataset.previousStopIndex
+            ]
+            const nextStop = state.coloringGradient.stops[
+              target.dataset.nextStopIndex
+            ]
+            const newStop = [
+              (previousStop[0] + nextStop[0]) / 2,
+              getRandomColor()
+            ]
+            const newStops = [
+              ...state.coloringGradient.stops.slice(0, target.dataset.nextStopIndex),
+              newStop,
+              ...state.coloringGradient.stops.slice(target.dataset.nextStopIndex)
+            ]
+
+            state.coloringGradient.stops = newStops
+            setupFormGradientStops()
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+          })
+        })
+
+      state.coloringGradient.stops.forEach((stop, stopIndex) => {
+        document
+          .getElementById(`form-coloring-gradient-stop-${stopIndex}-location`)
+          .addEventListener('change', ({
+            target: {value: location}
+          }) => {
+            state.coloringGradient.stops[stopIndex][0] = Number(location)
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+            // Should also re-render form segment if ordering is wrong now
+          })
+        document
+          .getElementById(`form-coloring-gradient-stop-${stopIndex}-color`)
+          .addEventListener('input', ({
+            target: {value: color}
+          }) => {
+            state.coloringGradient.stops[stopIndex][1] = color
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+          })
+      })
+    }
+
     const setupFormColoring = () => {
       // Coloring
       document
@@ -437,38 +506,9 @@
           const data = getColoringConfigFromState(state)
           output.innerHTML = triangleMosaic.rehydrate(data)
         })
-      document.getElementById('gradient-stops').innerHTML = (
-        state.coloringGradient.stops
-          .map(([location, color], index) => renderStop({
-            id: index,
-            location,
-            color,
-            isBoundary: [0, state.coloringGradient.stops.length - 1].includes(index)
-          }))
-          .join('')
-      )
-      state.coloringGradient.stops.forEach((stop, stopIndex) => {
-        document
-          .getElementById(`form-coloring-gradient-stop-${stopIndex}-location`)
-          .addEventListener('change', ({
-            target: {value: location}
-          }) => {
-            state.coloringGradient.stops[stopIndex][0] = Number(location)
-            const data = getColoringConfigFromState(state)
-            output.innerHTML = triangleMosaic.rehydrate(data)
-            // Should also re-render form segment if ordering is wrong now
-          })
-        document
-          .getElementById(`form-coloring-gradient-stop-${stopIndex}-color`)
-          .addEventListener('input', ({
-            target: {value: color}
-          }) => {
-            state.coloringGradient.stops[stopIndex][1] = color
-            const data = getColoringConfigFromState(state)
-            output.innerHTML = triangleMosaic.rehydrate(data)
-          })
-      })
-      // TODO: Add stop
+
+      setupFormGradientStops()
+
       // TODO: Remove stop
       // TODO: Update spot
       // TODO: Add spot
