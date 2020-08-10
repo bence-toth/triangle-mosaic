@@ -115,12 +115,12 @@
           </div>
           <div>
             Stops:
-            <div id="gradient-stops">
-            </div>
+            <div id="gradient-stops"></div>
           </div>
         </div>
         <div class="coloringOptions" data-mode="spots" style="display: none;">
           Spots:
+          <div id="spots"></div>
         </div>
       </fieldset>
     </aside>
@@ -307,6 +307,74 @@
         data-next-stop-index="${index + 1}"
       >
         Add new stop here
+      </button>
+    `
+
+    const renderSpot = ({id, x, y, color, intensity}) => `
+      <div class="spot">
+        <div class="formField">
+          <label for="form-coloring-gradient-spot-${id}-x">
+            Location X
+          </label>
+          <input
+            id="form-coloring-gradient-spot-${id}-x"
+            type="number"
+            value="${x}"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+        </div>
+        <div class="formField">
+          <label for="form-coloring-gradient-spot-${id}-y">
+            Location Y
+          </label>
+          <input
+            id="form-coloring-gradient-spot-${id}-y"
+            type="number"
+            value="${y}"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+        </div>
+        <div class="formField">
+          <label for="form-coloring-gradient-spot-${id}-color">
+            Color
+          </label>
+          <input
+            id="form-coloring-gradient-spot-${id}-color"
+            type="color"
+            value="${color}"
+          />
+        </div>
+        <div class="formField">
+          <label for="form-coloring-gradient-spot-${id}-intensity">
+            Intensity
+          </label>
+          <input
+            id="form-coloring-gradient-spot-${id}-intensity"
+            type="range"
+            min="0"
+            max="3"
+            step="0.001"
+            value="${intensity}"
+          />
+        </div>
+        <button
+          class="form-coloring-gradient-remove-spot"
+          data-spot-index="${id}"
+        >
+          Delete spot
+        </button>
+      </div>
+    `
+
+    const renderAddSpotButton = () => `
+      <button
+        id="form-coloring-add-spot"
+      >
+        Add new spot
       </button>
     `
 
@@ -511,6 +579,114 @@
       })
     }
 
+    const setupFormSpots = () => {
+      document.getElementById('spots').innerHTML = [
+        state.coloringSpots.spots
+          .map(({x, y, color, intensity}, index) => renderSpot({
+            id: index,
+            x,
+            y,
+            color,
+            intensity
+          }))
+          .join(''),
+        renderAddSpotButton()
+      ].join('')
+
+      // TODO: Remove spot
+      // class="form-coloring-gradient-remove-spot" data-spot-index="${id}"
+      // document
+      //   .querySelectorAll('.form-coloring-gradient-remove-stop')
+      //   .forEach(button => {
+      //     button.addEventListener('click', ({target}) => {
+      //       const index = Number(target.dataset.stopIndex)
+      //       const stops = state.coloringGradient.stops
+      //       const newStops = [
+      //         ...stops.slice(0, index),
+      //         ...stops.slice(index + 1)
+      //       ]
+      //       console.log({
+      //         index,
+      //         stops,
+      //         head: stops.slice(0, index),
+      //         tails: stops.slice(index + 1),
+      //         newStops,
+      //       })
+
+      //       state.coloringGradient.stops = newStops
+      //       setupFormGradientStops()
+      //       const data = getColoringConfigFromState(state)
+      //       output.innerHTML = triangleMosaic.rehydrate(data)
+      //     })
+      //   })
+
+      // document
+      //   .querySelectorAll('.form-coloring-gradient-add-stop')
+      //   .forEach(button => {
+      //     button.addEventListener('click', ({target}) => {
+      //       const previousStop = state.coloringGradient.stops[
+      //         target.dataset.previousStopIndex
+      //       ]
+      //       const nextStop = state.coloringGradient.stops[
+      //         target.dataset.nextStopIndex
+      //       ]
+      //       const newStop = [
+      //         (previousStop[0] + nextStop[0]) / 2,
+      //         getRandomColor()
+      //       ]
+      //       const newStops = [
+      //         ...state.coloringGradient.stops.slice(0, target.dataset.nextStopIndex),
+      //         newStop,
+      //         ...state.coloringGradient.stops.slice(target.dataset.nextStopIndex)
+      //       ]
+
+      //       state.coloringGradient.stops = newStops
+      //       setupFormGradientStops()
+      //       const data = getColoringConfigFromState(state)
+      //       output.innerHTML = triangleMosaic.rehydrate(data)
+      //     })
+      //   })
+
+      state.coloringSpots.spots.forEach((stop, spotIndex) => {
+        document
+          .getElementById(`form-coloring-gradient-spot-${spotIndex}-x`)
+          .addEventListener('change', ({
+            target: {value: x}
+          }) => {
+            state.coloringSpots.spots[spotIndex].x = Number(x)
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+          })
+        document
+          .getElementById(`form-coloring-gradient-spot-${spotIndex}-y`)
+          .addEventListener('change', ({
+            target: {value: y}
+          }) => {
+            state.coloringSpots.spots[spotIndex].y = Number(y)
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+          })
+        document
+          .getElementById(`form-coloring-gradient-spot-${spotIndex}-color`)
+          .addEventListener('input', ({
+            target: {value: color}
+          }) => {
+            state.coloringSpots.spots[spotIndex].color = color
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+          })
+        document
+          .getElementById(`form-coloring-gradient-spot-${spotIndex}-intensity`)
+          .addEventListener('input', ({
+            target: {value: intensity}
+          }) => {
+            state.coloringSpots.spots[spotIndex].intensity = Number(intensity)
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+          })
+      })
+    }
+
     const setupFormColoring = () => {
       // Coloring
       document
@@ -527,6 +703,9 @@
           document
             .querySelector('.coloringOptions[data-mode="gradient"]')
             .style.display = (['linearGradient', 'radialGradient'].includes(mode)) ? 'block' : 'none';
+          document
+            .querySelector('.coloringOptions[data-mode="spots"]')
+            .style.display = (['spots'].includes(mode)) ? 'block' : 'none';
         })
 
       // Coloring: Single color
@@ -578,9 +757,6 @@
           output.innerHTML = triangleMosaic.rehydrate(data)
         })
 
-      setupFormGradientStops()
-
-      // TODO: Update spot
       // TODO: Add spot
       // TODO: Remove spot
 
@@ -605,6 +781,8 @@
       setupFormDimensions()
       setupFormVariance()
       setupFormColoring()
+      setupFormGradientStops()
+      setupFormSpots()
     }
 
     setupForm()
