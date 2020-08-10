@@ -248,32 +248,57 @@
     document.getElementById('form-width').value = state.width
     document.getElementById('form-height').value = state.height
 
-    const renderStop = ({id, location, color, isBoundary}) => `
-      <div class="stop">
-        <div class="formField">
-          <label for="form-coloring-gradient-stop-${id}-location">Location</label>
-          <input
-            id="form-coloring-gradient-stop-${id}-location"
-            type="number"
-            value="${location}"
-            min="0"
-            max="1"
-            step="0.01"
-            ${isBoundary ? 'disabled' : ''}
-          />
+    const renderStop = ({id, location, color, isBoundary}) => {
+      const removeStopButton = (
+        isBoundary
+          ? ''
+          : (
+            `
+              <button
+                class="form-coloring-gradient-remove-stop"
+                data-stop-index="${id}"
+              >
+                Delete stop
+              </button>
+            `
+          )
+      )
+      return `
+        <div class="stop">
+          <div class="formField">
+            <label for="form-coloring-gradient-stop-${id}-location">
+              Location
+            </label>
+            <input
+              id="form-coloring-gradient-stop-${id}-location"
+              type="number"
+              value="${location}"
+              min="0"
+              max="1"
+              step="0.01"
+              ${isBoundary ? 'disabled' : ''}
+            />
+          </div>
+          <div class="formField">
+            <label for="form-coloring-gradient-stop-${id}-color">
+              Color
+            </label>
+            <input
+              id="form-coloring-gradient-stop-${id}-color"
+              type="color"
+              value="${color}"
+            />
+          </div>
+          ${removeStopButton}
         </div>
-        <div class="formField">
-          <label for="form-coloring-gradient-stop-${id}-color">Color</label>
-          <input id="form-coloring-gradient-stop-${id}-color" type="color" value="${color}" />
-        </div>
-      </div>
-    `
+      `
+    }
 
-    const renderAddStopButton = afterIndex => `
+    const renderAddStopButton = index => `
       <button
         class="form-coloring-gradient-add-stop"
-        data-previous-stop-index="${afterIndex}"
-        data-next-stop-index="${afterIndex + 1}"
+        data-previous-stop-index="${index}"
+        data-next-stop-index="${index + 1}"
       >
         Add new stop here
       </button>
@@ -390,6 +415,32 @@
           })
           .join('')
       )
+
+      document
+        .querySelectorAll('.form-coloring-gradient-remove-stop')
+        .forEach(button => {
+          button.addEventListener('click', ({target}) => {
+            const index = Number(target.dataset.stopIndex)
+            const stops = state.coloringGradient.stops
+            const newStops = [
+              ...stops.slice(0, index),
+              ...stops.slice(index + 1)
+            ]
+            console.log({
+              index,
+              stops,
+              head: stops.slice(0, index),
+              tails: stops.slice(index + 1),
+              newStops,
+            })
+
+            state.coloringGradient.stops = newStops
+            setupFormGradientStops()
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+          })
+        })
+
       document
         .querySelectorAll('.form-coloring-gradient-add-stop')
         .forEach(button => {
@@ -509,7 +560,6 @@
 
       setupFormGradientStops()
 
-      // TODO: Remove stop
       // TODO: Fix order when changing stop location
 
       // TODO: Update spot
