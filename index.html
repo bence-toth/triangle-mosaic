@@ -131,6 +131,12 @@
   <script type="module">
     import TriangleMosaic from './triangle-mosaic/triangle-mosaic.js';
 
+    const isArraySorted = array => (
+      array.every((element, index, fullArray) =>
+        (index === 0) || (fullArray[index - 1] <= element)
+      )
+    )
+
     const getRandomBetween = (min, max) => min + (Math.random() * (max - min))
 
     const getRandomColor = () => {
@@ -475,9 +481,23 @@
             target: {value: location}
           }) => {
             state.coloringGradient.stops[stopIndex][0] = Number(location)
+            const locations = state.coloringGradient.stops.map(([location]) => location)
+            if (!isArraySorted(locations)) {
+              state.coloringGradient.stops = [
+                ...state.coloringGradient.stops.sort(([location1], [location2]) => {
+                  if (location1 < location2) {
+                    return -1
+                  }
+                  if (location2 > location1) {
+                    return -1
+                  }
+                  return 0
+                })
+              ]
+              setupFormGradientStops()
+            }
             const data = getColoringConfigFromState(state)
             output.innerHTML = triangleMosaic.rehydrate(data)
-            // Should also re-render form segment if ordering is wrong now
           })
         document
           .getElementById(`form-coloring-gradient-stop-${stopIndex}-color`)
@@ -559,8 +579,6 @@
         })
 
       setupFormGradientStops()
-
-      // TODO: Fix order when changing stop location
 
       // TODO: Update spot
       // TODO: Add spot
