@@ -333,9 +333,8 @@
               id="form-coloring-gradient-spot-${id}-x"
               type="number"
               value="${x}"
-              min="0"
-              max="1"
-              step="0.01"
+              min="-1000"
+              max="3000"
             />
           </div>
           <div class="formField">
@@ -346,9 +345,8 @@
               id="form-coloring-gradient-spot-${id}-y"
               type="number"
               value="${y}"
-              min="0"
-              max="1"
-              step="0.01"
+              min="-1000"
+              max="3000"
             />
           </div>
           <div class="formField">
@@ -613,32 +611,23 @@
           })
         })
 
-      // document
-      //   .querySelectorAll('.form-coloring-gradient-add-stop')
-      //   .forEach(button => {
-      //     button.addEventListener('click', ({target}) => {
-      //       const previousStop = state.coloringGradient.stops[
-      //         target.dataset.previousStopIndex
-      //       ]
-      //       const nextStop = state.coloringGradient.stops[
-      //         target.dataset.nextStopIndex
-      //       ]
-      //       const newStop = [
-      //         (previousStop[0] + nextStop[0]) / 2,
-      //         getRandomColor()
-      //       ]
-      //       const newStops = [
-      //         ...state.coloringGradient.stops.slice(0, target.dataset.nextStopIndex),
-      //         newStop,
-      //         ...state.coloringGradient.stops.slice(target.dataset.nextStopIndex)
-      //       ]
-
-      //       state.coloringGradient.stops = newStops
-      //       setupFormSpots()
-      //       const data = getColoringConfigFromState(state)
-      //       output.innerHTML = triangleMosaic.rehydrate(data)
-      //     })
-      //   })
+      document
+        .getElementById('form-coloring-add-spot')
+        .addEventListener('click', ({target}) => {
+          const newSpot = {
+            x: getRandomBetween(0, state.width),
+            y: getRandomBetween(0, state.height),
+            color: getRandomColor(),
+            intensity: getRandomBetween(0.4, 0.6)
+          }
+          state.coloringSpots.spots = [
+            ...state.coloringSpots.spots,
+            newSpot
+          ]
+          setupFormSpots()
+          const data = getColoringConfigFromState(state)
+          output.innerHTML = triangleMosaic.rehydrate(data)
+        })
 
       state.coloringSpots.spots.forEach((stop, spotIndex) => {
         document
@@ -749,8 +738,6 @@
           const data = getColoringConfigFromState(state)
           output.innerHTML = triangleMosaic.rehydrate(data)
         })
-
-      // TODO: Add spot
 
       // TODO: Add styles
 
