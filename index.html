@@ -310,65 +310,74 @@
       </button>
     `
 
-    const renderSpot = ({id, x, y, color, intensity}) => `
-      <div class="spot">
-        <div class="formField">
-          <label for="form-coloring-gradient-spot-${id}-x">
-            Location X
-          </label>
-          <input
-            id="form-coloring-gradient-spot-${id}-x"
-            type="number"
-            value="${x}"
-            min="0"
-            max="1"
-            step="0.01"
-          />
+    const renderSpot = ({id, x, y, color, intensity, isOnly}) => {
+      const removeSpotButton = (
+        !isOnly
+          ? `
+            <button
+              class="form-coloring-gradient-remove-spot"
+              data-spot-index="${id}"
+            >
+              Delete spot
+            </button>
+          `
+          : ''
+      )
+      return `
+        <div class="spot">
+          <div class="formField">
+            <label for="form-coloring-gradient-spot-${id}-x">
+              Location X
+            </label>
+            <input
+              id="form-coloring-gradient-spot-${id}-x"
+              type="number"
+              value="${x}"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </div>
+          <div class="formField">
+            <label for="form-coloring-gradient-spot-${id}-y">
+              Location Y
+            </label>
+            <input
+              id="form-coloring-gradient-spot-${id}-y"
+              type="number"
+              value="${y}"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </div>
+          <div class="formField">
+            <label for="form-coloring-gradient-spot-${id}-color">
+              Color
+            </label>
+            <input
+              id="form-coloring-gradient-spot-${id}-color"
+              type="color"
+              value="${color}"
+            />
+          </div>
+          <div class="formField">
+            <label for="form-coloring-gradient-spot-${id}-intensity">
+              Intensity
+            </label>
+            <input
+              id="form-coloring-gradient-spot-${id}-intensity"
+              type="range"
+              min="0"
+              max="3"
+              step="0.001"
+              value="${intensity}"
+            />
+          </div>
+          ${removeSpotButton}
         </div>
-        <div class="formField">
-          <label for="form-coloring-gradient-spot-${id}-y">
-            Location Y
-          </label>
-          <input
-            id="form-coloring-gradient-spot-${id}-y"
-            type="number"
-            value="${y}"
-            min="0"
-            max="1"
-            step="0.01"
-          />
-        </div>
-        <div class="formField">
-          <label for="form-coloring-gradient-spot-${id}-color">
-            Color
-          </label>
-          <input
-            id="form-coloring-gradient-spot-${id}-color"
-            type="color"
-            value="${color}"
-          />
-        </div>
-        <div class="formField">
-          <label for="form-coloring-gradient-spot-${id}-intensity">
-            Intensity
-          </label>
-          <input
-            id="form-coloring-gradient-spot-${id}-intensity"
-            type="range"
-            min="0"
-            max="3"
-            step="0.001"
-            value="${intensity}"
-          />
-        </div>
-        <button
-          class="form-coloring-gradient-remove-spot"
-          data-spot-index="${id}"
-        >
-          Delete spot
-        </button>
-      </div>
-    `
+      `
+    }
 
     const renderAddSpotButton = () => `
       <button
@@ -500,13 +509,6 @@
               ...stops.slice(0, index),
               ...stops.slice(index + 1)
             ]
-            console.log({
-              index,
-              stops,
-              head: stops.slice(0, index),
-              tails: stops.slice(index + 1),
-              newStops,
-            })
 
             state.coloringGradient.stops = newStops
             setupFormGradientStops()
@@ -587,38 +589,29 @@
             x,
             y,
             color,
-            intensity
+            intensity,
+            isOnly: state.coloringSpots.spots.length === 1
           }))
           .join(''),
         renderAddSpotButton()
       ].join('')
 
-      // TODO: Remove spot
-      // class="form-coloring-gradient-remove-spot" data-spot-index="${id}"
-      // document
-      //   .querySelectorAll('.form-coloring-gradient-remove-stop')
-      //   .forEach(button => {
-      //     button.addEventListener('click', ({target}) => {
-      //       const index = Number(target.dataset.stopIndex)
-      //       const stops = state.coloringGradient.stops
-      //       const newStops = [
-      //         ...stops.slice(0, index),
-      //         ...stops.slice(index + 1)
-      //       ]
-      //       console.log({
-      //         index,
-      //         stops,
-      //         head: stops.slice(0, index),
-      //         tails: stops.slice(index + 1),
-      //         newStops,
-      //       })
-
-      //       state.coloringGradient.stops = newStops
-      //       setupFormGradientStops()
-      //       const data = getColoringConfigFromState(state)
-      //       output.innerHTML = triangleMosaic.rehydrate(data)
-      //     })
-      //   })
+      document
+        .querySelectorAll('.form-coloring-gradient-remove-spot')
+        .forEach(button => {
+          button.addEventListener('click', ({target}) => {
+            const index = Number(target.dataset.spotIndex)
+            const spots = state.coloringSpots.spots
+            const newSpots = [
+              ...spots.slice(0, index),
+              ...spots.slice(index + 1)
+            ]
+            state.coloringSpots.spots = newSpots
+            setupFormSpots()
+            const data = getColoringConfigFromState(state)
+            output.innerHTML = triangleMosaic.rehydrate(data)
+          })
+        })
 
       // document
       //   .querySelectorAll('.form-coloring-gradient-add-stop')
@@ -641,7 +634,7 @@
       //       ]
 
       //       state.coloringGradient.stops = newStops
-      //       setupFormGradientStops()
+      //       setupFormSpots()
       //       const data = getColoringConfigFromState(state)
       //       output.innerHTML = triangleMosaic.rehydrate(data)
       //     })
@@ -758,7 +751,6 @@
         })
 
       // TODO: Add spot
-      // TODO: Remove spot
 
       // TODO: Add styles
 
