@@ -30,8 +30,9 @@
     #root {
       font-size: 0;
       position: relative;
+      --sidebar-width: 420px;
     }
-    #root, input, select {
+    #root, input, select, button {
       font-family: 'Poppins', sans-serif;
     }
     #sidebar {
@@ -39,7 +40,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 360px;
+      width: var(--sidebar-width);
       background-color: hsl(0, 0%, 97.5%);
       padding: 10px;
       box-shadow: 0 20px 10px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
@@ -79,7 +80,7 @@
     }
     input[type="color"] {
       width: 100%;
-      height: 32px;
+      height: 40px;
     }
     .columns {
       display: flex;
@@ -90,11 +91,42 @@
     .columns .formField:last-child {
       margin-left: 7.5px;
     }
+    .spot, .stop {
+      border: 1px solid hsl(0, 0%, 85%);
+      margin: 20px 0;
+      padding: 20px;
+      background-color: hsl(0, 0%, 90%);
+      position: relative;
+    }
+    label.big {
+      font-size: 1.25em;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .form-coloring-gradient-remove-spot,
+    .form-coloring-gradient-remove-stop {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      background-color: hsl(0, 0%, 90%);
+      border: 0;
+      font-size: 1.25rem;
+    }
+    button {
+      padding: 10px;
+      cursor: pointer;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 0.75px;
+    }
     #svgRoot {
       position: absolute;
-      width: calc(100% - 360px);
+      width: calc(100% - var(--sidebar-width));
       top: 0;
-      left: 360px;
+      left: var(--sidebar-width);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -169,7 +201,7 @@
               <option value="single" selected>Single color</option>
               <option value="linearGradient">Linear gradient</option>
               <option value="radialGradient">Radial gradient</option>
-              <option value="spots">Light spots</option>
+              <option value="spots">Color spots</option>
             </select>
           </div>
           <div class="coloringOptions" data-mode="single">
@@ -200,12 +232,10 @@
               </div>
             </div>
             <div>
-              Stops:
               <div id="gradient-stops"></div>
             </div>
           </div>
           <div class="coloringOptions" data-mode="spots" style="display: none;">
-            Spots:
             <div id="spots"></div>
           </div>
         </fieldset>
@@ -341,7 +371,8 @@
     document.getElementById('form-width').value = state.width
     document.getElementById('form-height').value = state.height
 
-    const renderStop = ({id, location, color, isBoundary}) => {
+    const renderStop = ({id, location, color, isFirst, isLast}) => {
+      const isBoundary = isFirst || isLast
       const removeStopButton = (
         isBoundary
           ? ''
@@ -351,13 +382,19 @@
                 class="form-coloring-gradient-remove-stop"
                 data-stop-index="${id}"
               >
-                Delete stop
+                ✕
               </button>
             `
           )
       )
+      const heading = (
+        (isFirst && 'Start')
+          || (isLast && 'End')
+          || `Stop #${id + 1}`
+      )
       return `
         <div class="stop">
+          <label class="big">${heading}</label>
           <div class="formField">
             <label for="form-coloring-gradient-stop-${id}-location">
               Location
@@ -404,37 +441,41 @@
             <button
               class="form-coloring-gradient-remove-spot"
               data-spot-index="${id}"
+              title="Delete spot"
             >
-              Delete spot
+              ✕
             </button>
           `
           : ''
       )
       return `
         <div class="spot">
-          <div class="formField">
-            <label for="form-coloring-gradient-spot-${id}-x">
-              Location X
-            </label>
-            <input
-              id="form-coloring-gradient-spot-${id}-x"
-              type="number"
-              value="${x}"
-              min="-1000"
-              max="3000"
-            />
-          </div>
-          <div class="formField">
-            <label for="form-coloring-gradient-spot-${id}-y">
-              Location Y
-            </label>
-            <input
-              id="form-coloring-gradient-spot-${id}-y"
-              type="number"
-              value="${y}"
-              min="-1000"
-              max="3000"
-            />
+          <label class="big">Spot #${id + 1}</label>
+          <div class="columns">
+            <div class="formField">
+              <label for="form-coloring-gradient-spot-${id}-x">
+                Location X
+              </label>
+              <input
+                id="form-coloring-gradient-spot-${id}-x"
+                type="number"
+                value="${x}"
+                min="-1000"
+                max="3000"
+              />
+            </div>
+            <div class="formField">
+              <label for="form-coloring-gradient-spot-${id}-y">
+                Location Y
+              </label>
+              <input
+                id="form-coloring-gradient-spot-${id}-y"
+                type="number"
+                value="${y}"
+                min="-1000"
+                max="3000"
+              />
+            </div>
           </div>
           <div class="formField">
             <label for="form-coloring-gradient-spot-${id}-color">
@@ -454,7 +495,7 @@
               id="form-coloring-gradient-spot-${id}-intensity"
               type="range"
               min="0"
-              max="3"
+              max="1.5"
               step="0.001"
               value="${intensity}"
             />
@@ -572,7 +613,8 @@
               id: index,
               location,
               color,
-              isBoundary: [0, state.coloringGradient.stops.length - 1].includes(index)
+              isFirst: index === 0,
+              isLast: index === state.coloringGradient.stops.length - 1
             })
             const buttonHtml = (
               (index < state.coloringGradient.stops.length - 1)
@@ -826,8 +868,6 @@
           output.innerHTML = triangleMosaic.rehydrate(data)
         })
 
-      // TODO: Add styles
-
       // TODO: Add "branding", link to docs etc.
 
       // TODO: Display gradient on canvas
@@ -840,7 +880,7 @@
       // TODO: Add randomize options button
       // TODO: Add randomize grid button (no options change)
 
-      // TODO: Move logic to modules, create some separation of concerns
+      // TODO: Improve UX of gradient/spot editor
     }
 
     const setupForm = () => {
