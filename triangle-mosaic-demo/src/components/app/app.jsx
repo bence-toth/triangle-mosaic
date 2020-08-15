@@ -31,6 +31,88 @@ const getRandomColor = () => {
   return colors[randomIndex]
 }
 
+const Stop = ({
+  index,
+  id,
+  location,
+  color,
+  isFirst,
+  isLast,
+  dispatch
+}) => {
+  const isBoundary = isFirst || isLast
+  return (
+    <>
+      <div className="stop">
+        <label className="big">
+          {
+            (isFirst && 'Start')
+              || (isLast && 'End')
+              || `Stop #${index + 1}`
+          }
+        </label>
+        <div className="formField">
+          <label htmlFor="form-coloring-gradient-stop-${index}-location">
+            Location
+          </label>
+          <input
+            value={location}
+            onChange={({target: {value}}) => dispatch({
+              type: actions.updateStopLocation,
+              location: Number(value),
+              id
+            })}
+            id="form-coloring-gradient-stop-${index}-location"
+            type="number"
+            min="0"
+            max="1"
+            step="0.01"
+            disabled={isBoundary}
+          />
+        </div>
+        <div className="formField">
+          <label htmlFor="form-coloring-gradient-stop-${index}-color">
+            Color
+          </label>
+          <input
+            value={color}
+            onChange={({target: {value}}) => dispatch({
+              type: actions.updateStopColor,
+              location: value,
+              id
+            })}
+            id="form-coloring-gradient-stop-${index}-color"
+            type="color"
+          />
+        </div>
+        {!isBoundary && (
+          <button
+            onClick={() => dispatch({
+              type: actions.removeStop,
+              id
+            })}
+            className="form-coloring-gradient-remove-stop"
+            data-stop-index="${index}"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+      {!isLast && (
+        <button
+          onClick={() => dispatch({
+            type: actions.addStop,
+            id
+          })}
+          className="form-coloring-gradient-add-stop"
+        >
+          Add new stop here
+        </button>
+      )}
+    </>
+  )
+}
+
 const Spot = ({
   index,
   x,
@@ -164,11 +246,31 @@ const initialState = {
       y: 1000
     },
     stops: [
-      [0, '#9c27b0'],
-      [0.25, '#03a9f4'],
-      [0.5, '#8bc34a'],
-      [0.75, '#ffc107'],
-      [1, '#f44336']
+      {
+        id: 0,
+        location: 0,
+        color: '#9c27b0'
+      },
+      {
+        id: 1,
+        location: 0.25,
+        color: '#03a9f4'
+      },
+      {
+        id: 2,
+        location: 0.5,
+        color: '#8bc34a'
+      },
+      {
+        id: 3,
+        location: 0.75,
+        color: '#ffc107'
+      },
+      {
+        id: 4,
+        location: 1,
+        color: '#f44336'
+      }
     ]
   },
   coloringSpots: {
@@ -212,10 +314,15 @@ const actions = {
   updateSpotY: 'updateSpotY',
   updateSpotColor: 'updateSpotColor',
   updateSpotIntensity: 'updateSpotIntensity',
-  deleteSpot: 'deleteSpot'
+  deleteSpot: 'deleteSpot',
+  updateStopLocation: 'updateStopLocation',
+  updateStopColor: 'updateStopColor',
+  addStop: 'addStop',
+  deleteStop: 'deleteStop',
 }
 
 const reducer = (state, action) => {
+  console.log({state, action})
   switch (action.type) {
     case actions.updateWidth:
       return {
@@ -601,7 +708,20 @@ const App = () => {
                   </div>
                 </div>
                 <div>
-                  <div id='gradient-stops' />
+                  <div id='gradient-stops'>
+                    {state.coloringGradient.stops.map((stop, stopIndex, stops) => (
+                      <Stop
+                        key={stop.id}
+                        id={stop.id}
+                        index={stopIndex}
+                        location={stop.location}
+                        color={stop.color}
+                        isFirst={stopIndex === 0}
+                        isLast={stopIndex === (stops.length - 1)}
+                        dispatch={dispatch}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
