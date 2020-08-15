@@ -9,7 +9,7 @@
 // TODO: Add download SVG option
 // TODO: ESLint
 // TODO: Add tests (Jest, Cypress)
-// TODO: Update favicons, manifest, html
+// TODO: Update favicons, manifest, html title etc.
 // TODO: GitHub pages: https://medium.com/mobile-web-dev/how-to-build-and-deploy-a-react-app-to-github-pages-in-less-than-5-minutes-d6c4ffd30f14
 
 import React, {useState, useReducer, useEffect, useRef} from 'react'
