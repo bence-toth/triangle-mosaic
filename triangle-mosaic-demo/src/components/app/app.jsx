@@ -33,6 +33,85 @@ import './app.css'
 //   }
 // })
 
+const Spot = ({
+  id,
+  x,
+  y,
+  color,
+  intensity,
+  isOnly
+}) => (
+  <div class="spot">
+    <label class="big">Spot #{id + 1}</label>
+    <div class="columns">
+      <div class="formField">
+        <label for={`form-coloring-gradient-spot-${id}-x`}>
+          Location X
+        </label>
+        <input
+          id={`form-coloring-gradient-spot-${id}-x`}
+          type="number"
+          value={x}
+          min="-1000"
+          max="3000"
+        />
+      </div>
+      <div class="formField">
+        <label for={`form-coloring-gradient-spot-${id}-y`}>
+          Location Y
+        </label>
+        <input
+          id={`form-coloring-gradient-spot-${id}-y`}
+          type="number"
+          value={y}
+          min="-1000"
+          max="3000"
+        />
+      </div>
+    </div>
+    <div class="formField">
+      <label for={`form-coloring-gradient-spot-${id}-color`}>
+        Color
+      </label>
+      <input
+        id={`form-coloring-gradient-spot-${id}-color`}
+        type="color"
+        value={color}
+      />
+    </div>
+    <div class="formField">
+      <label for={`form-coloring-gradient-spot-${id}-intensity`}>
+        Intensity
+      </label>
+      <input
+        id={`form-coloring-gradient-spot-${id}-intensity`}
+        type="range"
+        min="0"
+        max="1.5"
+        step="0.001"
+        value={intensity}
+      />
+    </div>
+    {!isOnly && (
+      <button
+        class="form-coloring-gradient-remove-spot"
+        data-spot-index={id}
+        title="Delete spot"
+      >
+        ✕
+      </button>
+    )}
+  </div>
+)
+
+const AddSpotButton = () => (
+  <button
+    id="form-coloring-add-spot"
+  >
+    Add new spot
+  </button>
+)
+
 const initialState = {
   width: 1000,
   height: 1000,
@@ -390,7 +469,20 @@ const App = () => {
             )}
             {(state.coloringMode === 'spots') && (
               <div className='coloringOptions'>
-                <div id='spots' />
+                <div id='spots'>
+                  {state.coloringSpots.spots.map((spot, spotIndex, spots) => (
+                    <Spot
+                      key={spotIndex}
+                      id={spotIndex}
+                      x={spot.x}
+                      y={spot.y}
+                      color={spot.color}
+                      intensity={spot.intensity}
+                      isOnly={spots.length === 1}
+                    />
+                  ))}
+                  <AddSpotButton />
+                </div>
               </div>
             )}
           </fieldset>
