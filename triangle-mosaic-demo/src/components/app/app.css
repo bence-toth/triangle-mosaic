@@ -69,6 +69,10 @@ input[type="color"] {
   display: flex;
 }
 
+.columns .formField {
+  width: calc(50% - 7.5px);
+}
+
 .columns .formField:first-child {
   margin-right: 7.5px;
 }
