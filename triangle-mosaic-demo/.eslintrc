@@ -1,0 +1,73 @@
+{
+  "extends": [
+    "@bence.a.toth/eslint-config"
+  ],
+  "ignorePatterns": [
+    "coverage/",
+    "build/",
+    "node_modules/"
+  ],
+  "overrides": [
+    {
+      // Don't expect entry point to get imported.
+      "files": [
+        "src/index.js"
+      ],
+      "rules": {
+        "import/no-unused-modules": 0,
+        "react/jsx-filename-extension": 0
+      }
+    },
+    {
+      // Disabled some rules for the service worker
+      "files": [
+        "serviceWorker.js"
+      ],
+      "rules": {
+        "no-param-reassign": 0,
+        "fp/no-mutation": 0,
+        "no-console": 0,
+        "import/no-unused-modules": 0
+      }
+    },
+    {
+      // Don't expect config files to get imported.
+      "files": [
+        "stylelint.config.js"
+      ],
+      "rules": {
+        "import/no-unused-modules": 0
+      }
+    },
+    {
+      // Don't expect test files to get imported.
+      // Allow the usage of JSX in test files.
+      "files": [
+        "*.test.js",
+        "setupTests.js"
+      ],
+      "rules": {
+        "import/no-unused-modules": 0,
+        "import/no-unassigned-import": 0,
+        "react/jsx-filename-extension": 0
+      }
+    },
+    {
+      // The cypress folder is somewhat special
+      "files": [
+        "cypress/**/*"
+      ],
+      "rules": {
+        "import/no-unassigned-import": 0,
+        "import/no-unused-modules": 0,
+        "jest/expect-expect": 0,
+        // "no-undef": 0,
+        "spaced-comment": [0, "always", {
+          "markers": [ // Allow triple-slash notation
+            "/"
+          ]
+        }]
+      }
+    }
+  ]
+}

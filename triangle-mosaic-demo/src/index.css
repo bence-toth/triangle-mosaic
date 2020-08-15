@@ -1,0 +1,65 @@
+/* Set margin, padding to 0, and box sizing to `border-box` for all elements */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+/* Default height for the <html> and <body> elements and the application root */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Body defaults */
+body {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  scroll-behavior: smooth;
+  line-height: 1;
+  box-sizing: border-box;
+
+  /*
+    Font-smoothing is a non-standard feature. Read more:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth
+  */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make images fit in their parent elements horizontally */
+img {
+  max-width: 100%;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Set monospace font for <code> elements */
+code {
+  font-family:
+    source-code-pro,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Courier New',
+    monospace;
+}
