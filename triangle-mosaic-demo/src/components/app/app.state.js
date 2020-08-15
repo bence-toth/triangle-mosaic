@@ -9,8 +9,8 @@ const canvasHeight = window.innerHeight
 const initialState = {
   width: canvasWidth,
   height: canvasHeight,
-  xResolution: 16,
-  yResolution: 16,
+  xResolution: Math.round(canvasWidth / 96),
+  yResolution: Math.round(canvasHeight / 96),
   shapeFuzz: 0.65,
   colorFuzz: {
     hue: 0.1,
