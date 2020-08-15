@@ -6,50 +6,49 @@ import React, {useReducer} from 'react'
 
 import './app.css'
 
-// const getFullConfigFromState = ({
-//   width,
-//   height,
-//   xResolution,
-//   yResolution,
-//   shapeFuzz,
-//   colorFuzz,
-//   coloringMode,
-//   coloringSingle,
-//   coloringGradient,
-//   coloringSpots
-// }) => ({
-//   width,
-//   height,
-//   xResolution,
-//   yResolution,
-//   shapeFuzz,
-//   colorFuzz,
-//   coloring: {
-//     mode: coloringMode,
-//     ...((coloringMode === 'single') && coloringSingle),
-//     ...((coloringMode === 'linearGradient') && coloringGradient),
-//     ...((coloringMode === 'radialGradient') && coloringGradient),
-//     ...((coloringMode === 'spots') && coloringSpots)
-//   }
-// })
+const getRandomBetween = (min, max) => min + (Math.random() * (max - min))
+
+const getRandomColor = () => {
+  const colors = [
+    '#f44336',
+    '#e91e63',
+    '#9c27b0',
+    '#673ab7',
+    '#3f51b5',
+    '#2196f3',
+    '#03a9f4',
+    '#00bcd4',
+    '#009688',
+    '#4caf50',
+    '#8bc34a',
+    '#cddc39',
+    '#ffeb3b',
+    '#ffc107',
+    '#ff9800',
+    '#ff5722'
+  ]
+  const randomIndex = Math.floor(Math.random() * colors.length)
+  return colors[randomIndex]
+}
 
 const Spot = ({
-  id,
+  index,
   x,
   y,
   color,
   intensity,
-  isOnly
+  isOnly,
+  dispatch
 }) => (
   <div class="spot">
-    <label class="big">Spot #{id + 1}</label>
+    <label class="big">Spot #{index + 1}</label>
     <div class="columns">
       <div class="formField">
-        <label for={`form-coloring-gradient-spot-${id}-x`}>
+        <label for={`form-coloring-gradient-spot-${index}-x`}>
           Location X
         </label>
         <input
-          id={`form-coloring-gradient-spot-${id}-x`}
+          id={`form-coloring-gradient-spot-${index}-x`}
           type="number"
           value={x}
           min="-1000"
@@ -57,11 +56,11 @@ const Spot = ({
         />
       </div>
       <div class="formField">
-        <label for={`form-coloring-gradient-spot-${id}-y`}>
+        <label for={`form-coloring-gradient-spot-${index}-y`}>
           Location Y
         </label>
         <input
-          id={`form-coloring-gradient-spot-${id}-y`}
+          id={`form-coloring-gradient-spot-${index}-y`}
           type="number"
           value={y}
           min="-1000"
@@ -70,21 +69,21 @@ const Spot = ({
       </div>
     </div>
     <div class="formField">
-      <label for={`form-coloring-gradient-spot-${id}-color`}>
+      <label for={`form-coloring-gradient-spot-${index}-color`}>
         Color
       </label>
       <input
-        id={`form-coloring-gradient-spot-${id}-color`}
+        id={`form-coloring-gradient-spot-${index}-color`}
         type="color"
         value={color}
       />
     </div>
     <div class="formField">
-      <label for={`form-coloring-gradient-spot-${id}-intensity`}>
+      <label for={`form-coloring-gradient-spot-${index}-intensity`}>
         Intensity
       </label>
       <input
-        id={`form-coloring-gradient-spot-${id}-intensity`}
+        id={`form-coloring-gradient-spot-${index}-intensity`}
         type="range"
         min="0"
         max="1.5"
@@ -94,8 +93,12 @@ const Spot = ({
     </div>
     {!isOnly && (
       <button
+        onClick={() => dispatch({
+          type: actions.deleteSpot,
+          index
+        })}
         class="form-coloring-gradient-remove-spot"
-        data-spot-index={id}
+        data-spot-index={index}
         title="Delete spot"
       >
         ✕
@@ -104,9 +107,12 @@ const Spot = ({
   </div>
 )
 
-const AddSpotButton = () => (
+const AddSpotButton = ({dispatch}) => (
   <button
     id="form-coloring-add-spot"
+    onClick={() => dispatch({
+      type: actions.addSpot
+    })}
   >
     Add new spot
   </button>
@@ -179,11 +185,16 @@ const actions = {
   updateLightnessFuzz: 'updateLightnessFuzz',
   updateAlphaFuzz: 'updateAlphaFuzz',
   updateColoringMode: 'updateColoringMode',
-  updateSingleColor: 'updateSingleColor'
+  updateSingleColor: 'updateSingleColor',
+  addSpot: 'addSpot',
+  updateSpotX: 'updateSpotX',
+  updateSpotY: 'updateSpotY',
+  updateSpotColor: 'updateSpotColor',
+  updateSpotIntensity: 'updateSpotIntensity',
+  deleteSpot: 'deleteSpot'
 }
 
 const reducer = (state, action) => {
-  console.log(action, state)
   switch (action.type) {
     case actions.updateWidth:
       return {
@@ -253,6 +264,61 @@ const reducer = (state, action) => {
         coloringSingle: {
           ...state.coloringSingle,
           color: action.color
+        }
+      }
+    case actions.addSpot:
+      return {
+        ...state,
+        coloringSpots: {
+          ...state.coloringSpots,
+          spots: [
+            ...state.coloringSpots.spots, {
+              x: Math.round(getRandomBetween(0, state.width)),
+              y: Math.round(getRandomBetween(0, state.height)),
+              color: getRandomColor(),
+              intensity: getRandomBetween(0.4, 0.6)
+            }
+          ]
+        }
+      }
+    // case actions.updateSpotX:
+    //   return {
+    //     ...state,
+    //     coloringSpots: {
+    //       spots:
+    //     }
+    //   }
+    // case actions.updateSpotY:
+    //   return {
+    //     ...state,
+    //     coloringSpots: {
+    //       spots:
+    //     }
+    //   }
+    // case actions.updateSpotColor:
+    //   return {
+    //     ...state,
+    //     coloringSpots: {
+    //       spots:
+    //     }
+    //   }
+    // case actions.updateSpotIntensity:
+    //   return {
+    //     ...state,
+    //     coloringSpots: {
+    //       spots:
+    //     }
+    //   }
+    case actions.deleteSpot:
+      console.log(state, action)
+      return {
+        ...state,
+        coloringSpots: {
+          ...state.coloringSpots,
+          spots: [
+            ...state.coloringSpots.spots.slice(0, action.index),
+            ...state.coloringSpots.spots.slice(action.index + 1)
+          ]
         }
       }
     default:
@@ -473,15 +539,18 @@ const App = () => {
                   {state.coloringSpots.spots.map((spot, spotIndex, spots) => (
                     <Spot
                       key={spotIndex}
-                      id={spotIndex}
+                      index={spotIndex}
                       x={spot.x}
                       y={spot.y}
                       color={spot.color}
                       intensity={spot.intensity}
                       isOnly={spots.length === 1}
+                      dispatch={dispatch}
                     />
                   ))}
-                  <AddSpotButton />
+                  <AddSpotButton
+                    dispatch={dispatch}
+                  />
                 </div>
               </div>
             )}
