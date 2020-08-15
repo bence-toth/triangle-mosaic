@@ -24,4 +24,36 @@ const getRandomColor = () => {
   return randomColors[randomIndex]
 }
 
-export {getRandomBetween, getRandomColor}
+const getConfigFromState = ({
+  width,
+  height,
+  xResolution,
+  yResolution,
+  shapeFuzz,
+  colorFuzz,
+  coloringMode,
+  coloringSingle,
+  coloringGradient,
+  coloringSpots,
+  includeResolution = false
+}) => ({
+  width,
+  height,
+  ...(includeResolution && {
+    xResolution,
+    yResolution
+  }),
+  shapeFuzz,
+  colorFuzz,
+  coloring: {
+    mode: coloringMode,
+    ...((coloringMode === 'single') && coloringSingle),
+    ...((['linearGradient', 'radialGradient'].includes(coloringMode)) && ({
+      ...coloringGradient,
+      stops: coloringGradient.stops.map(({location, color}) => [location, color])
+    })),
+    ...((coloringMode === 'spots') && coloringSpots)
+  }
+})
+
+export {getRandomBetween, getRandomColor, getConfigFromState}

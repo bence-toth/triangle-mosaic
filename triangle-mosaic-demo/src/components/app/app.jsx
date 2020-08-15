@@ -2,9 +2,22 @@
 /* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
 
-import React, {useReducer} from 'react'
+// TODO: Add "branding", link to docs etc.
+// TODO: Add linear gradient presets
+// TODO: Add radial gradient presets
+// TODO: Add spot presets
+// TODO: Add download SVG option
+// TODO: ESLint
+// TODO: Add tests (Jest, Cypress)
+// TODO: Update favicons, manifest, html
+
+import React, {useState, useReducer, useEffect, useRef} from 'react'
 
 import {initialState, actions, reducer} from './app.state'
+import {getConfigFromState} from './app.utility'
+import {useDebounce} from './app.hooks'
+
+import TriangleMosaic from './triangleMosaic';
 
 import './app.css'
 
@@ -246,6 +259,21 @@ const Spot = ({
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
+  const [trianglesHtml, onUpdateTrianglesHtml] = useState('')
+  const {current: triangleMosaic} = useRef(new TriangleMosaic(getConfigFromState(state)))
+  const debouncedState = useDebounce(state, 100)
+  useEffect(() => {
+    const config = getConfigFromState(debouncedState)
+    onUpdateTrianglesHtml(triangleMosaic.rehydrate(config))
+  }, [debouncedState])
+  useEffect(() => {
+    const config = getConfigFromState({
+      ...debouncedState,
+      includeResolution: true
+    })
+    onUpdateTrianglesHtml(triangleMosaic.rehydrate(config))
+  }, [debouncedState.xResolution, debouncedState.yResolution])
+
   return (
     <>
       <aside id='sidebar'>
@@ -340,7 +368,11 @@ const App = () => {
                   type: actions.updateHueFuzz,
                   hueFuzz: Number(value)
                 })}
-                value={state.colorFuzz.hueFuzz}
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateHueFuzz,
+                  hueFuzz: Number(value)
+                })}
+                value={state.colorFuzz.hue}
                 id='form-hue-fuzz'
                 type='range'
                 min='0'
@@ -490,7 +522,7 @@ const App = () => {
         </div>
       </aside>
       <div id='svgRoot'>
-        <div id='output' />
+        <div id='output' dangerouslySetInnerHTML={{__html: trianglesHtml}} />
       </div>
     </>
   )
