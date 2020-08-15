@@ -18,7 +18,7 @@ const Coloring = ({
   dispatch
 }) => (
   <fieldset>
-    <legend>Coloring</legend>
+    <legend>Coloring details</legend>
     <div className='formField'>
       <label htmlFor='form-coloring-mode-select'>Coloring mode</label>
       <select

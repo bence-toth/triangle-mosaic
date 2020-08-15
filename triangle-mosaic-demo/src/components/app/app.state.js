@@ -107,7 +107,8 @@ const actions = {
   updateGradientEndY: 'updateGradientEndY',
   updateStopLocation: 'updateStopLocation',
   updateStopColor: 'updateStopColor',
-  addStop: 'addStop'
+  addStop: 'addStop',
+  loadColorPreset: 'loadColorPreset'
 }
 
 const reducer = (state, action) => {
@@ -382,6 +383,11 @@ const reducer = (state, action) => {
           ...state.coloringGradient,
           stops: state.coloringGradient.stops.filter(({id}) => (id !== action.id))
         }
+      }
+    case actions.loadColorPreset:
+      return {
+        ...state,
+        ...action.colorConfiguration
       }
     default:
       return state

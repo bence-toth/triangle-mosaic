@@ -2,20 +2,20 @@
 /* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
 
-// TODO: Add "branding", link to docs etc.
-// TODO: Add linear gradient presets
-// TODO: Add radial gradient presets
-// TODO: Add spot presets
 // TODO: Add download SVG option
-// TODO: ESLint
-// TODO: Add tests (Jest, Cypress)
+// TODO: Make it a bit more responsive (Tablet, MDPI Laptop)
 // TODO: Update favicons, manifest, html title etc.
+
+// TODO: ESLint
+// TODO: Add "branding", link to docs etc.
 // TODO: GitHub pages: https://medium.com/mobile-web-dev/how-to-build-and-deploy-a-react-app-to-github-pages-in-less-than-5-minutes-d6c4ffd30f14
+// TODO: Add tests (Jest, Cypress)
 
 import React, {useState, useReducer, useEffect, useRef} from 'react'
 
 import Dimensions from '../dimensions/dimensions'
 import Variance from '../variance/variance'
+import ColoringPresets from '../coloringPresets/coloringPresets'
 import Coloring from '../coloring/coloring'
 
 import {initialState, actions, reducer} from './app.state'
@@ -58,6 +58,11 @@ const App = () => {
           <Variance
             shapeFuzz={state.shapeFuzz}
             colorFuzz={state.colorFuzz}
+            dispatch={dispatch}
+          />
+          <ColoringPresets
+            width={state.width}
+            height={state.height}
             dispatch={dispatch}
           />
           <Coloring

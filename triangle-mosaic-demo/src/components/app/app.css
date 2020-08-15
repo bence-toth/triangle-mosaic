@@ -39,7 +39,7 @@ h1 {
 
 fieldset {
   padding: 15px 20px;
-  margin-bottom: 20px;
+  margin-bottom: 35px;
   border-color: hsl(0, 0%, 95%);
 }
 
@@ -137,4 +137,17 @@ button {
 #output {
   box-shadow: 0 0 30px hsl(0, 0%, 75%);
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AgJFBoEoBbCEQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAArSURBVDjLY0xLS/vPgAcYGxvjk2ZgYqAQjBowGAxgIRTPZ8+eHQ3E4W8AAEktBewUY/QYAAAAAElFTkSuQmCC');
+}
+
+.presets {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.preset {
+  border: 0;
+  height: 60px;
+  width: calc(33.3333% - 20px);
+  margin: 10px;
 }
