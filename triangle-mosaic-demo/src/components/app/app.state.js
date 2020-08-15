@@ -3,9 +3,12 @@
 
 import {getRandomBetween, getRandomColor} from './app.utility'
 
+const canvasWidth = window.innerWidth - 420
+const canvasHeight = window.innerHeight
+
 const initialState = {
-  width: 1000,
-  height: 1000,
+  width: canvasWidth,
+  height: canvasHeight,
   xResolution: 16,
   yResolution: 16,
   shapeFuzz: 0.65,
@@ -25,8 +28,8 @@ const initialState = {
       y: 0
     },
     end: {
-      x: 1000,
-      y: 1000
+      x: canvasWidth,
+      y: canvasHeight
     },
     stops: [
       {
@@ -65,14 +68,14 @@ const initialState = {
         intensity: 0.65
       },
       {
-        x: 1280,
+        x: canvasWidth,
         y: 0,
         color: '#f44336',
         intensity: 0.6
       },
       {
-        x: 640,
-        y: 720,
+        x: canvasWidth / 2,
+        y: canvasHeight,
         color: '#2196f3',
         intensity: 0.6
       }
