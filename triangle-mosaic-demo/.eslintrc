@@ -39,35 +39,5 @@
         "import/no-unused-modules": 0
       }
     },
-    {
-      // Don't expect test files to get imported.
-      // Allow the usage of JSX in test files.
-      "files": [
-        "*.test.js",
-        "setupTests.js"
-      ],
-      "rules": {
-        "import/no-unused-modules": 0,
-        "import/no-unassigned-import": 0,
-        "react/jsx-filename-extension": 0
-      }
-    },
-    {
-      // The cypress folder is somewhat special
-      "files": [
-        "cypress/**/*"
-      ],
-      "rules": {
-        "import/no-unassigned-import": 0,
-        "import/no-unused-modules": 0,
-        "jest/expect-expect": 0,
-        // "no-undef": 0,
-        "spaced-comment": [0, "always", {
-          "markers": [ // Allow triple-slash notation
-            "/"
-          ]
-        }]
-      }
-    }
   ]
 }
