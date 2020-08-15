@@ -101,7 +101,6 @@ const actions = {
 }
 
 const reducer = (state, action) => {
-  console.log({action, state})
   switch (action.type) {
     case actions.updateWidth:
       return {
@@ -186,7 +185,7 @@ const App = () => {
                   value={state.width}
                   onChange={({target: {value}}) => dispatch({
                     type: actions.updateWidth,
-                    width: value
+                    width: Number(value)
                   })}
                   id='form-width'
                   type='number'
@@ -199,7 +198,7 @@ const App = () => {
                   value={state.height}
                   onChange={({target: {value}}) => dispatch({
                     type: actions.updateHeight,
-                    height: value
+                    height: Number(value)
                   })}
                   id='form-height'
                   type='number'
@@ -214,7 +213,7 @@ const App = () => {
                   value={state.xResolution}
                   onChange={({target: {value}}) => dispatch({
                     type: actions.updateXResolution,
-                    xResolution: value
+                    xResolution: Number(value)
                   })}
                   id='form-x-resolution'
                   type='number'
@@ -228,7 +227,7 @@ const App = () => {
                   value={state.yResolution}
                   onChange={({target: {value}}) => dispatch({
                     type: actions.updateYResolution,
-                    yResolution: value
+                    yResolution: Number(value)
                   })}
                   id='form-y-resolution'
                   type='number'
@@ -242,23 +241,78 @@ const App = () => {
             <legend>Variance</legend>
             <div className='formField'>
               <label htmlFor='form-shape-fuzz'>Shape variance</label>
-              <input id='form-shape-fuzz' type='range' min='0' max='3' value='0.65' step='0.01' />
+              <input
+                onInput={({target: {value}}) => dispatch({
+                  type: actions.updateShapeFuzz,
+                  shapeFuzz: Number(value)
+                })}
+                value={state.shapeFuzz}
+                id='form-shape-fuzz'
+                type='range'
+                min='0'
+                max='3'
+                step='0.01'
+              />
             </div>
             <div className='formField'>
               <label htmlFor='form-hue-fuzz'>Hue variance</label>
-              <input id='form-hue-fuzz' type='range' min='0' max='1' value='0.1' step='0.01' />
+              <input
+                onInput={({target: {value}}) => dispatch({
+                  type: actions.updateHueFuzz,
+                  hueFuzz: Number(value)
+                })}
+                value={state.colorFuzz.hueFuzz}
+                id='form-hue-fuzz'
+                type='range'
+                min='0'
+                max='1'
+                step='0.01'
+              />
             </div>
             <div className='formField'>
               <label htmlFor='form-saturation-fuzz'>Saturation variance</label>
-              <input id='form-saturation-fuzz' type='range' min='0' max='1' value='0.1' step='0.01' />
+              <input
+                onInput={({target: {value}}) => dispatch({
+                  type: actions.updateSaturationFuzz,
+                  saturationFuzz: Number(value)
+                })}
+                value={state.colorFuzz.saturation}
+                id='form-saturation-fuzz'
+                type='range'
+                min='0'
+                max='1'
+                step='0.01'
+              />
             </div>
             <div className='formField'>
               <label htmlFor='form-lightness-fuzz'>Lightness variance</label>
-              <input id='form-lightness-fuzz' type='range' min='0' max='1' value='0.1' step='0.01' />
+              <input
+                onInput={({target: {value}}) => dispatch({
+                  type: actions.updateLightnessFuzz,
+                  lightnessFuzz: Number(value)
+                })}
+                value={state.colorFuzz.lightness}
+                id='form-lightness-fuzz'
+                type='range'
+                min='0'
+                max='1'
+                step='0.01'
+              />
             </div>
             <div className='formField'>
               <label htmlFor='form-alpha-fuzz'>Alpha variance</label>
-              <input id='form-alpha-fuzz' type='range' min='0' max='1' value='0' step='0.01' />
+              <input
+                onInput={({target: {value}}) => dispatch({
+                  type: actions.updateAlphaFuzz,
+                  alphaFuzz: Number(value)
+                })}
+                value={state.colorFuzz.alpha}
+                id='form-alpha-fuzz'
+                type='range'
+                min='0'
+                max='1'
+                step='0.01'
+              />
             </div>
           </fieldset>
           <fieldset>
