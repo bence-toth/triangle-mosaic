@@ -38,7 +38,9 @@ const Stop = ({
   color,
   isFirst,
   isLast,
-  dispatch
+  dispatch,
+  start,
+  end
 }) => {
   const isBoundary = isFirst || isLast
   return (
@@ -51,6 +53,62 @@ const Stop = ({
               || `Stop #${index + 1}`
           }
         </label>
+        {isFirst && (
+          <div className='columns'>
+            <div className='formField'>
+              <label htmlFor='form-coloring-gradient-start-x'>Position X</label>
+              <input
+                value={start.x}
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateGradientStartX,
+                  x: Number(value)
+                })}
+                id='form-coloring-gradient-start-x'
+                type='number'
+              />
+            </div>
+            <div className='formField'>
+              <label htmlFor='form-coloring-gradient-start-y'>Position Y</label>
+              <input
+                value={start.y}
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateGradientStartY,
+                  y: Number(value)
+                })}
+                id='form-coloring-gradient-start-y'
+                type='number'
+              />
+            </div>
+          </div>
+        )}
+        {isLast && (
+          <div className='columns'>
+            <div className='formField'>
+              <label htmlFor='form-coloring-gradient-end-x'>Position X</label>
+              <input
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateGradientEndX,
+                  x: Number(value)
+                })}
+                value={end.x}
+                id='form-coloring-gradient-end-x'
+                type='number'
+              />
+            </div>
+            <div className='formField'>
+              <label htmlFor='form-coloring-gradient-end-y'>Position Y</label>
+              <input
+                value={end.y}
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateGradientEndY,
+                  y: Number(value)
+                })}
+                id='form-coloring-gradient-end-y'
+                type='number'
+              />
+            </div>
+          </div>
+        )}
         <div className="formField">
           <label htmlFor="form-coloring-gradient-stop-${index}-location">
             Location
@@ -304,10 +362,13 @@ const actions = {
   updateSpotColor: 'updateSpotColor',
   updateSpotIntensity: 'updateSpotIntensity',
   deleteSpot: 'deleteSpot',
+  updateGradientStartX: 'updateGradientStartX',
+  updateGradientStartY: 'updateGradientStartY',
+  updateGradientEndX: 'updateGradientEndX',
+  updateGradientEndY: 'updateGradientEndY',
   updateStopLocation: 'updateStopLocation',
   updateStopColor: 'updateStopColor',
-  addStop: 'addStop',
-  deleteStop: 'deleteStop',
+  addStop: 'addStop'
 }
 
 const reducer = (state, action) => {
@@ -486,6 +547,50 @@ const reducer = (state, action) => {
             newStop,
             ...state.coloringGradient.stops.slice(action.index + 1)
           ]
+        }
+      }
+    case actions.updateGradientStartX:
+      return {
+        ...state,
+        coloringGradient: {
+          ...state.coloringGradient,
+          start: {
+            ...state.coloringGradient.start,
+            x: action.x
+          }
+        }
+      }
+    case actions.updateGradientStartY:
+      return {
+        ...state,
+        coloringGradient: {
+          ...state.coloringGradient,
+          start: {
+            ...state.coloringGradient.start,
+            y: action.y
+          }
+        }
+      }
+    case actions.updateGradientEndX:
+      return {
+        ...state,
+        coloringGradient: {
+          ...state.coloringGradient,
+          end: {
+            ...state.coloringGradient.end,
+            x: action.x
+          }
+        }
+      }
+    case actions.updateGradientEndY:
+      return {
+        ...state,
+        coloringGradient: {
+          ...state.coloringGradient,
+          end: {
+            ...state.coloringGradient.end,
+            y: action.y
+          }
         }
       }
     case actions.updateStopLocation:
@@ -742,41 +847,21 @@ const App = () => {
             )}
             {(['linearGradient', 'radialGradient'].includes(state.coloringMode)) && (
               <div className='coloringOptions'>
-                <div className='columns'>
-                  <div className='formField'>
-                    <label htmlFor='form-coloring-gradient-start-x'>Start X</label>
-                    <input id='form-coloring-gradient-start-x' type='number' value='0' />
-                  </div>
-                  <div className='formField'>
-                    <label htmlFor='form-coloring-gradient-start-y'>Start Y</label>
-                    <input id='form-coloring-gradient-start-y' type='number' value='0' />
-                  </div>
-                </div>
-                <div className='columns'>
-                  <div className='formField'>
-                    <label htmlFor='form-coloring-gradient-end-x'>End X</label>
-                    <input id='form-coloring-gradient-end-x' type='number' value='0' />
-                  </div>
-                  <div className='formField'>
-                    <label htmlFor='form-coloring-gradient-end-y'>End Y</label>
-                    <input id='form-coloring-gradient-end-y' type='number' value='0' />
-                  </div>
-                </div>
-                <div>
-                  <div id='gradient-stops'>
-                    {state.coloringGradient.stops.map((stop, stopIndex, stops) => (
-                      <Stop
-                        key={stop.id}
-                        id={stop.id}
-                        index={stopIndex}
-                        location={stop.location}
-                        color={stop.color}
-                        isFirst={stopIndex === 0}
-                        isLast={stopIndex === (stops.length - 1)}
-                        dispatch={dispatch}
-                      />
-                    ))}
-                  </div>
+                <div id='gradient-stops'>
+                  {state.coloringGradient.stops.map((stop, stopIndex, stops) => (
+                    <Stop
+                      key={stop.id}
+                      id={stop.id}
+                      index={stopIndex}
+                      location={stop.location}
+                      color={stop.color}
+                      isFirst={stopIndex === 0}
+                      isLast={stopIndex === (stops.length - 1)}
+                      dispatch={dispatch}
+                      start={state.coloringGradient.start}
+                      end={state.coloringGradient.end}
+                    />
+                  ))}
                 </div>
               </div>
             )}
