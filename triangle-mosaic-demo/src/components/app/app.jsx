@@ -40,55 +40,75 @@ const Spot = ({
   isOnly,
   dispatch
 }) => (
-  <div class="spot">
-    <label class="big">Spot #{index + 1}</label>
-    <div class="columns">
-      <div class="formField">
-        <label for={`form-coloring-gradient-spot-${index}-x`}>
+  <div className="spot">
+    <label className="big">Spot #{index + 1}</label>
+    <div className="columns">
+      <div className="formField">
+        <label htmlFor={`form-coloring-gradient-spot-${index}-x`}>
           Location X
         </label>
         <input
+          value={x}
+          onChange={({target: {value}}) => dispatch({
+            type: actions.updateSpotX,
+            x: Number(value),
+            index
+          })}
           id={`form-coloring-gradient-spot-${index}-x`}
           type="number"
-          value={x}
           min="-1000"
           max="3000"
         />
       </div>
-      <div class="formField">
-        <label for={`form-coloring-gradient-spot-${index}-y`}>
+      <div className="formField">
+        <label htmlFor={`form-coloring-gradient-spot-${index}-y`}>
           Location Y
         </label>
         <input
+          value={y}
+          onChange={({target: {value}}) => dispatch({
+            type: actions.updateSpotY,
+            y: Number(value),
+            index
+          })}
           id={`form-coloring-gradient-spot-${index}-y`}
           type="number"
-          value={y}
           min="-1000"
           max="3000"
         />
       </div>
     </div>
-    <div class="formField">
-      <label for={`form-coloring-gradient-spot-${index}-color`}>
+    <div className="formField">
+      <label htmlFor={`form-coloring-gradient-spot-${index}-color`}>
         Color
       </label>
       <input
+        value={color}
+        onChange={({target: {value}}) => dispatch({
+          type: actions.updateSpotColor,
+          color: value,
+          index
+        })}
         id={`form-coloring-gradient-spot-${index}-color`}
         type="color"
-        value={color}
       />
     </div>
-    <div class="formField">
-      <label for={`form-coloring-gradient-spot-${index}-intensity`}>
+    <div className="formField">
+      <label htmlFor={`form-coloring-gradient-spot-${index}-intensity`}>
         Intensity
       </label>
       <input
+        value={intensity}
+        onChange={({target: {value}}) => dispatch({
+          type: actions.updateSpotIntensity,
+          intensity: Number(value),
+          index
+        })}
         id={`form-coloring-gradient-spot-${index}-intensity`}
         type="range"
         min="0"
         max="1.5"
         step="0.001"
-        value={intensity}
       />
     </div>
     {!isOnly && (
@@ -97,7 +117,7 @@ const Spot = ({
           type: actions.deleteSpot,
           index
         })}
-        class="form-coloring-gradient-remove-spot"
+        className="form-coloring-gradient-remove-spot"
         data-spot-index={index}
         title="Delete spot"
       >
@@ -168,7 +188,8 @@ const initialState = {
       {
         x: 640,
         y: 720,
-        color: '#2196f3'
+        color: '#2196f3',
+        intensity: 0.6
       }
     ]
   }
@@ -281,36 +302,71 @@ const reducer = (state, action) => {
           ]
         }
       }
-    // case actions.updateSpotX:
-    //   return {
-    //     ...state,
-    //     coloringSpots: {
-    //       spots:
-    //     }
-    //   }
-    // case actions.updateSpotY:
-    //   return {
-    //     ...state,
-    //     coloringSpots: {
-    //       spots:
-    //     }
-    //   }
-    // case actions.updateSpotColor:
-    //   return {
-    //     ...state,
-    //     coloringSpots: {
-    //       spots:
-    //     }
-    //   }
-    // case actions.updateSpotIntensity:
-    //   return {
-    //     ...state,
-    //     coloringSpots: {
-    //       spots:
-    //     }
-    //   }
+    case actions.updateSpotX:
+      return {
+        ...state,
+        coloringSpots: {
+          ...state.coloringSpots,
+          spots: state.coloringSpots.spots.map((spot, spotIndex) => {
+            if (spotIndex === action.index) {
+              return {
+                ...state.coloringSpots.spots[action.index],
+                x: action.x
+              }
+            }
+            return spot
+          })
+        }
+      }
+    case actions.updateSpotY:
+      return {
+        ...state,
+        coloringSpots: {
+          ...state.coloringSpots,
+          spots: state.coloringSpots.spots.map((spot, spotIndex) => {
+            if (spotIndex === action.index) {
+              return {
+                ...state.coloringSpots.spots[action.index],
+                y: action.y
+              }
+            }
+            return spot
+          })
+        }
+      }
+    case actions.updateSpotColor:
+      return {
+        ...state,
+        coloringSpots: {
+          ...state.coloringSpots,
+          spots: state.coloringSpots.spots.map((spot, spotIndex) => {
+            if (spotIndex === action.index) {
+              return {
+                ...state.coloringSpots.spots[action.index],
+                color: action.color
+              }
+            }
+            return spot
+          })
+        }
+      }
+    case actions.updateSpotIntensity:
+      return {
+        ...state,
+        coloringSpots: {
+          ...state.coloringSpots,
+          spots: state.coloringSpots.spots.map((spot, spotIndex) => {
+            if (spotIndex === action.index) {
+              return {
+                ...state.coloringSpots.spots[action.index],
+                intensity: action.intensity
+              }
+            }
+            return spot
+          })
+        }
+      }
     case actions.deleteSpot:
-      console.log(state, action)
       return {
         ...state,
         coloringSpots: {
@@ -403,6 +459,10 @@ const App = () => {
                   type: actions.updateShapeFuzz,
                   shapeFuzz: Number(value)
                 })}
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateShapeFuzz,
+                  shapeFuzz: Number(value)
+                })}
                 value={state.shapeFuzz}
                 id='form-shape-fuzz'
                 type='range'
@@ -433,6 +493,10 @@ const App = () => {
                   type: actions.updateSaturationFuzz,
                   saturationFuzz: Number(value)
                 })}
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateSaturationFuzz,
+                  saturationFuzz: Number(value)
+                })}
                 value={state.colorFuzz.saturation}
                 id='form-saturation-fuzz'
                 type='range'
@@ -448,6 +512,10 @@ const App = () => {
                   type: actions.updateLightnessFuzz,
                   lightnessFuzz: Number(value)
                 })}
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateLightnessFuzz,
+                  lightnessFuzz: Number(value)
+                })}
                 value={state.colorFuzz.lightness}
                 id='form-lightness-fuzz'
                 type='range'
@@ -460,6 +528,10 @@ const App = () => {
               <label htmlFor='form-alpha-fuzz'>Alpha variance</label>
               <input
                 onInput={({target: {value}}) => dispatch({
+                  type: actions.updateAlphaFuzz,
+                  alphaFuzz: Number(value)
+                })}
+                onChange={({target: {value}}) => dispatch({
                   type: actions.updateAlphaFuzz,
                   alphaFuzz: Number(value)
                 })}
@@ -484,7 +556,7 @@ const App = () => {
                 })}
                 id='form-coloring-mode-select'
               >
-                <option value='single' selected>Single color</option>
+                <option value='single'>Single color</option>
                 <option value='linearGradient'>Linear gradient</option>
                 <option value='radialGradient'>Radial gradient</option>
                 <option value='spots'>Color spots</option>
