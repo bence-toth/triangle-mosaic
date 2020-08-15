@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/no-abusive-eslint-disable */
+/* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
 
 import React, {useReducer} from 'react'
@@ -97,7 +99,8 @@ const actions = {
   updateSaturationFuzz: 'updateSaturationFuzz',
   updateLightnessFuzz: 'updateLightnessFuzz',
   updateAlphaFuzz: 'updateAlphaFuzz',
-  updateColoringMode: 'updateColoringMode'
+  updateColoringMode: 'updateColoringMode',
+  updateSingleColor: 'updateSingleColor'
 }
 
 const reducer = (state, action) => {
@@ -164,6 +167,14 @@ const reducer = (state, action) => {
       return {
         ...state,
         coloringMode: action.coloringMode
+      }
+    case actions.updateSingleColor:
+      return {
+        ...state,
+        coloringSingle: {
+          ...state.coloringSingle,
+          color: action.color
+        }
       }
     default:
       return state
@@ -338,7 +349,15 @@ const App = () => {
               <div className='coloringOptions'>
                 <div className='formField'>
                   <label htmlFor='form-coloring-single-color'>Color</label>
-                  <input id='form-coloring-single-color' type='color' value='#ffc107' />
+                  <input
+                    value={state.coloringSingle.color}
+                    onChange={({target: {value}}) => dispatch({
+                      type: actions.updateSingleColor,
+                      color: value
+                    })}
+                    id='form-coloring-single-color'
+                    type='color'
+                  />
                 </div>
               </div>
             )}
