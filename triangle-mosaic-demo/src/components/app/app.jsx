@@ -1,8 +1,35 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
 
 import React, {useReducer} from 'react'
 
 import './app.css'
+
+// const getFullConfigFromState = ({
+//   width,
+//   height,
+//   xResolution,
+//   yResolution,
+//   shapeFuzz,
+//   colorFuzz,
+//   coloringMode,
+//   coloringSingle,
+//   coloringGradient,
+//   coloringSpots
+// }) => ({
+//   width,
+//   height,
+//   xResolution,
+//   yResolution,
+//   shapeFuzz,
+//   colorFuzz,
+//   coloring: {
+//     mode: coloringMode,
+//     ...((coloringMode === 'single') && coloringSingle),
+//     ...((coloringMode === 'linearGradient') && coloringGradient),
+//     ...((coloringMode === 'radialGradient') && coloringGradient),
+//     ...((coloringMode === 'spots') && coloringSpots)
+//   }
+// })
 
 const initialState = {
   width: 1000,
@@ -60,33 +87,6 @@ const initialState = {
   }
 }
 
-// const getFullConfigFromState = ({
-//   width,
-//   height,
-//   xResolution,
-//   yResolution,
-//   shapeFuzz,
-//   colorFuzz,
-//   coloringMode,
-//   coloringSingle,
-//   coloringGradient,
-//   coloringSpots
-// }) => ({
-//   width,
-//   height,
-//   xResolution,
-//   yResolution,
-//   shapeFuzz,
-//   colorFuzz,
-//   coloring: {
-//     mode: coloringMode,
-//     ...((coloringMode === 'single') && coloringSingle),
-//     ...((coloringMode === 'linearGradient') && coloringGradient),
-//     ...((coloringMode === 'radialGradient') && coloringGradient),
-//     ...((coloringMode === 'spots') && coloringSpots)
-//   }
-// })
-
 const actions = {
   updateWidth: 'updateWidth',
   updateHeight: 'updateHeight',
@@ -101,6 +101,7 @@ const actions = {
 }
 
 const reducer = (state, action) => {
+  console.log(action, state)
   switch (action.type) {
     case actions.updateWidth:
       return {
@@ -319,47 +320,60 @@ const App = () => {
             <legend>Coloring</legend>
             <div className='formField'>
               <label htmlFor='form-coloring-mode-select'>Coloring mode</label>
-              <select id='form-coloring-mode-select'>
+              <select
+                value={state.coloringMode}
+                onChange={({target: {value}}) => dispatch({
+                  type: actions.updateColoringMode,
+                  coloringMode: value
+                })}
+                id='form-coloring-mode-select'
+              >
                 <option value='single' selected>Single color</option>
                 <option value='linearGradient'>Linear gradient</option>
                 <option value='radialGradient'>Radial gradient</option>
                 <option value='spots'>Color spots</option>
               </select>
             </div>
-            <div className='coloringOptions' data-mode='single'>
-              <div className='formField'>
-                <label htmlFor='form-coloring-single-color'>Color</label>
-                <input id='form-coloring-single-color' type='color' value='#ffc107' />
-              </div>
-            </div>
-            <div className='coloringOptions' data-mode='gradient' style={{display: 'none'}}>
-              <div className='columns'>
+            {(state.coloringMode === 'single') && (
+              <div className='coloringOptions'>
                 <div className='formField'>
-                  <label htmlFor='form-coloring-gradient-start-x'>Start X</label>
-                  <input id='form-coloring-gradient-start-x' type='number' value='0' />
-                </div>
-                <div className='formField'>
-                  <label htmlFor='form-coloring-gradient-start-y'>Start Y</label>
-                  <input id='form-coloring-gradient-start-y' type='number' value='0' />
+                  <label htmlFor='form-coloring-single-color'>Color</label>
+                  <input id='form-coloring-single-color' type='color' value='#ffc107' />
                 </div>
               </div>
-              <div className='columns'>
-                <div className='formField'>
-                  <label htmlFor='form-coloring-gradient-end-x'>End X</label>
-                  <input id='form-coloring-gradient-end-x' type='number' value='0' />
+            )}
+            {(['linearGradient', 'radialGradient'].includes(state.coloringMode)) && (
+              <div className='coloringOptions'>
+                <div className='columns'>
+                  <div className='formField'>
+                    <label htmlFor='form-coloring-gradient-start-x'>Start X</label>
+                    <input id='form-coloring-gradient-start-x' type='number' value='0' />
+                  </div>
+                  <div className='formField'>
+                    <label htmlFor='form-coloring-gradient-start-y'>Start Y</label>
+                    <input id='form-coloring-gradient-start-y' type='number' value='0' />
+                  </div>
                 </div>
-                <div className='formField'>
-                  <label htmlFor='form-coloring-gradient-end-y'>End Y</label>
-                  <input id='form-coloring-gradient-end-y' type='number' value='0' />
+                <div className='columns'>
+                  <div className='formField'>
+                    <label htmlFor='form-coloring-gradient-end-x'>End X</label>
+                    <input id='form-coloring-gradient-end-x' type='number' value='0' />
+                  </div>
+                  <div className='formField'>
+                    <label htmlFor='form-coloring-gradient-end-y'>End Y</label>
+                    <input id='form-coloring-gradient-end-y' type='number' value='0' />
+                  </div>
+                </div>
+                <div>
+                  <div id='gradient-stops' />
                 </div>
               </div>
-              <div>
-                <div id='gradient-stops' />
+            )}
+            {(state.coloringMode === 'spots') && (
+              <div className='coloringOptions'>
+                <div id='spots' />
               </div>
-            </div>
-            <div className='coloringOptions' data-mode='spots' style={{display: 'none'}}>
-              <div id='spots' />
-            </div>
+            )}
           </fieldset>
         </div>
       </aside>
