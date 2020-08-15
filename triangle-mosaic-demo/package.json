@@ -7,7 +7,7 @@
     "alex": "^8.2.0",
     "classnames": "^2.2.6",
     "cypress": "^4.12.1",
-    "eslint": "^7.7.0",
+    "eslint": "^6.8.0",
     "majestic": "^1.7.0",
     "npm-check": "^5.9.2",
     "prop-types": "^15.7.2",
