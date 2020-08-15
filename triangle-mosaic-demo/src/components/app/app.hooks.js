@@ -20,7 +20,7 @@ const useDebounce = (value, delay) => {
         clearTimeout(debounceHandler)
       }
     },
-    [value]
+    [value, delay, lastUpdate]
   )
 
   return debouncedValue

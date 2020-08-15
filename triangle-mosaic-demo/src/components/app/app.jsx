@@ -14,6 +14,7 @@
 import React, {useState, useReducer, useEffect, useRef} from 'react'
 
 import Dimensions from '../dimensions/dimensions'
+import Variance from '../variance/variance'
 
 import {initialState, actions, reducer} from './app.state'
 import {getConfigFromState} from './app.utility'
@@ -288,104 +289,11 @@ const App = () => {
             yResolution={state.yResolution}
             dispatch={dispatch}
           />
-          <fieldset>
-            <legend>Variance</legend>
-            <div className='formField'>
-              <label htmlFor='form-shape-fuzz'>Shape variance</label>
-              <input
-                onInput={({target: {value}}) => dispatch({
-                  type: actions.updateShapeFuzz,
-                  shapeFuzz: Number(value)
-                })}
-                onChange={({target: {value}}) => dispatch({
-                  type: actions.updateShapeFuzz,
-                  shapeFuzz: Number(value)
-                })}
-                value={state.shapeFuzz}
-                id='form-shape-fuzz'
-                type='range'
-                min='0'
-                max='3'
-                step='0.01'
-              />
-            </div>
-            <div className='formField'>
-              <label htmlFor='form-hue-fuzz'>Hue variance</label>
-              <input
-                onInput={({target: {value}}) => dispatch({
-                  type: actions.updateHueFuzz,
-                  hueFuzz: Number(value)
-                })}
-                onChange={({target: {value}}) => dispatch({
-                  type: actions.updateHueFuzz,
-                  hueFuzz: Number(value)
-                })}
-                value={state.colorFuzz.hue}
-                id='form-hue-fuzz'
-                type='range'
-                min='0'
-                max='1'
-                step='0.01'
-              />
-            </div>
-            <div className='formField'>
-              <label htmlFor='form-saturation-fuzz'>Saturation variance</label>
-              <input
-                onInput={({target: {value}}) => dispatch({
-                  type: actions.updateSaturationFuzz,
-                  saturationFuzz: Number(value)
-                })}
-                onChange={({target: {value}}) => dispatch({
-                  type: actions.updateSaturationFuzz,
-                  saturationFuzz: Number(value)
-                })}
-                value={state.colorFuzz.saturation}
-                id='form-saturation-fuzz'
-                type='range'
-                min='0'
-                max='1'
-                step='0.01'
-              />
-            </div>
-            <div className='formField'>
-              <label htmlFor='form-lightness-fuzz'>Lightness variance</label>
-              <input
-                onInput={({target: {value}}) => dispatch({
-                  type: actions.updateLightnessFuzz,
-                  lightnessFuzz: Number(value)
-                })}
-                onChange={({target: {value}}) => dispatch({
-                  type: actions.updateLightnessFuzz,
-                  lightnessFuzz: Number(value)
-                })}
-                value={state.colorFuzz.lightness}
-                id='form-lightness-fuzz'
-                type='range'
-                min='0'
-                max='1'
-                step='0.01'
-              />
-            </div>
-            <div className='formField'>
-              <label htmlFor='form-alpha-fuzz'>Alpha variance</label>
-              <input
-                onInput={({target: {value}}) => dispatch({
-                  type: actions.updateAlphaFuzz,
-                  alphaFuzz: Number(value)
-                })}
-                onChange={({target: {value}}) => dispatch({
-                  type: actions.updateAlphaFuzz,
-                  alphaFuzz: Number(value)
-                })}
-                value={state.colorFuzz.alpha}
-                id='form-alpha-fuzz'
-                type='range'
-                min='0'
-                max='1'
-                step='0.01'
-              />
-            </div>
-          </fieldset>
+          <Variance
+            shapeFuzz={state.shapeFuzz}
+            colorFuzz={state.colorFuzz}
+            dispatch={dispatch}
+          />
           <fieldset>
             <legend>Coloring</legend>
             <div className='formField'>
