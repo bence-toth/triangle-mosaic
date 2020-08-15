@@ -78,7 +78,7 @@ const Stop = ({
             value={color}
             onChange={({target: {value}}) => dispatch({
               type: actions.updateStopColor,
-              location: value,
+              color: value,
               id
             })}
             id="form-coloring-gradient-stop-${index}-color"
@@ -88,7 +88,7 @@ const Stop = ({
         {!isBoundary && (
           <button
             onClick={() => dispatch({
-              type: actions.removeStop,
+              type: actions.deleteStop,
               id
             })}
             className="form-coloring-gradient-remove-stop"
@@ -102,7 +102,7 @@ const Stop = ({
         <button
           onClick={() => dispatch({
             type: actions.addStop,
-            id
+            index
           })}
           className="form-coloring-gradient-add-stop"
         >
@@ -209,17 +209,6 @@ const Spot = ({
   </div>
 )
 
-const AddSpotButton = ({dispatch}) => (
-  <button
-    id="form-coloring-add-spot"
-    onClick={() => dispatch({
-      type: actions.addSpot
-    })}
-  >
-    Add new spot
-  </button>
-)
-
 const initialState = {
   width: 1000,
   height: 1000,
@@ -322,7 +311,6 @@ const actions = {
 }
 
 const reducer = (state, action) => {
-  console.log({state, action})
   switch (action.type) {
     case actions.updateWidth:
       return {
@@ -478,10 +466,77 @@ const reducer = (state, action) => {
         ...state,
         coloringSpots: {
           ...state.coloringSpots,
-          spots: [
-            ...state.coloringSpots.spots.slice(0, action.index),
-            ...state.coloringSpots.spots.slice(action.index + 1)
+          spots: state.coloringSpots.spots.filter((_, spotIndex) => spotIndex !== action.index)
+        }
+      }
+    case actions.addStop:
+      const previousStop = state.coloringGradient.stops[action.index]
+      const nextStop = state.coloringGradient.stops[action.index + 1]
+      const newStop = {
+        id: Math.max(...state.coloringGradient.stops.map(({id}) => id)) + 1,
+        location: (previousStop.location + nextStop.location) / 2,
+        color: getRandomColor()
+      }
+      return {
+        ...state,
+        coloringGradient: {
+          ...state.coloringGradient,
+          stops: [
+            ...state.coloringGradient.stops.slice(0, action.index + 1),
+            newStop,
+            ...state.coloringGradient.stops.slice(action.index + 1)
           ]
+        }
+      }
+    case actions.updateStopLocation:
+      return {
+        ...state,
+        coloringGradient: {
+          ...state.coloringGradient,
+          stops: state.coloringGradient.stops.map(stop => {
+            if (stop.id === action.id) {
+              return {
+                ...stop,
+                location: action.location
+              }
+            }
+            return stop
+          }).sort((
+            {location: leftLocation},
+            {location: rightLocation}
+          ) => {
+            if (leftLocation < rightLocation) {
+              return -1
+            }
+            if (rightLocation > leftLocation) {
+              return 1
+            }
+            return 0
+          })
+        }
+      }
+    case actions.updateStopColor:
+      return {
+        ...state,
+        coloringGradient: {
+          ...state.coloringGradient,
+          stops: state.coloringGradient.stops.map(stop => {
+            if (stop.id === action.id) {
+              return {
+                ...stop,
+                color: action.color
+              }
+            }
+            return stop
+          })
+        }
+      }
+    case actions.deleteStop:
+      return {
+        ...state,
+        coloringGradient: {
+          ...state.coloringGradient,
+          stops: state.coloringGradient.stops.filter(({id}) => (id !== action.id))
         }
       }
     default:
@@ -740,9 +795,14 @@ const App = () => {
                       dispatch={dispatch}
                     />
                   ))}
-                  <AddSpotButton
-                    dispatch={dispatch}
-                  />
+                    <button
+                      id="form-coloring-add-spot"
+                      onClick={() => dispatch({
+                        type: actions.addSpot
+                      })}
+                    >
+                      Add new spot
+                    </button>
                 </div>
               </div>
             )}
