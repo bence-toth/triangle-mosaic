@@ -1,18 +1,136 @@
-.app {
-  text-align: center;
+#root {
+  font-size: 0;
+  position: relative;
+
+  --sidebar-width: 420px;
 }
 
-.content {
-  background-color: #282c34;
-  min-height: 100vh;
+#sidebar,
+#svgRoot {
+  height: 100%;
+}
+
+#sidebar {
+  font-size: 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  background-color: hsl(0, 0%, 97.5%);
+  padding: 10px;
+  box-shadow: 0 20px 10px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  z-index: 1;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+h1 {
+  text-align: center;
+  margin: 40px 0;
+  font-size: 2.25rem;
+  font-weight: 300;
+  color: hsl(0, 0%, 25%);
+  letter-spacing: -0.035em;
+}
+
+#form {
+  color: hsl(0, 0%, 15%);
+}
+
+fieldset {
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-color: hsl(0, 0%, 95%);
+}
+
+legend {
+  padding: 0 10px;
+  margin-left: -10px;
+  font-size: 1.2em;
+}
+
+.formField {
+  margin-bottom: 10px;
+}
+
+input[type="number"],
+input[type="range"],
+select {
+  width: 100%;
+  padding: 5px;
+}
+
+input[type="color"] {
+  width: 100%;
+  height: 40px;
+}
+
+.columns {
   display: flex;
-  flex-direction: column;
+}
+
+.columns .formField:first-child {
+  margin-right: 7.5px;
+}
+
+.columns .formField:last-child {
+  margin-left: 7.5px;
+}
+
+.spot,
+.stop {
+  border: 1px solid hsl(0, 0%, 85%);
+  margin: 20px 0;
+  padding: 20px;
+  background-color: hsl(0, 0%, 90%);
+  position: relative;
+}
+
+label.big {
+  font-size: 1.25em;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.form-coloring-gradient-remove-spot,
+.form-coloring-gradient-remove-stop {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background-color: hsl(0, 0%, 90%);
+  border: 0;
+  font-size: 1.25rem;
+}
+
+button {
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.75px;
+}
+
+#svgRoot {
+  position: absolute;
+  width: calc(100% - var(--sidebar-width));
+  top: 0;
+  left: var(--sidebar-width);
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: 0;
+  background-color: hsl(0, 0%, 90%);
+  overflow: auto;
 }
 
-.content p {
-  margin-bottom: 1em;
+#svgRoot::-webkit-scrollbar-track {
+  background-color: hsl(0, 0%, 90%);
+}
+
+#output {
+  box-shadow: 0 0 30px hsl(0, 0%, 75%);
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AgJFBoEoBbCEQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAArSURBVDjLY0xLS/vPgAcYGxvjk2ZgYqAQjBowGAxgIRTPZ8+eHQ3E4W8AAEktBewUY/QYAAAAAElFTkSuQmCC');
 }

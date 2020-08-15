@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
 /* Set margin, padding to 0, and box sizing to `border-box` for all elements */
 *,
 *::before,
@@ -12,6 +14,21 @@ html,
 body,
 #root {
   height: 100%;
+}
+
+/* Nice scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: hsl(0, 0%, 97.5%);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: hsl(0, 0%, 70%);
 }
 
 /* Body defaults */
@@ -31,6 +48,7 @@ body {
   scroll-behavior: smooth;
   line-height: 1;
   box-sizing: border-box;
+  font-size: 16px;
 
   /*
     Font-smoothing is a non-standard feature. Read more:
