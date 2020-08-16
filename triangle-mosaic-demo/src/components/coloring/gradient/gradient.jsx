@@ -1,8 +1,5 @@
-/* eslint-disable unicorn/no-abusive-eslint-disable */
-/* eslint-disable */
-/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
-
 import React from 'react'
+import {bool, func, number, object, string} from 'prop-types'
 
 import {actions} from '../../app/app.state'
 
@@ -20,8 +17,8 @@ const Stop = ({
   const isBoundary = isFirst || isLast
   return (
     <>
-      <div className="stop">
-        <label className="big">
+      <div className='stop'>
+        <label className='big'>
           {
             (isFirst && 'Start')
               || (isLast && 'End')
@@ -84,8 +81,8 @@ const Stop = ({
             </div>
           </div>
         )}
-        <div className="formField">
-          <label htmlFor="form-coloring-gradient-stop-${index}-location">
+        <div className='formField'>
+          <label htmlFor={`form-coloring-gradient-stop-${index}-location`}>
             Location
           </label>
           <input
@@ -95,16 +92,16 @@ const Stop = ({
               location: Number(value),
               id
             })}
-            id="form-coloring-gradient-stop-${index}-location"
-            type="number"
-            min="0"
-            max="1"
-            step="0.01"
+            id={`form-coloring-gradient-stop-${index}-location`}
+            type='number'
+            min={0}
+            max={1}
+            step={0.01}
             disabled={isBoundary}
           />
         </div>
-        <div className="formField">
-          <label htmlFor="form-coloring-gradient-stop-${index}-color">
+        <div className='formField'>
+          <label htmlFor={`form-coloring-gradient-stop-${index}-color`}>
             Color
           </label>
           <input
@@ -114,18 +111,18 @@ const Stop = ({
               color: value,
               id
             })}
-            id="form-coloring-gradient-stop-${index}-color"
-            type="color"
+            id={`form-coloring-gradient-stop-${index}-color`}
+            type='color'
           />
         </div>
         {!isBoundary && (
           <button
+            type='button'
             onClick={() => dispatch({
               type: actions.deleteStop,
               id
             })}
-            className="form-coloring-gradient-remove-stop"
-            data-stop-index="${index}"
+            className='form-coloring-gradient-remove-stop'
           >
             ✕
           </button>
@@ -133,17 +130,32 @@ const Stop = ({
       </div>
       {!isLast && (
         <button
+          type='button'
           onClick={() => dispatch({
             type: actions.addStop,
             index
           })}
-          className="form-coloring-gradient-add-stop"
+          className='form-coloring-gradient-add-stop'
         >
           + Add new stop here
         </button>
       )}
     </>
   )
+}
+
+Stop.propTypes = {
+  index: number,
+  id: number,
+  location: number,
+  color: string,
+  isFirst: bool,
+  isLast: bool,
+  dispatch: func,
+  // eslint-disable-next-line react/forbid-prop-types
+  start: object,
+  // eslint-disable-next-line react/forbid-prop-types
+  end: object
 }
 
 const Gradient = ({
@@ -167,5 +179,11 @@ const Gradient = ({
     ))}
   </div>
 )
+
+Gradient.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  coloringGradient: object,
+  dispatch: func
+}
 
 export default Gradient

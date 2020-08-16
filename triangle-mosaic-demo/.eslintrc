@@ -5,8 +5,18 @@
   "ignorePatterns": [
     "coverage/",
     "build/",
-    "node_modules/"
+    "node_modules/",
+    // TODO: https://github.com/bence-toth/triangle-mosaic/issues/7
+    "src/components/app/triangleMosaic.js"
   ],
+  "rules": {
+    "@getify/proper-arrows/params": [2, {
+      "unused": "all",
+      "count": 20,
+      "length": 1
+    }],
+    "jsx-a11y/label-has-associated-control": 0
+  },
   "overrides": [
     {
       // Don't expect entry point to get imported.

@@ -1,24 +1,13 @@
-/* eslint-disable unicorn/no-abusive-eslint-disable */
-/* eslint-disable */
-/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
+import React, {useEffect, useReducer, useRef, useState} from 'react'
 
-// TODO: ESLint
-
-// TODO: GitHub pages: https://medium.com/mobile-web-dev/how-to-build-and-deploy-a-react-app-to-github-pages-in-less-than-5-minutes-d6c4ffd30f14
-// TODO: Add tests (Jest, Cypress)
-
-import React, {useState, useReducer, useEffect, useRef} from 'react'
-
+import Coloring from '../coloring/coloring'
+import ColoringPresets from '../coloringPresets/coloringPresets'
 import Dimensions from '../dimensions/dimensions'
 import Variance from '../variance/variance'
-import ColoringPresets from '../coloringPresets/coloringPresets'
-import Coloring from '../coloring/coloring'
-
-import {initialState, reducer} from './app.state'
-import {getConfigFromState, downloadSvg} from './app.utility'
 import {useDebounce} from './app.hooks'
-
-import TriangleMosaic from './triangleMosaic';
+import {initialState, reducer} from './app.state'
+import {downloadSvg, getConfigFromState} from './app.utility'
+import TriangleMosaic from './triangleMosaic'
 
 import './app.css'
 
@@ -30,14 +19,15 @@ const App = () => {
   useEffect(() => {
     const config = getConfigFromState(debouncedState)
     onUpdateTrianglesHtml(triangleMosaic.rehydrate(config))
-  }, [debouncedState])
+  }, [debouncedState, triangleMosaic])
   useEffect(() => {
     const config = getConfigFromState({
       ...debouncedState,
       includeResolution: true
     })
     onUpdateTrianglesHtml(triangleMosaic.rehydrate(config))
-  }, [debouncedState.xResolution, debouncedState.yResolution])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedState.xResolution, debouncedState.yResolution, triangleMosaic])
 
   return (
     <>
@@ -72,32 +62,32 @@ const App = () => {
         <footer>
           <div className='byLine'>
             <a
-              href="https://github.com/bence-toth"
-              target="_blank"
-              rel="noopener noreferrer"
+              href='https://github.com/bence-toth'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               by Bence A. Tóth
             </a>
           </div>
           <div>
             <a
-              href="https://github.com/bence-toth/triangle-mosaic#readme"
-              target="_blank"
-              rel="noopener noreferrer"
+              href='https://github.com/bence-toth/triangle-mosaic#readme'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               About
             </a>
             <a
-              href="https://github.com/bence-toth/triangle-mosaic#license"
-              target="_blank"
-              rel="noopener noreferrer"
+              href='https://github.com/bence-toth/triangle-mosaic#license'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               License
             </a>
             <a
-              href="https://github.com/bence-toth/triangle-mosaic/issues"
-              target="_blank"
-              rel="noopener noreferrer"
+              href='https://github.com/bence-toth/triangle-mosaic/issues'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               Report a bug
             </a>
@@ -105,9 +95,14 @@ const App = () => {
         </footer>
       </aside>
       <div id='svgRoot'>
-        <div id='output' dangerouslySetInnerHTML={{__html: trianglesHtml}} />
+        <div
+          id='output'
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{__html: trianglesHtml}}
+        />
         <button
-          id="downloadSvgButton"
+          type='button'
+          id='downloadSvgButton'
           onClick={() => {
             downloadSvg({
               svgCode: trianglesHtml

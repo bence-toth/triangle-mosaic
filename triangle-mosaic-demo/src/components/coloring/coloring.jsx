@@ -1,14 +1,11 @@
-/* eslint-disable unicorn/no-abusive-eslint-disable */
-/* eslint-disable */
-/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
-
+/* eslint-disable react/forbid-prop-types */
 import React from 'react'
-
-import SingleColor from './singleColor/singleColor'
-import Gradient from './gradient/gradient'
-import Spots from './spots/spots'
+import {func, object, string} from 'prop-types'
 
 import {actions} from '../app/app.state'
+import Gradient from './gradient/gradient'
+import SingleColor from './singleColor/singleColor'
+import Spots from './spots/spots'
 
 const Coloring = ({
   coloringMode,
@@ -21,6 +18,7 @@ const Coloring = ({
     <legend>Coloring details</legend>
     <div className='formField'>
       <label htmlFor='form-coloring-mode-select'>Coloring mode</label>
+      {/* eslint-disable-next-line jsx-a11y/no-onchange */}
       <select
         value={coloringMode}
         onChange={({target: {value}}) => dispatch({
@@ -57,5 +55,13 @@ const Coloring = ({
     </div>
   </fieldset>
 )
+
+Coloring.propTypes = {
+  coloringMode: string,
+  coloringSingle: object,
+  coloringGradient: object,
+  coloringSpots: object,
+  dispatch: func
+}
 
 export default Coloring

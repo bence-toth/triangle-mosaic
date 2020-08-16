@@ -1,8 +1,5 @@
-/* eslint-disable unicorn/no-abusive-eslint-disable */
-/* eslint-disable */
-/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
-
 import React from 'react'
+import {func, number} from 'prop-types'
 
 import {actions} from '../app/app.state'
 
@@ -44,7 +41,7 @@ const getPresets = ({
             color: '#f44336'
           }
         ]
-      },
+      }
     }
   },
   {
@@ -77,9 +74,10 @@ const getPresets = ({
             color: '#f44336'
           }
         ]
-      },
+      }
     }
-  },  {
+  },
+  {
     background: '#ff9800',
     colorConfiguration: {
       coloringMode: 'single',
@@ -113,7 +111,7 @@ const getPresets = ({
             color: '#3f51b5'
           }
         ]
-      },
+      }
     }
   },
   {
@@ -146,7 +144,7 @@ const getPresets = ({
             color: '#ff5722'
           }
         ]
-      },
+      }
     }
   },
   {
@@ -199,7 +197,7 @@ const getPresets = ({
           }
         ]
       }
-    },
+    }
   },
   {
     background: 'linear-gradient(135deg, #9c27b0 0%, #03a9f4 25%, #8bc34a 50%, #ffc107 75%, #f44336 100%)',
@@ -242,7 +240,7 @@ const getPresets = ({
           }
         ]
       }
-    },
+    }
   },
   {
     background: '#4caf50',
@@ -294,7 +292,7 @@ const getPresets = ({
           }
         ]
       }
-    },
+    }
   },
   {
     background: 'radial-gradient(ellipse at 0 0, #03a9f4, #ffc107, #03a9f4, #ffc107, #03a9f4)',
@@ -337,7 +335,7 @@ const getPresets = ({
           }
         ]
       }
-    },
+    }
   },
   {
     background: '#3f51b5',
@@ -486,7 +484,8 @@ const getPresets = ({
         ]
       }
     }
-  },]
+  }
+]
 
 const ColoringPresets = ({
   dispatch,
@@ -495,7 +494,7 @@ const ColoringPresets = ({
 }) => (
   <fieldset>
     <legend>Color presets</legend>
-    <div className="presets">
+    <div className='presets'>
       {getPresets({
         width,
         height
@@ -504,7 +503,9 @@ const ColoringPresets = ({
         colorConfiguration
       }, index) => (
         <button
+          // eslint-disable-next-line react/no-array-index-key
           key={index}
+          type='button'
           className='preset'
           style={{background}}
           onClick={() => dispatch({
@@ -516,5 +517,11 @@ const ColoringPresets = ({
     </div>
   </fieldset>
 )
+
+ColoringPresets.propTypes = {
+  dispatch: func,
+  width: number,
+  height: number
+}
 
 export default ColoringPresets

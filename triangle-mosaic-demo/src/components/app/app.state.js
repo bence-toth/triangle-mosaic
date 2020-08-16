@@ -1,6 +1,3 @@
-/* eslint-disable unicorn/no-abusive-eslint-disable */
-/* eslint-disable */
-
 import {getRandomBetween, getRandomColor} from './app.utility'
 
 const rem = (() => {
@@ -128,6 +125,7 @@ const actions = {
   loadColorPreset: 'loadColorPreset'
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const reducer = (state, action) => {
   switch (action.type) {
     case actions.updateWidth:
@@ -284,12 +282,16 @@ const reducer = (state, action) => {
         ...state,
         coloringSpots: {
           ...state.coloringSpots,
+          // eslint-disable-next-line @getify/proper-arrows/params
           spots: state.coloringSpots.spots.filter((_, spotIndex) => spotIndex !== action.index)
         }
       }
     case actions.addStop:
+      // eslint-disable-next-line no-case-declarations
       const previousStop = state.coloringGradient.stops[action.index]
+      // eslint-disable-next-line no-case-declarations
       const nextStop = state.coloringGradient.stops[action.index + 1]
+      // eslint-disable-next-line no-case-declarations
       const newStop = {
         id: Math.max(...state.coloringGradient.stops.map(({id}) => id)) + 1,
         location: (previousStop.location + nextStop.location) / 2,
@@ -355,6 +357,7 @@ const reducer = (state, action) => {
         ...state,
         coloringGradient: {
           ...state.coloringGradient,
+          // eslint-disable-next-line fp/no-mutating-methods
           stops: state.coloringGradient.stops.map(stop => {
             if (stop.id === action.id) {
               return {

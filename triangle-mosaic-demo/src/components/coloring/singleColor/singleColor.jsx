@@ -1,8 +1,5 @@
-/* eslint-disable unicorn/no-abusive-eslint-disable */
-/* eslint-disable */
-/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
-
 import React from 'react'
+import {func, shape, string} from 'prop-types'
 
 import {actions} from '../../app/app.state'
 
@@ -23,5 +20,12 @@ const SingleColor = ({
     />
   </div>
 )
+
+SingleColor.propTypes = {
+  coloringSingle: shape({
+    color: string
+  }),
+  dispatch: func
+}
 
 export default SingleColor

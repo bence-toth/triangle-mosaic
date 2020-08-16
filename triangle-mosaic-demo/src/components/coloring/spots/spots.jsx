@@ -1,8 +1,5 @@
-/* eslint-disable unicorn/no-abusive-eslint-disable */
-/* eslint-disable */
-/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
-
 import React from 'react'
+import {bool, func, number, object, string} from 'prop-types'
 
 import {actions} from '../../app/app.state'
 
@@ -15,10 +12,12 @@ const Spot = ({
   isOnly,
   dispatch
 }) => (
-  <div className="spot">
-    <label className="big">Spot #{index + 1}</label>
-    <div className="columns">
-      <div className="formField">
+  <div className='spot'>
+    <label className='big'>
+      {`Spot #${index + 1}`}
+    </label>
+    <div className='columns'>
+      <div className='formField'>
         <label htmlFor={`form-coloring-gradient-spot-${index}-x`}>
           Location X
         </label>
@@ -30,12 +29,12 @@ const Spot = ({
             index
           })}
           id={`form-coloring-gradient-spot-${index}-x`}
-          type="number"
-          min="-1000"
-          max="3000"
+          type='number'
+          min={-1000}
+          max={3000}
         />
       </div>
-      <div className="formField">
+      <div className='formField'>
         <label htmlFor={`form-coloring-gradient-spot-${index}-y`}>
           Location Y
         </label>
@@ -47,13 +46,13 @@ const Spot = ({
             index
           })}
           id={`form-coloring-gradient-spot-${index}-y`}
-          type="number"
-          min="-1000"
-          max="3000"
+          type='number'
+          min={-1000}
+          max={3000}
         />
       </div>
     </div>
-    <div className="formField">
+    <div className='formField'>
       <label htmlFor={`form-coloring-gradient-spot-${index}-color`}>
         Color
       </label>
@@ -65,10 +64,10 @@ const Spot = ({
           index
         })}
         id={`form-coloring-gradient-spot-${index}-color`}
-        type="color"
+        type='color'
       />
     </div>
-    <div className="formField">
+    <div className='formField'>
       <label htmlFor={`form-coloring-gradient-spot-${index}-intensity`}>
         Intensity
       </label>
@@ -80,10 +79,10 @@ const Spot = ({
           index
         })}
         id={`form-coloring-gradient-spot-${index}-intensity`}
-        type="range"
-        min="0"
-        max="1.5"
-        step="0.001"
+        type='range'
+        min={0}
+        max={1.5}
+        step={0.001}
       />
     </div>
     {!isOnly && (
@@ -92,15 +91,25 @@ const Spot = ({
           type: actions.deleteSpot,
           index
         })}
-        className="form-coloring-gradient-remove-spot"
-        data-spot-index={index}
-        title="Delete spot"
+        className='form-coloring-gradient-remove-spot'
+        title='Delete spot'
+        type='button'
       >
         ✕
       </button>
     )}
   </div>
 )
+
+Spot.propTypes = {
+  index: number,
+  x: number,
+  y: number,
+  color: string,
+  intensity: number,
+  isOnly: bool,
+  dispatch: func
+}
 
 const Spots = ({
   coloringSpots,
@@ -109,6 +118,7 @@ const Spots = ({
   <div id='spots'>
     {coloringSpots.spots.map((spot, spotIndex, spots) => (
       <Spot
+        // eslint-disable-next-line react/no-array-index-key
         key={spotIndex}
         index={spotIndex}
         x={spot.x}
@@ -119,15 +129,22 @@ const Spots = ({
         dispatch={dispatch}
       />
     ))}
-      <button
-        id="form-coloring-add-spot"
-        onClick={() => dispatch({
-          type: actions.addSpot
-        })}
-      >
-        + Add new spot
-      </button>
+    <button
+      type='button'
+      id='form-coloring-add-spot'
+      onClick={() => dispatch({
+        type: actions.addSpot
+      })}
+    >
+      + Add new spot
+    </button>
   </div>
 )
+
+Spots.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  coloringSpots: object,
+  dispatch: func
+}
 
 export default Spots
