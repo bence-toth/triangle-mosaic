@@ -153,26 +153,44 @@ const options = {
 ```
 
 
-#### Linear gradient
+#### Linear and radial gradient
+
+| Member name      | Description                                                                       |
+|------------------|-----------------------------------------------------------------------------------|
+| `coloring.start` | An object with the location of the gradient’s starting point                      |
+| `coloring.end`   | An object with the location of the gradient’s end point                           |
+| `coloring.stops` | An array describing all stops of the gradient.                                    |
+
+The linear and radial gradient color modes require three additional options in the `coloring` object:
+
+The options `coloring.start` and `coloring.end` are object that have members `x` and `y` containing the horizontal and vertical coordinates of the gradient’s starting and end points.
+
+The `coloring.stops` option is an array of arrays, where the elements have two items: a location (0-1) and a color (in hexadecimal color format). The locations of the first and the last spot must always be 0 and 1, respectively.
+
+For example:
 
 ```js
-coloring: {
-  mode: 'linearGradient',
-  start: {
-    x: 0,
-    y: 0
+const options = {
+  ...,
+  coloring: {
+    mode: 'linearGradient', // or 'radialGradient'
+    start: {
+      x: 0,
+      y: 0
+    },
+    end: {
+      x: 1280,
+      y: 720
+    },
+    stops: [
+      [0,    '#9c27b0'],
+      [0.25, '#03a9f4'],
+      [0.5,  '#8bc34a'],
+      [0.75, '#ffc107'],
+      [1,    '#f44336']
+    ]
   },
-  end: {
-    x: 1280,
-    y: 720
-  },
-  stops: [
-    [0, '#9c27b0'],
-    [0.25, '#03a9f4'],
-    [0.5, '#8bc34a'],
-    [0.75, '#ffc107'],
-    [1, '#f44336']
-  ]
+  ...
 }
 ```
 
