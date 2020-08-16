@@ -23,8 +23,6 @@ const canvasWidth = window.innerWidth - sidebarWidth
 const canvasHeight = window.innerHeight
 const idealGridSize = 128
 
-console.log(sidebarWidth, rem)
-
 const initialState = {
   width: canvasWidth,
   height: canvasHeight,
