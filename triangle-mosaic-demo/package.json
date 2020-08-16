@@ -16,7 +16,7 @@
     "react-scripts": "3.4.3",
     "stylelint": "^13.6.1",
     "stylelint-config-standard": "^20.0.0",
-    "triangle-mosaic": "^1.0.0"
+    "triangle-mosaic": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
