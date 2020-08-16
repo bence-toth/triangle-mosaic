@@ -79,13 +79,36 @@ The options `xResolution` and `yResolution` are the only options which cannot be
 
 ### Variance
 
+| Member name            | Description                                        |
+|------------------------|----------------------------------------------------|
+| `shapeFuzz`            | Variance factor of grid points (0-1)               |
+| `colorFuzz.hue`        | Variance factor of triangle color hue (0-1)        |
+| `colorFuzz.saturation` | Variance factor of triangle color saturation (0-1) |
+| `colorFuzz.lightness`  | Variance factor of triangle color lightness (0-1)  |
+| `colorFuzz.alpha`      | Variance factor of triangle color alpha (0-1)      |
+
+Variance options control how the triangles can deviate from their original shape and coloring.
+
+The option `shapeFuzz` controls how far the grid points may venture from their original location.
+
+Parameters that belong the object `colorFuzz` control how much the triangle colors may deviate from their original color. This can be controlled along all four axes of the HSLA color representation.
+
+
+For example:
+
+```js
+const options = {
+  ...,
   shapeFuzz: 0.65,
   colorFuzz: {
-    hue: 0.1,
+    hue:        0.1,
     saturation: 0.1,
-    lightness: 0.1,
-    alpha: 0
+    lightness:  0.1,
+    alpha:      0
   },
+  ...
+}
+```
 
 
 ### Coloring
