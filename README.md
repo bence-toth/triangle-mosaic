@@ -135,12 +135,20 @@ Their additional options of the `coloring` object are detailed below for each of
 
 #### Single color
 
+| Member name      | Description                     |
+|------------------|---------------------------------|
+| `coloring.color` | Base color (hexadecimal format) |
+
+The single color mode only takes a color in hexadecimal color format:
+
 ```js
-{
+const options = {
+  ...,
   coloring: {
-    mode: 'single',
+    mode:  'single',
     color: '#ffc107'
-  }
+  },
+  ...
 }
 ```
 
