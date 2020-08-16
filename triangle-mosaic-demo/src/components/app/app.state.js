@@ -3,9 +3,27 @@
 
 import {getRandomBetween, getRandomColor} from './app.utility'
 
-const canvasWidth = window.innerWidth - (26 * 16)
+const rem = (() => {
+  const below1024 = window.matchMedia('(max-width: 1024px)').matches
+  if (below1024) {
+    return 13
+  }
+  const below1196 = window.matchMedia('(max-width: 1196px)').matches
+  if (below1196) {
+    return 14
+  }
+  const below1366 = window.matchMedia('(max-width: 1366px)').matches
+  if (below1366) {
+    return 15
+  }
+  return 16
+})()
+const sidebarWidth = 26 * rem
+const canvasWidth = window.innerWidth - sidebarWidth
 const canvasHeight = window.innerHeight
 const idealGridSize = 128
+
+console.log(sidebarWidth, rem)
 
 const initialState = {
   width: canvasWidth,

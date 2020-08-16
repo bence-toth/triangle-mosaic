@@ -31,6 +31,28 @@ body,
   background-color: hsl(0, 0%, 70%);
 }
 
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 1366px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 1196px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 13px;
+  }
+}
+
 /* Body defaults */
 body {
   font-family:
@@ -48,7 +70,6 @@ body {
   scroll-behavior: smooth;
   line-height: 1;
   box-sizing: border-box;
-  font-size: 16px;
 
   /*
     Font-smoothing is a non-standard feature. Read more:

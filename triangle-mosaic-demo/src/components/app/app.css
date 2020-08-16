@@ -134,7 +134,6 @@ button {
 }
 
 #output {
-  width: 100%;
   font-size: 0;
   box-shadow: 0 0 2rem hsl(0, 0%, 75%);
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AgJFBoEoBbCEQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAArSURBVDjLY0xLS/vPgAcYGxvjk2ZgYqAQjBowGAxgIRTPZ8+eHQ3E4W8AAEktBewUY/QYAAAAAElFTkSuQmCC');
