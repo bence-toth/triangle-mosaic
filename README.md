@@ -45,6 +45,38 @@ const myNewSvgCode = myMosaic.rehydrate(newOptions)
 ```
 
 
+## Options
+
+The `options` parameter of both the constructor and the `rehydrate` method is an object with various options that influence the outcome.
+
+If you haven’t yet, maybe it’s a good time to check out [the demo page](http://bence-toth.github.io/triangle-mosaic) to get a good overview of the features.
+
+
+### Dimensions and number of tiles
+
+| Member name    | Description                        |
+|----------------|------------------------------------|
+| `width`        | The width of the output in pixels  |
+| `height`       | The height of the output in pixels |
+| `xResolution`  | The number of tiles horizontally   |
+| `yResolution`  | The number of tiles vertically     |
+
+For example:
+
+```js
+const options = {
+  ...,
+  width:  640,
+  height: 480,
+  xResolution: 16,
+  yResolution: 12,
+  ...
+}
+```
+
+The options `xResolution` and `yResolution` are the only options which cannot be rehydrated without losing the random-generated variance of tiles.
+
+
 ### Variance
 
   shapeFuzz: 0.65,
