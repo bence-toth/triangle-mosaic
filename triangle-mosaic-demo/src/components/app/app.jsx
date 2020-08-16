@@ -2,10 +2,9 @@
 /* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
 
-// TODO: Update favicons, manifest, html title etc.
-
-// TODO: ESLint
 // TODO: Add "branding", link to docs etc.
+// TODO: ESLint
+
 // TODO: GitHub pages: https://medium.com/mobile-web-dev/how-to-build-and-deploy-a-react-app-to-github-pages-in-less-than-5-minutes-d6c4ffd30f14
 // TODO: Add tests (Jest, Cypress)
 
