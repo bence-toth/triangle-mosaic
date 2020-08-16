@@ -1,15 +1,54 @@
 # Triangle mosaic
 
-## Options
+Some description
 
-### Coloring modes
+
+## Demo
+
+
+## Installation
+
+
+## Usage
+
+
+### Dimensions and resolution
+
+  width: canvasWidth,
+  height: canvasHeight,
+  xResolution: Math.max(Math.round(canvasWidth / idealGridSize), 4),
+  yResolution: Math.max(Math.round(canvasHeight / idealGridSize), 4),
+
+
+### Variance
+
+  shapeFuzz: 0.65,
+  colorFuzz: {
+    hue: 0.1,
+    saturation: 0.1,
+    lightness: 0.1,
+    alpha: 0
+  },
+
+
+### Coloring
+
+Some description.
+
+
+#### Coloring mode
+
+single, linearGradient, radialGradient, spots
+
 
 #### Single color
 
 ```js
-coloring: {
-  mode: 'single',
-  color: '#ffc107'
+{
+  coloring: {
+    mode: 'single',
+    color: '#ffc107'
+  }
 }
 ```
 
@@ -91,15 +130,8 @@ coloring: {
 }
 ```
 
-### Color fuzz
-
-```js
-colorFuzz: {
-  hue: 0.1,
-  saturation: 0.1,
-  lightness: 0.1,
-  alpha: 0.1
-},
-```
-
 ## License
+
+Under MIT.
+
+Whatever you create with the web-based tool is your intellectual product and you may license it in any way you see fit.
