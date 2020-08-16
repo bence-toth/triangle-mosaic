@@ -152,7 +152,80 @@ coloring: {
       intensity: 0.6
     }
   ]
+
+
+### Full example
+
+```js
+import TriangleMosaic from 'triangle-mosaic'
+
+let options = {
+  width:  640,
+  height: 480,
+  xResolution: 12,
+  yResolution: 8,
+  shapeFuzz: 0.65,
+  colorFuzz: {
+    hue:        0.1,
+    saturation: 0.1,
+    lightness:  0.1,
+    alpha:      0
+  },
+  coloring: {
+    mode: 'linearGradient',
+    start: {
+      x: 0,
+      y: 0
+    },
+    end: {
+      x: 640,
+      y: 480
+    },
+    stops: [
+      {
+        id: 0,
+        location: 0,
+        color: '#9c27b0'
+      },
+      {
+        id: 1,
+        location: 0.25,
+        color: '#03a9f4'
+      },
+      {
+        id: 2,
+        location: 0.5,
+        color: '#8bc34a'
+      },
+      {
+        id: 3,
+        location: 0.75,
+        color: '#ffc107'
+      },
+      {
+        id: 4,
+        location: 1,
+        color: '#f44336'
+      }
+    ]
+  }
 }
+
+// Render SVG
+const myMosaic = new TriangleMosaic(options)
+const mySvgCode = myMosaic.render()
+
+console.log(mySvgCode)
+
+// Change options and render SVG again
+options.width = 720
+options.coloring.end.x = 720
+options.shapeFuzz = 0.5
+options.colorFuzz.hue = 0
+
+const myNewSvgCode = myMosaic.rehydrate(options)
+
+console.log(myNewSvgCode)
 ```
 
 
