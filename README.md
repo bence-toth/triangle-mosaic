@@ -113,12 +113,24 @@ const options = {
 
 ### Coloring
 
-Some description.
+The option `coloring` will decide the original color of the triangles. There are various possibilities here.
 
 
 #### Coloring mode
 
-single, linearGradient, radialGradient, spots
+| Member name     | Description   |
+|-----------------|---------------|
+| `coloring.mode` | Coloring mode |
+
+The option `coloring.mode` will decide how the rest of the `coloring` object is interpreted.
+
+The following coloring modes are supported:
+- Single color (`single`)
+- Linear gradient (`linearGradient`)
+- Radial gradient (`radialGradient`)
+- Color spots (`spots`)
+
+Their additional options of the `coloring` object are detailed below for each of the coloring modes.
 
 
 #### Single color
