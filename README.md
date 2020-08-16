@@ -11,6 +11,13 @@ You can try Triangle mosaic [on the demo page](http://bence-toth.github.io/trian
 
 ## Installation
 
+To install `triangle-mosaic`, run:
+
+```sh
+npm install triangle-mosaic
+```
+
+
 
 ## Usage
 
