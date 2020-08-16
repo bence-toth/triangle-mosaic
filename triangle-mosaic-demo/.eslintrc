@@ -1,0 +1,53 @@
+{
+  "extends": [
+    "@bence.a.toth/eslint-config"
+  ],
+  "ignorePatterns": [
+    "coverage/",
+    "build/",
+    "node_modules/",
+    // TODO: https://github.com/bence-toth/triangle-mosaic/issues/7
+    "src/components/app/triangleMosaic.js"
+  ],
+  "rules": {
+    "@getify/proper-arrows/params": [2, {
+      "unused": "all",
+      "count": 20,
+      "length": 1
+    }],
+    "jsx-a11y/label-has-associated-control": 0
+  },
+  "overrides": [
+    {
+      // Don't expect entry point to get imported.
+      "files": [
+        "src/index.js"
+      ],
+      "rules": {
+        "import/no-unused-modules": 0,
+        "react/jsx-filename-extension": 0
+      }
+    },
+    {
+      // Disabled some rules for the service worker
+      "files": [
+        "serviceWorker.js"
+      ],
+      "rules": {
+        "no-param-reassign": 0,
+        "fp/no-mutation": 0,
+        "no-console": 0,
+        "import/no-unused-modules": 0
+      }
+    },
+    {
+      // Don't expect config files to get imported.
+      "files": [
+        "stylelint.config.js"
+      ],
+      "rules": {
+        "import/no-unused-modules": 0
+      }
+    },
+  ]
+}
