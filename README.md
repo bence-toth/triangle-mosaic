@@ -1,9 +1,12 @@
 # Triangle mosaic
 
-Some description
+Generate colorful triangle-based SVG patterns (like this 👇) with ease.
 
+<img src="./readme-assets/header.jpg" alt="Example output with triangles" style="width: 100%" />
 
 ## Demo
+
+You can try Triangle mosaic [on the demo page](http://bence-toth.github.io/triangle-mosaic).
 
 
 ## Installation
