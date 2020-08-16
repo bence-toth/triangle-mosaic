@@ -18,16 +18,31 @@ npm install triangle-mosaic
 ```
 
 
+## Quick start
 
-## Usage
+You can import `TriangleMosaic` like this:
 
+```js
+import TriangleMosaic from 'triangle-mosaic'
+```
 
-### Dimensions and resolution
+`TriangleMosaic` is a class and it can be instantiated like this:
 
-  width: canvasWidth,
-  height: canvasHeight,
-  xResolution: Math.max(Math.round(canvasWidth / idealGridSize), 4),
-  yResolution: Math.max(Math.round(canvasHeight / idealGridSize), 4),
+```js
+const myMosaic = new TriangleMosaic(options)
+```
+
+Then you can call the `render` method which returns the SVG code as a string:
+
+```js
+const mySvgCode = myMosaic.render()
+```
+
+You can also change the options without losing the random-generated variance by calling the `rehydrate` method with the new options. This will also return the new SVG code as a string:
+
+```js
+const myNewSvgCode = myMosaic.rehydrate(newOptions)
+```
 
 
 ### Variance
