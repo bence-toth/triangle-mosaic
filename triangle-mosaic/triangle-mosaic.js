@@ -584,16 +584,16 @@ class TriangleMosaic {
     if (shapeFuzz !== undefined) {
       this.shapeFuzz = shapeFuzz
     }
-    if (colorFuzz?.hue !== undefined) {
+    if (colorFuzz && (colorFuzz.hue !== undefined)) {
       this.colorFuzz.hue = colorFuzz.hue
     }
-    if (colorFuzz?.saturation !== undefined) {
+    if (colorFuzz && (colorFuzz.saturation !== undefined)) {
       this.colorFuzz.saturation = colorFuzz.saturation
     }
-    if (colorFuzz?.lightness !== undefined) {
+    if (colorFuzz && (colorFuzz.lightness !== undefined)) {
       this.colorFuzz.lightness = colorFuzz.lightness
     }
-    if (colorFuzz?.alpha !== undefined) {
+    if (colorFuzz && (colorFuzz.alpha !== undefined)) {
       this.colorFuzz.alpha = colorFuzz.alpha
     }
     if (coloring !== undefined) {
