@@ -28,8 +28,8 @@ console.log(sidebarWidth, rem)
 const initialState = {
   width: canvasWidth,
   height: canvasHeight,
-  xResolution: Math.round(canvasWidth / idealGridSize),
-  yResolution: Math.round(canvasHeight / idealGridSize),
+  xResolution: Math.max(Math.round(canvasWidth / idealGridSize), 4),
+  yResolution: Math.max(Math.round(canvasHeight / idealGridSize), 4),
   shapeFuzz: 0.65,
   colorFuzz: {
     hue: 0.1,
