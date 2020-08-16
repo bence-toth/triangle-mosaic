@@ -155,8 +155,9 @@ coloring: {
 }
 ```
 
+
 ## License
 
-Under MIT.
+Triangle Mosaic is [licensed under MIT](./LICENSE).
 
-Whatever you create with the web-based tool is your intellectual product and you may license it in any way you see fit.
+Whatever you create with the library or web-based tool is yours and you may license it in any way you see fit.
