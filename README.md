@@ -2,7 +2,7 @@
 
 Generate colorful triangle-based SVG patterns (like this 👇) with ease.
 
-<img src="./readme-assets/header.jpg" alt="Example output with triangles" style="width: 100%" />
+<img src="https://raw.githubusercontent.com/bence-toth/triangle-mosaic/master/readme-assets/header.jpg" alt="Example output with triangles" style="width: 100%" />
 
 ## Demo
 
