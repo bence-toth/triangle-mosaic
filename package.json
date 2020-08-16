@@ -1,0 +1,32 @@
+{
+  "name": "triangle-mosaic",
+  "version": "1.0.0",
+  "description": "Generate colorful triangle-based SVG patterns (like this point_down) with ease.",
+  "main": "./triangle-mosaic/triangle-mosaic.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bence-toth/triangle-mosaic.git"
+  },
+  "keywords": [
+    "SVG",
+    "image generation",
+    "triangles",
+    "image pattern"
+  ],
+  "author": {
+		"name": "Bence A. Tóth",
+		"email": "tothab@gmail.com",
+		"url": "https://github.com/bence-toth"
+	},
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bence-toth/triangle-mosaic/issues"
+  },
+  "homepage": "https://github.com/bence-toth/triangle-mosaic#readme",
+  "files": [
+		"LICENSE",
+		"README.md",
+		"changelog.md",
+		"triangle-mosaic"
+	]
+}
