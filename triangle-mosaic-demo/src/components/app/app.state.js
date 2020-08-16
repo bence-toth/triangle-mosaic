@@ -5,12 +5,13 @@ import {getRandomBetween, getRandomColor} from './app.utility'
 
 const canvasWidth = window.innerWidth - 420
 const canvasHeight = window.innerHeight
+const idealGridSize = 128
 
 const initialState = {
   width: canvasWidth,
   height: canvasHeight,
-  xResolution: Math.round(canvasWidth / 96),
-  yResolution: Math.round(canvasHeight / 96),
+  xResolution: Math.round(canvasWidth / idealGridSize),
+  yResolution: Math.round(canvasHeight / idealGridSize),
   shapeFuzz: 0.65,
   colorFuzz: {
     hue: 0.1,

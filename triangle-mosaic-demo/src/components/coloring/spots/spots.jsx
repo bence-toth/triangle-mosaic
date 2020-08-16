@@ -125,7 +125,7 @@ const Spots = ({
           type: actions.addSpot
         })}
       >
-        Add new spot
+        + Add new spot
       </button>
   </div>
 )

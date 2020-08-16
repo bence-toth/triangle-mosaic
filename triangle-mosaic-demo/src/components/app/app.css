@@ -8,10 +8,10 @@
 #sidebar,
 #svgRoot {
   height: 100%;
+  font-size: 1rem;
 }
 
 #sidebar {
-  font-size: 1rem;
   position: absolute;
   top: 0;
   left: 0;
@@ -125,7 +125,6 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0;
   background-color: hsl(0, 0%, 90%);
   overflow: auto;
 }
@@ -135,6 +134,7 @@ button {
 }
 
 #output {
+  font-size: 0;
   box-shadow: 0 0 30px hsl(0, 0%, 75%);
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AgJFBoEoBbCEQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAArSURBVDjLY0xLS/vPgAcYGxvjk2ZgYqAQjBowGAxgIRTPZ8+eHQ3E4W8AAEktBewUY/QYAAAAAElFTkSuQmCC');
 }
@@ -150,4 +150,15 @@ button {
   height: 60px;
   width: calc(33.3333% - 20px);
   margin: 10px;
+}
+
+#downloadSvgButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: auto;
+  padding: 15px 20px;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: none;
 }

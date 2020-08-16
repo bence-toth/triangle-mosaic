@@ -56,4 +56,31 @@ const getConfigFromState = ({
   }
 })
 
-export {getRandomBetween, getRandomColor, getConfigFromState}
+
+const displayTwoDigits = string => `0${string}`.slice(-2)
+
+const getTimestamp = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = displayTwoDigits(date.getMonth() + 1)
+  const day = displayTwoDigits(date.getDate())
+  const hours = displayTwoDigits(date.getHours())
+  const minutes = displayTwoDigits(date.getMinutes())
+  const seconds = displayTwoDigits(date.getSeconds())
+  return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`
+}
+
+const downloadSvg = ({svgCode}) => {
+  const dataUrl = `data:image/svg+xml;utf8,${svgCode}`
+  const fileName = `triangle-mosaic-${getTimestamp()}.svg`
+  const downloadLink = document.createElement('a')
+  document.body.append(downloadLink) // This line makes it work in Firefox
+  downloadLink.setAttribute('href', dataUrl)
+  downloadLink.setAttribute('download', fileName)
+  downloadLink.click()
+  window.requestAnimationFrame(() => {
+    downloadLink.remove()
+  })
+}
+
+export {getRandomBetween, getRandomColor, getConfigFromState, downloadSvg}

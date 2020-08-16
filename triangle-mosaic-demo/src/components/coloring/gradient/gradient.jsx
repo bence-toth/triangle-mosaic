@@ -139,7 +139,7 @@ const Stop = ({
           })}
           className="form-coloring-gradient-add-stop"
         >
-          Add new stop here
+          + Add new stop here
         </button>
       )}
     </>

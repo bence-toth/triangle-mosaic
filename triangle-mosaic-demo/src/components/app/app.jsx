@@ -2,7 +2,6 @@
 /* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
 
-// TODO: Add download SVG option
 // TODO: Make it a bit more responsive (Tablet, MDPI Laptop)
 // TODO: Update favicons, manifest, html title etc.
 
@@ -18,8 +17,8 @@ import Variance from '../variance/variance'
 import ColoringPresets from '../coloringPresets/coloringPresets'
 import Coloring from '../coloring/coloring'
 
-import {initialState, actions, reducer} from './app.state'
-import {getConfigFromState} from './app.utility'
+import {initialState, reducer} from './app.state'
+import {getConfigFromState, downloadSvg} from './app.utility'
 import {useDebounce} from './app.hooks'
 
 import TriangleMosaic from './triangleMosaic';
@@ -76,6 +75,16 @@ const App = () => {
       </aside>
       <div id='svgRoot'>
         <div id='output' dangerouslySetInnerHTML={{__html: trianglesHtml}} />
+        <button
+          id="downloadSvgButton"
+          onClick={() => {
+            downloadSvg({
+              svgCode: trianglesHtml
+            })
+          }}
+        >
+          ⬇ Download SVG
+        </button>
       </div>
     </>
   )
