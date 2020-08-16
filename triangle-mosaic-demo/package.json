@@ -27,7 +27,9 @@
     "eslint": "eslint --ext .js,.jsx .",
     "stylelint": "stylelint \"./src/**/*.css\"",
     "proofread": "alex",
-    "update": "npm-check -u"
+    "update": "npm-check -u",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
