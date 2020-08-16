@@ -101,3 +101,5 @@ colorFuzz: {
   alpha: 0.1
 },
 ```
+
+## License

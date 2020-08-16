@@ -24,6 +24,26 @@
   overflow-y: auto;
 }
 
+#sidebar > footer {
+  text-align: center;
+}
+
+#sidebar > footer > .byLine {
+  font-size: 1.1rem;
+}
+
+#sidebar > footer a {
+  display: inline-block;
+  padding: 0.75rem;
+  color: #3f51b5;
+  text-decoration: none;
+}
+
+#sidebar > footer a:hover,
+#sidebar > footer a:active {
+  text-decoration: underline;
+}
+
 h1 {
   text-align: center;
   margin: 2.5rem 0;
@@ -88,6 +108,11 @@ input[type="color"] {
   padding: 1.25rem;
   background-color: hsl(0, 0%, 90%);
   position: relative;
+}
+
+label {
+  display: inline-block;
+  padding-bottom: 0.2rem;
 }
 
 label.big {

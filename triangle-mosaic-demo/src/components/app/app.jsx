@@ -2,7 +2,6 @@
 /* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
 
-// TODO: Add "branding", link to docs etc.
 // TODO: ESLint
 
 // TODO: GitHub pages: https://medium.com/mobile-web-dev/how-to-build-and-deploy-a-react-app-to-github-pages-in-less-than-5-minutes-d6c4ffd30f14
@@ -70,6 +69,40 @@ const App = () => {
             dispatch={dispatch}
           />
         </div>
+        <footer>
+          <div className='byLine'>
+            <a
+              href="https://github.com/bence-toth"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              by Bence A. Tóth
+            </a>
+          </div>
+          <div>
+            <a
+              href="https://github.com/bence-toth/triangle-mosaic#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              About
+            </a>
+            <a
+              href="https://github.com/bence-toth/triangle-mosaic#license"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              License
+            </a>
+            <a
+              href="https://github.com/bence-toth/triangle-mosaic/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Report a bug
+            </a>
+          </div>
+        </footer>
       </aside>
       <div id='svgRoot'>
         <div id='output' dangerouslySetInnerHTML={{__html: trianglesHtml}} />
