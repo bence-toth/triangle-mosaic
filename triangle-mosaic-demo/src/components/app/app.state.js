@@ -3,7 +3,7 @@
 
 import {getRandomBetween, getRandomColor} from './app.utility'
 
-const canvasWidth = window.innerWidth - 420
+const canvasWidth = window.innerWidth - (26 * 16)
 const canvasHeight = window.innerHeight
 const idealGridSize = 128
 

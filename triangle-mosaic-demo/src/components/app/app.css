@@ -2,7 +2,7 @@
   font-size: 0;
   position: relative;
 
-  --sidebar-width: 420px;
+  --sidebar-width: 26rem;
 }
 
 #sidebar,
@@ -17,8 +17,8 @@
   left: 0;
   width: var(--sidebar-width);
   background-color: hsl(0, 0%, 97.5%);
-  padding: 10px;
-  box-shadow: 0 20px 10px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  padding: 0.625rem;
+  box-shadow: 0 1.25rem 0.625rem rgba(0, 0, 0, 0.19), 0 0.5rem 0.5rem rgba(0, 0, 0, 0.23);
   z-index: 1;
   overflow: hidden;
   overflow-y: auto;
@@ -26,7 +26,7 @@
 
 h1 {
   text-align: center;
-  margin: 40px 0;
+  margin: 2.5rem 0;
   font-size: 2.25rem;
   font-weight: 300;
   color: hsl(0, 0%, 25%);
@@ -38,31 +38,31 @@ h1 {
 }
 
 fieldset {
-  padding: 15px 20px;
-  margin-bottom: 35px;
+  padding: 2rem 1.25rem;
+  margin-bottom: 2.25rem;
   border-color: hsl(0, 0%, 95%);
 }
 
 legend {
-  padding: 0 10px;
-  margin-left: -10px;
+  padding: 0 0.625rem;
+  margin-left: -0.625rem;
   font-size: 1.2em;
 }
 
 .formField {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 
 input[type="number"],
 input[type="range"],
 select {
   width: 100%;
-  padding: 5px;
+  padding: 0.375rem;
 }
 
 input[type="color"] {
   width: 100%;
-  height: 40px;
+  height: 2.5rem;
 }
 
 .columns {
@@ -70,39 +70,39 @@ input[type="color"] {
 }
 
 .columns .formField {
-  width: calc(50% - 7.5px);
+  width: calc(50% - 1rem);
 }
 
 .columns .formField:first-child {
-  margin-right: 7.5px;
+  margin-right: 1rem;
 }
 
 .columns .formField:last-child {
-  margin-left: 7.5px;
+  margin-left: 1rem;
 }
 
 .spot,
 .stop {
   border: 1px solid hsl(0, 0%, 85%);
-  margin: 20px 0;
-  padding: 20px;
+  margin: 1.25rem 0;
+  padding: 1.25rem;
   background-color: hsl(0, 0%, 90%);
   position: relative;
 }
 
 label.big {
   font-size: 1.25em;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   display: inline-block;
 }
 
 .form-coloring-gradient-remove-spot,
 .form-coloring-gradient-remove-stop {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 30px;
-  height: 30px;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
   background-color: hsl(0, 0%, 90%);
   border: 0;
@@ -110,7 +110,7 @@ label.big {
 }
 
 button {
-  padding: 10px;
+  padding: 0.625rem;
   cursor: pointer;
   width: 100%;
   text-transform: uppercase;
@@ -134,8 +134,9 @@ button {
 }
 
 #output {
+  width: 100%;
   font-size: 0;
-  box-shadow: 0 0 30px hsl(0, 0%, 75%);
+  box-shadow: 0 0 2rem hsl(0, 0%, 75%);
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AgJFBoEoBbCEQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAArSURBVDjLY0xLS/vPgAcYGxvjk2ZgYqAQjBowGAxgIRTPZ8+eHQ3E4W8AAEktBewUY/QYAAAAAElFTkSuQmCC');
 }
 
@@ -147,18 +148,18 @@ button {
 
 .preset {
   border: 0;
-  height: 60px;
-  width: calc(33.3333% - 20px);
-  margin: 10px;
+  height: 3.75rem;
+  width: calc(33.3333% - 1.25rem);
+  margin: 0.625rem;
 }
 
 #downloadSvgButton {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 1.25rem;
+  right: 1.25rem;
   width: auto;
-  padding: 15px 20px;
-  font-size: 20px;
+  padding: 1.25rem 2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   text-transform: none;
 }
