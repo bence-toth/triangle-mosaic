@@ -14,19 +14,19 @@
     "image pattern"
   ],
   "author": {
-		"name": "Bence A. Tóth",
-		"email": "tothab@gmail.com",
-		"url": "https://github.com/bence-toth"
-	},
+    "name": "Bence A. Tóth",
+    "email": "tothab@gmail.com",
+    "url": "https://github.com/bence-toth"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bence-toth/triangle-mosaic/issues"
   },
   "homepage": "https://github.com/bence-toth/triangle-mosaic#readme",
   "files": [
-		"LICENSE",
-		"README.md",
-		"changelog.md",
-		"triangle-mosaic"
-	]
+    "LICENSE",
+    "README.md",
+    "changelog.md",
+    "triangle-mosaic"
+  ]
 }
