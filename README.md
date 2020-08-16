@@ -195,56 +195,56 @@ const options = {
 ```
 
 
-#### Radial gradient
-
-```js
-coloring: {
-  mode: 'radialGradient',
-  start: {
-    x: 480,
-    y: 360
-  },
-  end: {
-    x: 0,
-    y: 0
-  },
-  stops: [
-    [0, '#9c27b0'],
-    [0.25, '#03a9f4'],
-    [0.5, '#8bc34a'],
-    [0.75, '#ffc107'],
-    [1, '#f44336']
-  ]
-}
-```
-
-
 #### Spots
 
+| Member name              | Description                                    |
+|--------------------------|------------------------------------------------|
+| `coloring.spots`         | An array of objects describing all color spots |
+| `coloring.spotIntensity` | The default intensity of spots                 |
+
+
+The `coloring.spots` option is an array of color spots, where the elements have four members:
+
+- `x` and `y` containing the horizontal and vertical coordinates of the color spot
+
+- `color` containing the spot’s color in hexadecimal color format
+
+- `intensity` which represents how much this light spot contributes to individual triangle colors as compared to other spots (0-1)
+
+The `coloring.spotIntensity` (0-1) option sets the intensity for spots that don’t have their individual intensity specified.
+
+For example:
+
 ```js
-coloring: {
-  mode: 'spots',
-  spotIntensity: 0.5,
-  spots: [
-    {
-      x: 0,
-      y: 0,
-      color: '#ffc107',
-      intensity: 0.65
-    },
-    {
-      x: 1280,
-      y: 0,
-      color: '#f44336'
-      // intensity falls back to 0.5
-    },
-    {
-      x: 640,
-      y: 720,
-      color: '#2196f3',
-      intensity: 0.6
-    }
-  ]
+const options = {
+  ...,
+  coloring: {
+    mode: 'spots',
+    spotIntensity: 0.5,
+    spots: [
+      {
+        x: 0,
+        y: 0,
+        color: '#ffc107',
+        intensity: 0.65
+      },
+      {
+        x: 1280,
+        y: 0,
+        color: '#f44336'
+        // intensity falls back to 0.5
+      },
+      {
+        x: 640,
+        y: 720,
+        color: '#2196f3',
+        intensity: 0.6
+      }
+    ]
+  },
+  ...
+}
+```
 
 
 ### Full example
