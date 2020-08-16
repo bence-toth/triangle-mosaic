@@ -2,7 +2,6 @@
 /* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/no-onchange */
 
-// TODO: Make it a bit more responsive (Tablet, MDPI Laptop)
 // TODO: Update favicons, manifest, html title etc.
 
 // TODO: ESLint
