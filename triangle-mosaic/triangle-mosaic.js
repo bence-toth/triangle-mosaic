@@ -200,8 +200,8 @@ const adjustColor = ({color, adjustments}) => {
   const adjustedHslaColor = {
     h: rotate({
       min: 0,
-      max: 360,
-      value: h * (adjustments.hue + 1)
+      max: 1,
+      value: h + (adjustments.hue * 0.15)
     }),
     s: clamp({
       min: 0,
