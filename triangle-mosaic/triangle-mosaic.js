@@ -233,14 +233,18 @@ const getTriangleColorForGradient = ({coloring, center}) => {
       external: center
     })
 
-    ratio = getRatio(start.x, end.x, perpendicularPoint.x)
+    ratio = (
+      (start.x !== end.x)
+        ? getRatio(start.x, end.x, perpendicularPoint.x)
+        : getRatio(start.y, end.y, perpendicularPoint.y)
+    ) || 0
   }
 
   if (mode === 'radialGradient') {
     const gradientLength = getDistance(start, end)
     const triangleDistance = getDistance(start, center)
 
-    ratio = triangleDistance / gradientLength
+    ratio = (triangleDistance / gradientLength) || 0
   }
 
   const exactMatch = stops.find(([location]) => ratio === location)
