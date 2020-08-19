@@ -1,5 +1,4 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react'
-import TriangleMosaic from 'triangle-mosaic'
 
 import Coloring from '../coloring/coloring'
 import ColoringPresets from '../coloringPresets/coloringPresets'
@@ -8,6 +7,7 @@ import Variance from '../variance/variance'
 import {useDebounce} from './app.hooks'
 import {initialState, reducer} from './app.state'
 import {downloadSvg, getConfigFromState} from './app.utility'
+import TriangleMosaic from './triangleMosaic'
 
 import './app.css'
 
