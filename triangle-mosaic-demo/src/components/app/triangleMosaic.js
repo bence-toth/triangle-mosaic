@@ -373,6 +373,7 @@ const getRandomTriangleColorDeviation = () => ({
 const getRandomGridPointOptions = () => ({
   direction: Math.random() * Math.PI * 2,
   factor: Math.random(),
+  diagonal: Math.round(Math.random()),
   topTriangleColorDeviation: getRandomTriangleColorDeviation(),
   bottomTriangleColorDeviation: getRandomTriangleColorDeviation()
 })
