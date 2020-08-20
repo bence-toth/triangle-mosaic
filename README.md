@@ -79,13 +79,14 @@ The options `xResolution` and `yResolution` are the only options which cannot be
 
 ### Variance
 
-| Member name            | Description                                        |
-|------------------------|----------------------------------------------------|
-| `shapeFuzz`            | Variance factor of grid points (0-1)               |
-| `colorFuzz.hue`        | Variance factor of triangle color hue (0-1)        |
-| `colorFuzz.saturation` | Variance factor of triangle color saturation (0-1) |
-| `colorFuzz.lightness`  | Variance factor of triangle color lightness (0-1)  |
-| `colorFuzz.alpha`      | Variance factor of triangle color alpha (0-1)      |
+| Member name            | Description                                                 |
+|------------------------|-------------------------------------------------------------|
+| `shapeFuzz`            | Variance factor of grid points (0-1)                        |
+| `colorFuzz.hue`        | Variance factor of triangle color hue (0-1)                 |
+| `colorFuzz.saturation` | Variance factor of triangle color saturation (0-1)          |
+| `colorFuzz.lightness`  | Variance factor of triangle color lightness (0-1)           |
+| `colorFuzz.alpha`      | Variance factor of triangle color alpha (0-1)               |
+| `diagonals`            | Either `'nw-se'`, `'ne-sw'`, `'alternating'`, or `'random'` |
 
 Variance options control how the triangles can deviate from their original shape and coloring.
 
@@ -93,6 +94,11 @@ The option `shapeFuzz` controls how far the grid points may venture from their o
 
 Parameters that belong the object `colorFuzz` control how much the triangle colors may deviate from their original color. This can be controlled along all four axes of the HSLA color representation.
 
+The option `diagonals` controls which diagonals of the squares of the grid are used:
+- `'nw-se'` draws the diagonals from the top left corners to the bottom right corners (North-West - South-East)
+- `'ne-sw'` draws the diagonals from the top right corners to the bottom left corners (North-East - South-West)
+- `'alternating'` draws diagonals alternating, so that no two neighboring squares have the same diagonal
+- `'random'` draws diagonals randomly
 
 For example:
 
@@ -106,6 +112,7 @@ const options = {
     lightness:  0.1,
     alpha:      0
   },
+  diagonals: 'nw-se',
   ...
 }
 ```
@@ -264,6 +271,7 @@ let options = {
     lightness:  0.1,
     alpha:      0
   },
+  diagonals: 'nw-se',
   coloring: {
     mode: 'linearGradient',
     start: {
@@ -326,4 +334,4 @@ console.log(myNewSvgCode)
 
 Triangle Mosaic is [licensed under MIT](./LICENSE).
 
-Whatever you create with the library or web-based tool is yours and you may license it in any way you see fit.
+The images you create with the library or web-based tool are yours and you may license them in any way you see fit.
