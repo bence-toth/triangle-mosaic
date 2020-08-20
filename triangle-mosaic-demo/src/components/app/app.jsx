@@ -61,15 +61,6 @@ const App = () => {
           />
         </div>
         <footer>
-          <div className='byLine'>
-            <a
-              href='https://github.com/bence-toth'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              by Bence A. Tóth
-            </a>
-          </div>
           <div>
             <a
               href='https://github.com/bence-toth/triangle-mosaic#readme'
@@ -79,18 +70,29 @@ const App = () => {
               About
             </a>
             <a
-              href='https://github.com/bence-toth/triangle-mosaic#license'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              License
-            </a>
-            <a
               href='https://github.com/bence-toth/triangle-mosaic/issues'
               target='_blank'
               rel='noopener noreferrer'
             >
               Report a bug
+            </a>
+            <a
+              href='https://github.com/bence-toth/triangle-mosaic#license'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              License (MIT)
+            </a>
+          </div>
+          <div className='byLine'>
+            made with ❤ by
+            {' '}
+            <a
+              href='https://github.com/bence-toth'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Bence A. Tóth
             </a>
           </div>
         </footer>
