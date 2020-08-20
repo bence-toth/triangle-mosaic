@@ -44,6 +44,7 @@ const App = () => {
           <Variance
             shapeFuzz={state.shapeFuzz}
             colorFuzz={state.colorFuzz}
+            diagonals={state.diagonals}
             dispatch={dispatch}
           />
           <ColoringPresets
