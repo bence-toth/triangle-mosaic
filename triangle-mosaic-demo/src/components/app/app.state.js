@@ -32,6 +32,7 @@ const initialState = {
     lightness: 0.1,
     alpha: 0
   },
+  diagonals: 'nw-se',
   coloringMode: 'single',
   coloringSingle: {
     color: '#ffc107'
@@ -107,6 +108,7 @@ const actions = {
   updateSaturationFuzz: 'updateSaturationFuzz',
   updateLightnessFuzz: 'updateLightnessFuzz',
   updateAlphaFuzz: 'updateAlphaFuzz',
+  updateDiagonals: 'updateDiagonals',
   updateColoringMode: 'updateColoringMode',
   updateSingleColor: 'updateSingleColor',
   addSpot: 'addSpot',
@@ -184,6 +186,11 @@ const reducer = (state, action) => {
           ...state.colorFuzz,
           alpha: action.alphaFuzz
         }
+      }
+    case actions.updateDiagonals:
+      return {
+        ...state,
+        diagonals: action.diagonals
       }
     case actions.updateColoringMode:
       return {

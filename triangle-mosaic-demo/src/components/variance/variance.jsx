@@ -1,12 +1,13 @@
 /* eslint-disable sonarjs/no-identical-functions */
 import React from 'react'
-import {func, number, object} from 'prop-types'
+import {func, number, object, oneOf} from 'prop-types'
 
 import {actions} from '../app/app.state'
 
 const Variance = ({
   shapeFuzz,
   colorFuzz,
+  diagonals,
   dispatch
 }) => (
   <fieldset>
@@ -106,11 +107,29 @@ const Variance = ({
         step={0.01}
       />
     </div>
+    <div className='formField'>
+      <label htmlFor='form-diagonals'>Diagonals</label>
+      {/* eslint-disable-next-line jsx-a11y/no-onchange */}
+      <select
+        onChange={({target: {value}}) => dispatch({
+          type: actions.updateDiagonals,
+          diagonals: value
+        })}
+        value={diagonals}
+        id='form-diagonals'
+      >
+        <option value='nw-se'>North-West - South-East</option>
+        <option value='ne-sw'>North-East - South-West</option>
+        <option value='alternating'>Alternating</option>
+        <option value='random'>Random</option>
+      </select>
+    </div>
   </fieldset>
 )
 
 Variance.propTypes = {
   shapeFuzz: number,
+  diagonals: oneOf(['nw-se', 'ne-sw', 'alternating', 'random']),
   // eslint-disable-next-line react/forbid-prop-types
   colorFuzz: object,
   dispatch: func

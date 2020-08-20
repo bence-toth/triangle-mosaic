@@ -373,6 +373,7 @@ const getRandomTriangleColorDeviation = () => ({
 const getRandomGridPointOptions = () => ({
   direction: Math.random() * Math.PI * 2,
   factor: Math.random(),
+  diagonal: Math.round(Math.random()),
   topTriangleColorDeviation: getRandomTriangleColorDeviation(),
   bottomTriangleColorDeviation: getRandomTriangleColorDeviation()
 })
@@ -409,6 +410,7 @@ const getTriangles = ({
   shapeFuzz,
   colorFuzz,
   coloring,
+  diagonals,
   width,
   height
 }) => {
@@ -443,10 +445,12 @@ const getTriangles = ({
       }
 
       const points = [
-        // 0----1
-        // |  / |
-        // | /  |
-        // 2----3
+        //
+        // 0----1    0----1
+        // |  / | or | \  |
+        // | /  |    |  \ |
+        // 2----3    2----3
+        //
         grid[rowCounter][columnCounter],
         grid[rowCounter][columnCounter + 1],
         grid[rowCounter + 1][columnCounter],
@@ -463,35 +467,82 @@ const getTriangles = ({
         )
       })).map(movePoint)
 
+      const {
+        topTriangleColorDeviation,
+        bottomTriangleColorDeviation,
+        diagonal: pointDiagonal
+      } = points[0]
+
+      const diagonal = (() => {
+        if (diagonals === 'nw-se') {
+          return 0
+        }
+        if (diagonals === 'ne-sw') {
+          return 1
+        }
+        if (diagonals === 'alternating') {
+          return (
+            (
+              ((rowCounter % 2) === 0) && ((columnCounter % 2) === 1)
+                || ((rowCounter % 2) === 1) && ((columnCounter % 2) === 0)
+            )
+              ? 0
+              : 1
+          )
+        }
+        if (diagonals === 'random') {
+          return pointDiagonal
+        }
+        return 0
+      })()
+
       const topTriangle = {
         // Top triangle
         //
-        // 0----1
-        // |  /
-        // | /
-        // 2
-        edges: [points[0], points[1], points[2]],
+        // 0----1    0----1
+        // |  /   or   \  |
+        // | /          \ |
+        // 2              3
+        //
+        edges: (
+          (diagonal === 0)
+            ? [points[0], points[1], points[2]]
+            : [points[0], points[1], points[3]]
+        ),
         color: getRgbaColor(getTriangleColor({
-          triangle: [points[0], points[1], points[2]],
+          triangle: (
+            (diagonal === 0)
+              ? [points[0], points[1], points[2]]
+              : [points[0], points[1], points[3]]
+          ),
           coloring,
           colorFuzz,
-          colorDeviation: points[0].topTriangleColorDeviation
+          colorDeviation: topTriangleColorDeviation
         }))
       }
 
       const bottomTriangle = {
         // Bottom triangle
         //
-        //      1
-        //    / |
-        //   /  |
-        // 2----3
-        edges: [points[1], points[2], points[3]],
+        //      1    0
+        //    / | or | \
+        //   /  |    |  \
+        // 2----3    2----3
+        //
+        edges: (
+          (diagonal === 0)
+            ? [points[1], points[3], points[2]]
+            : [points[0], points[3], points[2]]
+        ),
         color: getRgbaColor(getTriangleColor({
-          triangle: [points[1], points[2], points[3]],
+          triangle: (
+            (diagonal === 0)
+              ? [points[1], points[3], points[2]]
+              : [points[0], points[3], points[2]]
+          ),
           coloring,
           colorFuzz,
-          colorDeviation: points[0].bottomTriangleColorDeviation
+          colorDeviation: bottomTriangleColorDeviation
         }))
       }
 
@@ -518,6 +569,7 @@ class TriangleMosaic {
       lightness: 0.1,
       alpha: 0
     },
+    diagonals = 'ne-sw',
     coloring = {
       mode: 'spots',
       spots: [
@@ -545,6 +597,7 @@ class TriangleMosaic {
     this.yResolution = yResolution
     this.shapeFuzz = shapeFuzz
     this.colorFuzz = colorFuzz
+    this.diagonals = diagonals
     this.coloring = coloring
     this.grid = getGrid({
       width,
@@ -565,6 +618,7 @@ class TriangleMosaic {
       grid: this.grid,
       shapeFuzz: this.shapeFuzz * maxVentureDistance,
       colorFuzz: this.colorFuzz,
+      diagonals: this.diagonals,
       coloring: this.coloring,
       width: this.width,
       height: this.height
@@ -582,8 +636,9 @@ class TriangleMosaic {
     coloring,
     width,
     height,
+    diagonals,
     xResolution,
-    yResolution
+    yResolution,
   } = {}) {
     if (shapeFuzz !== undefined) {
       this.shapeFuzz = shapeFuzz
@@ -608,6 +663,9 @@ class TriangleMosaic {
     }
     if (height !== undefined) {
       this.height = height
+    }
+    if (diagonals !== undefined) {
+      this.diagonals = diagonals
     }
     if (xResolution !== undefined) {
       this.xResolution = xResolution

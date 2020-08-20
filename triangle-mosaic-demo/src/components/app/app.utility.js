@@ -31,6 +31,7 @@ const getConfigFromState = ({
   yResolution,
   shapeFuzz,
   colorFuzz,
+  diagonals,
   coloringMode,
   coloringSingle,
   coloringGradient,
@@ -45,6 +46,7 @@ const getConfigFromState = ({
   }),
   shapeFuzz,
   colorFuzz,
+  diagonals,
   coloring: {
     mode: coloringMode,
     ...((coloringMode === 'single') && coloringSingle),
